@@ -1,40 +1,74 @@
 import React from 'react'
-import 'styled-components/macro'
 
-export default function VerticalNavigator({ itemNumber, width, height }) {
-  return (
-    <svg
-      width={width || 64}
-      height={height || 64 * itemNumber}
-      viewBox="0 0 64 128"
-    >
-      <Indicator index={0} />
-      <Indicator y={64} index={1} />
-    </svg>
-  )
-}
-function Indicator({ x = 0, y = 0, index = 0, ...rest }) {
-  return (
-    <svg
-      x={`${x}`}
-      y={`${y}`}
-      height={64}
-      viewBox="0 0 64 64"
-      onClick={() => console.log(`click big circle ${index}`)}
-      css={`
-        circle {
-          fill: hsla(${index * 30}, 60%, 70%, 0.4);
-        }
+export default function VerticalNavigator({
+  items = [
+    {
+      // r: 20,
+      onClick(item, index) {
+        console.log('item.r: ', item.r)
+        return console.log(`click big circle ${index}`)
+      }
+    },
+    {
+      // r: 24,
+      onClick(item, index) {
+        console.log('item.r: ', item.r)
+        return console.log(`click big circle ${index}`)
+      }
+    },
+    {},
+    {},
+    {},
+    {}
+  ],
+  activeItemIndex = 1,
+  gutter,
 
-        :hover {
-          circle {
-            fill: blue;
+  // 泛化性 Props
+  width = 32,
+  height,
+  fill = 'hsla(0, 0%, 70%,0.2)',
+  fill_hover = 'hsl(25, 98%, 70%)',
+  fill_active = 'hsl(238, 98%, 70%)',
+  element // 手动指定渲染组件(传递已激发的组件)
+}) {
+  return (
+    <div style={{ width, height }}>
+      {items.map((item, index) => (
+        <svg
+          viewBox="0 0 64 64"
+          onClick={
+            (item.onClick && (() => item.onClick(item, index))) ||
+            (() => console.log(`click Indicator ${index}`))
           }
-        }
-      `}
-      {...rest}
-    >
-      <circle cx="32" cy="20" r="20" />
-    </svg>
+          style={{
+            width: '100%',
+            height: '100%',
+            marginBottom: index !== items.length - 1 && gutter
+          }}
+        >
+          <style>
+            {`
+                  #indicator {
+                    transition: 400ms all ease
+                  }
+                  #indicator:hover {
+                    fill: ${fill_hover};
+                  }
+                  #indicator.active {
+                    fill: ${fill_active};
+                  }
+              `}
+          </style>
+          <g
+            id="indicator"
+            class={index === activeItemIndex && 'active'}
+            fill={fill}
+          >
+            {element || <circle cx="32" cy="32" r={`${item.r || 16}`} />}
+          </g>
+        </svg>
+      ))}
+    </div>
   )
 }
