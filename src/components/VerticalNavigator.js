@@ -1,18 +1,17 @@
 import React from 'react'
 
 export default function VerticalNavigator({
+  // 特化型 props
   items = [
     {
       // r: 20,
-      onClick(item, idx) {
-        console.log('item.r: ', item.r)
+      onClick(e, idx) {
         return console.log(`click big circle ${idx}`)
       }
     },
     {
       // r: 24,
-      onClick(item, idx) {
-        console.log('item.r: ', item.r)
+      onClick(e, idx) {
         return console.log(`click big circle ${idx}`)
       }
     },
@@ -39,7 +38,7 @@ export default function VerticalNavigator({
           key={idx}
           viewBox="0 0 64 64"
           onClick={
-            (item.onClick && (() => item.onClick(item, idx))) ||
+            (item.onClick && (e => item.onClick(e, idx))) ||
             (() => console.log(`click Indicator ${idx}`))
           }
           style={{
@@ -51,7 +50,8 @@ export default function VerticalNavigator({
           <style>
             {`
               #indicator {
-                transition: 400ms all ease
+                transition: 400ms all ease;
+                fill: ${fill}
               }
               #indicator:hover {
                 fill: ${fill_hover};
@@ -61,11 +61,7 @@ export default function VerticalNavigator({
               }
               `}
           </style>
-          <g
-            id="indicator"
-            className={idx === activeItemIdx ? 'active' : ''}
-            fill={fill}
-          >
+          <g id="indicator" className={idx === activeItemIdx ? 'active' : ''}>
             {element || <circle cx="32" cy="32" r={`${item.r || 16}`} />}
           </g>
         </svg>
