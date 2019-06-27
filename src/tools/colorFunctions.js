@@ -1,4 +1,5 @@
 const colorFunctions = {
+  // 记录了stage1、2、3的标准颜色名称（向HSL的转换）
   _CSSColor: {
     // 灰色系
     white: [0, 0, 100], // 白
@@ -155,12 +156,16 @@ const colorFunctions = {
     mediumvioletred: [322, 81, 43], // 间紫罗兰红
     deeppink: [328, 100, 54] // 深粉红
   },
-
+  // 记录了自定义的颜色名称（向hsl的转换）
   _myColor: {
     blackcoffee: [12, 83, 2],
     coco: [10, 37, 25]
   },
-
+  
+  /**
+   *
+   * @param {string} color 需要提取格式关键信息的颜色字符串
+   */
   _formatColor(color) {
     let regexResult
     if (
@@ -201,11 +206,11 @@ const colorFunctions = {
     )
   },
 
-/**
- * 
- * @param {string} colorname 描述性颜色名称
- * @example TODO
- */
+  /**
+   *
+   * @param {string} colorname 描述性颜色名称
+   * @example TODO
+   */
   toHSL(colorname) {
     const hslElements = this._CSSColor[colorname] || this._myColor[colorname]
     if (!hslElements) {
