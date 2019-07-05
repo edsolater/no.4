@@ -1,5 +1,5 @@
 import React from 'react'
-import * as componentItems from './components'
+import * as componentItems from '../my-library/components'
 
 const components = Object.values(componentItems)
 
