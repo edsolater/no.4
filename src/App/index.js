@@ -1,33 +1,33 @@
 import React from 'react'
 import * as componentItems from '../my-library/components'
+import { Layout } from 'antd/es'
+import TopIndicator from './TopIndicator'
+import SideMenu from './SideMenu'
 
 const components = Object.values(componentItems)
 
-export default function App() {
+const { Header, Sider, Content } = Layout
+
+const App = () => {
+  const [activeComponent, selectComponent] = React.useState('Button')
+  const handleSelectItem = ({ key }) => selectComponent(key)
   return (
-    <div
-      className="grid"
-      style={{
-        display: 'grid',
-        gridAutoFlow: 'column',
-        gridGap: 10,
-        justifyItems: 'center',
-        alignItems: 'center'
-      }}
-    >
-      {components.map((Component, idx) => (
-        <div key={idx}>
-          <div
-            style={{
-              background: 'hsla(0, 0%, 40%, 0.2)',
-              width: 'max-content'
+    <Layout style={{ width: '100vw', height: '100vh' }}>
+      <Header style={{ height: 40, background: '#000c17' }}>
+        <TopIndicator activeComponent={activeComponent} />
+      </Header>
+      <Layout>
+        <Sider trigger={null}>
+          <div className="logo" />
+          <SideMenu
+            menuState={{
+              handleSelectItem
             }}
-          >
-            <Component />
-          </div>
-          <p>{Component.name}</p>
-        </div>
-      ))}
-    </div>
+          />
+        </Sider>
+        <Content />
+      </Layout>
+    </Layout>
   )
 }
+export default App
