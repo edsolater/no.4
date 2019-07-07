@@ -29,7 +29,7 @@ export default function VerticalNavigator({
   fill = 'hsla(0, 0%, 70%, 0.2)',
   fill_hover = 'hsl(25, 98%, 70%)',
   fill_active = 'hsl(238, 98%, 70%)',
-  element // 手动指定渲染组件(传递已激发的组件)
+  element // 用于手动指定渲染组件(传递已激发的组件)
 }) {
   return (
     <div style={{ width, height }}>

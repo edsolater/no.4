@@ -1,0 +1,104 @@
+{
+  "Button": {
+    "tableData": [
+      {
+        "property": "disabled",
+        "description": "按钮失效状态",
+        "type": "boolean",
+        "default": "false"
+      },
+      {
+        "property": "ghost",
+        "description": "幽灵属性，使按钮背景透明，版本 2.7 中增加",
+        "type": "boolean",
+        "default": "false"
+      },
+      {
+        "property": "href",
+        "description": "点击跳转的地址，指定此属性 button 的行为和 a 链接一致",
+        "type": "string",
+        "default": "-"
+      },
+      {
+        "property": "htmlType",
+        "description": "设置 button 原生的 type 值，可选值请参考 HTML 标准",
+        "type": "string",
+        "default": "button"
+      },
+      {
+        "property": "icon",
+        "description": "设置按钮的图标类型",
+        "type": "string",
+        "default": "-"
+      }
+    ]
+  },
+  "Table": {
+    "tableData": {
+      "main": [
+        {
+          "property": "bordered",
+          "description": "是否展示外边框和列边框",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "property": "childrenColumnName",
+          "description": "指定树形结构的列名",
+          "type": "string[]",
+          "default": "children"
+        },
+        {
+          "property": "columns",
+          "description": "表格列的配置描述，具体项见下表",
+          "type": "ColumnProps[]",
+          "default": "-"
+        },
+        {
+          "property": "components",
+          "description": "覆盖默认的 table 元素",
+          "type": "TableComponents",
+          "default": "-"
+        },
+        {
+          "property": "dataSource",
+          "description": "数据数组",
+          "type": "any[]",
+          "default": "-"
+        }
+      ],
+      "column": [
+        {
+          "property": "bordered",
+          "description": "是否展示外边框和列边框",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "property": "childrenColumnName",
+          "description": "指定树形结构的列名",
+          "type": "string[]",
+          "default": "children"
+        },
+        {
+          "property": "columns",
+          "description": "表格列的配置描述，具体项见下表",
+          "type": "ColumnProps[]",
+          "default": "-"
+        },
+        {
+          "property": "components",
+          "description": "覆盖默认的 table 元素",
+          "type": "TableComponents",
+          "default": "-"
+        },
+        {
+          "property": "dataSource",
+          "description": "数据数组",
+          "type": "any[]",
+          "default": "-"
+        }
+      ]
+    }
+  }
+}

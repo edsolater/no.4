@@ -21,7 +21,7 @@ const SideMenu = ({ icons, selectItem }) => {
           key={category}
           title={
             <>
-              <img src={icons[category]} />
+              <Icon component={icons[category]} />
               <span>{category}</span>
             </>
           }
@@ -58,7 +58,7 @@ const SideMenu = ({ icons, selectItem }) => {
               'Popconfirm'
             ],
             Navigation: ['VerticalNavigator', 'Breadcrumb'],
-            'Data Display': ['Tree', 'Card', 'Collapse']
+            'Data Display': ['Tree', 'Card', 'Collapse', 'Table']
           }
         })}
       </Menu>

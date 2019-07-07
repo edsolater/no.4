@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="19.193" height="7" viewBox="0 0 19.193 7">
-  <g id="Group_36" data-name="Group 36" transform="translate(0 -13)">
-    <path id="Subtraction_14" data-name="Subtraction 14" d="M18.194,7H1A1,1,0,0,1,0,6V1A1,1,0,0,1,1,0H18.194a1,1,0,0,1,1,1V6A1,1,0,0,1,18.194,7ZM1.522,4V6H17.716V4Zm6-3V3h4.2V1Z" transform="translate(0 13)" fill="rgba(204,208,95,0.23)"/>
-    <g id="Rectangle_27" data-name="Rectangle 27" transform="translate(0 13)" fill="none" stroke="#ccd05f" stroke-width="0.5">
-      <rect width="19.193" height="7" rx="1" stroke="none"/>
-      <rect x="0.25" y="0.25" width="18.693" height="6.5" rx="0.75" fill="none"/>
-    </g>
-  </g>
-</svg>
