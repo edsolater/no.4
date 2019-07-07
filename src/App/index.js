@@ -1,31 +1,32 @@
 import React from 'react'
-import * as componentItems from '../my-library/components'
+import * as icons from './asset/reactComponentIcons'
+import * as myLibrary from '../my-library'
 import { Layout } from 'antd/es'
 import TopIndicator from './TopIndicator'
 import SideMenu from './SideMenu'
+import InfoPanel from './InfoPanel'
 
-const components = Object.values(componentItems)
 
 const { Header, Sider, Content } = Layout
-
 const App = () => {
-  const [activeComponent, selectComponent] = React.useState('Button')
-  const handleSelectItem = ({ key }) => selectComponent(key)
+  const [selectedItem, selectItem] = React.useState('Button')
+  const itemInfo = {
+    icon: icons[selectedItem],
+    name: selectedItem,
+    info: myLibrary.components[selectedItem.toLocaleLowerCase()].info
+  }
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
       <Header style={{ height: 40, background: '#000c17' }}>
-        <TopIndicator activeComponent={activeComponent} />
+        <TopIndicator selectedItemInfo={itemInfo}/>
       </Header>
       <Layout>
         <Sider trigger={null}>
-          <div className="logo" />
-          <SideMenu
-            menuState={{
-              handleSelectItem
-            }}
-          />
+          <SideMenu icons={icons} selectItem={selectItem} />
         </Sider>
-        <Content />
+        <Content>
+          <InfoPanel selectedItemInfo={itemInfo}/>
+        </Content>
       </Layout>
     </Layout>
   )

@@ -1,9 +1,8 @@
 import React from 'react'
-import * as icons from './asset/reactComponentIcons'
 import { Icon, Menu } from 'antd/es'
 const { SubMenu, ItemGroup } = Menu
 
-const SideMenu = ({ menuState: { handleSelectItem } }) => {
+const SideMenu = ({ icons, selectItem }) => {
   const createMenuItem = name => (
     <Menu.Item key={name}>
       <Icon component={icons[name]} />
@@ -46,7 +45,7 @@ const SideMenu = ({ menuState: { handleSelectItem } }) => {
         style={{ height: '100%' }}
         defaultOpenKeys={['Component']}
         defaultSelectedKeys={['Button']}
-        onSelect={handleSelectItem}
+        onSelect={({ key }) => selectItem(key)}
       >
         {createSubMenus({
           Component: {

@@ -1,9 +1,7 @@
 import React from 'react'
-import * as icons from './asset/reactComponentIcons'
 import { Icon } from 'antd/es'
 
-const TopIndicator = ({ activeComponent, selectCategory }) => {
-  console.log('activeComponent: ', activeComponent)
+const TopIndicator = ({ selectedItemInfo }) => {
   return (
     <div
       style={{
@@ -20,9 +18,9 @@ const TopIndicator = ({ activeComponent, selectCategory }) => {
           alignItems: 'center'
         }}
       >
-        <Icon component={icons[activeComponent]} />
-        <span style={{ marginLeft: 20, color: 'hsla(0, 0%, 100%, 0.4)' }}>
-          {activeComponent}
+        <Icon component={selectedItemInfo.icon} />
+        <span style={{ marginLeft: 16, color: 'hsla(0, 0%, 100%, 0.4)' }}>
+          {selectedItemInfo.name}
         </span>
       </div>
     </div>
