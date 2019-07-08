@@ -3,6 +3,7 @@ import { Table, Card } from 'antd/es'
 
 // react-component
 const APITable = ({ apiArray }) => {
+  console.log('apiArray: ', apiArray)
   return (
     <>
       {apiArray.map(api => (

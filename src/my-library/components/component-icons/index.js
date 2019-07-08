@@ -22,3 +22,6 @@ export { ReactComponent as Modal } from './component-modal.svg'
 export { ReactComponent as Notification } from './component-notification.svg'
 export { ReactComponent as Progress } from './component-progress.svg'
 export { ReactComponent as Popconfirm } from './component-popconfirm.svg'
+export { ReactComponent as Grid } from './Grid.svg'
+export { ReactComponent as Layout } from './Layout.svg'
+

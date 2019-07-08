@@ -65,23 +65,6 @@ const SideMenu = ({ componentInfo, icons, selectItem }) => {
         onSelect={({ key }) => selectItem(key)}
       >
         {createSubMenus(extractComponentMenuTree(componentInfo))}
-        {/* {createSubMenus({
-          Component: {
-            //groupName:itemName[]
-            General: Object.keys(componentInfo).filter(
-              componentName => componentInfo[componentName].class === 'general'
-            ),
-            Navigation: ['VerticalNavigator', 'Breadcrumb'],
-            'Data Display': ['Tree', 'Card', 'Collapse', 'Table'],
-            Feedback: [
-              'Alert',
-              'Message',
-              'Modal',
-              'Notification',
-              'Popconfirm'
-            ]
-          }
-        })} */}
       </Menu>
     </div>
   )
