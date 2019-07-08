@@ -33,9 +33,77 @@
       }
     ]
   },
+  "Card": {
+    "tableData": {
+      "Card": [
+        {
+          "property": "bordered",
+          "description": "是否展示外边框和列边框",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "property": "childrenColumnName",
+          "description": "指定树形结构的列名",
+          "type": "string[]",
+          "default": "children"
+        },
+        {
+          "property": "columns",
+          "description": "表格列的配置描述，具体项见下表",
+          "type": "ColumnProps[]",
+          "default": "-"
+        },
+        {
+          "property": "components",
+          "description": "覆盖默认的 table 元素",
+          "type": "TableComponents",
+          "default": "-"
+        },
+        {
+          "property": "dataSource",
+          "description": "数据数组",
+          "type": "any[]",
+          "default": "-"
+        }
+      ],
+      "Column": [
+        {
+          "property": "bordered",
+          "description": "是否展示外边框和列边框",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "property": "childrenColumnName",
+          "description": "指定树形结构的列名",
+          "type": "string[]",
+          "default": "children"
+        },
+        {
+          "property": "columns",
+          "description": "表格列的配置描述，具体项见下表",
+          "type": "ColumnProps[]",
+          "default": "-"
+        },
+        {
+          "property": "components",
+          "description": "覆盖默认的 table 元素",
+          "type": "TableComponents",
+          "default": "-"
+        },
+        {
+          "property": "dataSource",
+          "description": "数据数组",
+          "type": "any[]",
+          "default": "-"
+        }
+      ]
+    }
+  },
   "Table": {
     "tableData": {
-      "main": [
+      "Table": [
         {
           "property": "bordered",
           "description": "是否展示外边框和列边框",
