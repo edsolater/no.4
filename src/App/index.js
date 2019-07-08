@@ -7,13 +7,13 @@ import SideMenu from './SideMenu'
 import InfoPanel from './InfoPanel'
 const { Header, Sider, Content } = Layout
 
-const { componentInfo, componentIcons, myComponents } = myLibrary.components
+const { componentInfo, componentIcons } = myLibrary.components
 
 const App = () => {
   const [selectedItem, selectItem] = React.useState('Button')
-  const itemInfo = {
+  let itemInfo = myLibrary.components[selectedItem.toLowerCase()] || {
     icon: componentIcons[selectedItem],
-    name: selectedItem,
+    componentName: selectedItem,
     api: componentInfo[selectedItem].api
   }
   return (

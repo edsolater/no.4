@@ -24,18 +24,12 @@ const APITable = ({ apiArray }) => {
 
 // react component
 const InfoPanel = ({ selectedItemInfo }) => {
-  const { api } = selectedItemInfo
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        background: '#6e6e6e',
-        padding: 10
-      }}
-    >
+    <div style={{ padding: 10 }}>
       <Card title="API">
-        <APITable apiArray={api.filter(({ type }) => type === 'table')} />
+        <APITable
+          apiArray={selectedItemInfo.api.filter(({ type }) => type === 'table')}
+        />
       </Card>
     </div>
   )
