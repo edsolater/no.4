@@ -2,6 +2,6 @@
 // import * as table from './table'
 import * as componentIcons from './component-icons'
 import * as myComponents from './my-component'
-import componentAPI from './info.json'
+import componentInfo from './info.json'
 
-export { componentAPI, componentIcons, myComponents }
+export { componentInfo, componentIcons, myComponents }

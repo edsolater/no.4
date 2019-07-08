@@ -2,7 +2,7 @@ import React from 'react'
 import { Icon, Menu } from 'antd/es'
 const { SubMenu, ItemGroup } = Menu
 
-const SideMenu = ({ icons, selectItem }) => {
+const SideMenu = ({ componentInfo, icons, selectItem }) => {
   const createMenuItem = name => (
     <Menu.Item key={name}>
       <Icon component={icons[name]} />
@@ -49,16 +49,19 @@ const SideMenu = ({ icons, selectItem }) => {
       >
         {createSubMenus({
           Component: {
-            General: ['Button', 'Icon', 'Image', 'Typography'],
+            General: Object.keys(componentInfo).filter(
+              componentName =>
+                componentInfo[componentName].property === 'General'
+            ),
+            Navigation: ['VerticalNavigator', 'Breadcrumb'],
+            'Data Display': ['Tree', 'Card', 'Collapse', 'Table'],
             Feedback: [
               'Alert',
               'Message',
               'Modal',
               'Notification',
               'Popconfirm'
-            ],
-            Navigation: ['VerticalNavigator', 'Breadcrumb'],
-            'Data Display': ['Tree', 'Card', 'Collapse', 'Table']
+            ]
           }
         })}
       </Menu>
