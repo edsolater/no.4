@@ -23,5 +23,5 @@ export { ReactComponent as Notification } from './Notification.svg'
 export { ReactComponent as Progress } from './Progress.svg'
 export { ReactComponent as Popconfirm } from './Popconfirm.svg'
 export { ReactComponent as Grid } from './Grid.svg'
-export { ReactComponent as Layout } from './Layout.svg'
+export { ReactComponent as Layout } from './Layout.svg' 
 
