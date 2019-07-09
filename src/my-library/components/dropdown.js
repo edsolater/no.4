@@ -1,7 +1,7 @@
 const componentInfo = {
   class: 'navigation',
-  componentName: 'Breadcrumb',
-  icon: require('./component-icons').Breadcrumb,
+  componentName: 'Dropdown',
+  icon: require('./component-icons').Dropdown,
   api: [
     {
       type: 'table',
