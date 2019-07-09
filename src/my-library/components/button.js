@@ -1,5 +1,5 @@
 import { Button } from './component-icons'
-const componentInfo = {
+const allComponents = {
   class: 'general',
   componentName:'Button',
   icon: Button,
@@ -92,4 +92,4 @@ const componentInfo = {
   ]
 }
 
-export default componentInfo
+export default allComponents

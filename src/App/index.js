@@ -7,30 +7,30 @@ import SideMenu from './SideMenu'
 import InfoPanel from './InfoPanel'
 const { Header, Sider, Content } = Layout
 
-const { componentInfo, componentIcons } = myLibrary.components
+const { allComponents, componentIcons } = myLibrary.components
 
 const App = () => {
-  const [selectedItem, selectItem] = React.useState('Button')
-  let itemInfo = myLibrary.components[selectedItem.toLowerCase()] || {
-    icon: componentIcons[selectedItem],
-    componentName: selectedItem,
-    api: componentInfo[selectedItem].api
+  const [selectedItemName, selectItemName] = React.useState('Button')
+  let selectedItem = myLibrary.components[selectedItemName.toLowerCase()] || {
+    icon: componentIcons[selectedItemName],
+    componentName: selectedItemName,
+    api: allComponents[selectedItemName].api
   }
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
       <Header style={{ height: 40, background: '#000c17' }}>
-        <TopIndicator selectedItemInfo={itemInfo} />
+        <TopIndicator selectedItem={selectedItem} />
       </Header>
       <Layout>
         <Sider>
           <SideMenu
-            componentInfo={componentInfo}
+            allComponents={allComponents}
             icons={componentIcons}
-            selectItem={selectItem}
+            selectItem={selectItemName}
           />
         </Sider>
         <Content>
-          <InfoPanel selectedItemInfo={itemInfo} />
+          <InfoPanel selectedItem={selectedItem} />
         </Content>
       </Layout>
     </Layout>
