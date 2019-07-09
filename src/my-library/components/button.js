@@ -15,7 +15,7 @@ const allComponents = {
       data: [
         {
           property: 'disabled',
-          description: '按钮失效状态，hello world',
+          description: '按钮失效状态',
           type: 'boolean',
           default: 'false'
         },

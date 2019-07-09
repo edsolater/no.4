@@ -1,8 +1,11 @@
-// import * as button from './button'
-// import * as table from './table'
-import * as componentIcons from './component-icons'
-import * as myComponents from './my-component'
-import allComponents from './info.json'
-export {default as button} from './button.js'
+export {default as button} from './button'
+export {default as icon} from './icon'
+export {default as typography} from './typography'
+export {default as grid} from './grid'
+export {default as layout} from './layout'
+export {default as breadcrumb} from './breadcrumb'
+export {default as tree} from './tree'
+export {default as card} from './card'
+export {default as alert} from './alert'
+export {default as message} from './message'
 
-export { allComponents, componentIcons, myComponents }

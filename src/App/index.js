@@ -7,15 +7,10 @@ import SideMenu from './SideMenu'
 import InfoPanel from './InfoPanel'
 const { Header, Sider, Content } = Layout
 
-const { allComponents, componentIcons } = myLibrary.components
 
 const App = () => {
   const [selectedItemName, selectItemName] = React.useState('Button')
-  let selectedItem = myLibrary.components[selectedItemName.toLowerCase()] || {
-    icon: componentIcons[selectedItemName],
-    componentName: selectedItemName,
-    api: allComponents[selectedItemName].api
-  }
+  let selectedItem = myLibrary.components[selectedItemName.toLowerCase()]
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
       <Header style={{ height: 40, background: '#000c17' }}>
@@ -24,8 +19,7 @@ const App = () => {
       <Layout>
         <Sider>
           <SideMenu
-            allComponents={allComponents}
-            icons={componentIcons}
+            allComponentInfo={Object.values(myLibrary.components)}
             selectItem={selectItemName}
           />
         </Sider>

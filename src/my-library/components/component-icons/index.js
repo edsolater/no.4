@@ -1,6 +1,3 @@
-// component
-export { ReactComponent as Component } from './folder-react-components-open.svg'
-
 export { ReactComponent as Button } from './Button.svg'
 export { ReactComponent as Icon } from './Icon.svg'
 export { ReactComponent as Image } from './component-image.svg'
@@ -23,5 +20,4 @@ export { ReactComponent as Notification } from './Notification.svg'
 export { ReactComponent as Progress } from './Progress.svg'
 export { ReactComponent as Popconfirm } from './Popconfirm.svg'
 export { ReactComponent as Grid } from './Grid.svg'
-export { ReactComponent as Layout } from './Layout.svg' 
-
+export { ReactComponent as Layout } from './Layout.svg'

@@ -1,19 +1,26 @@
 import React from 'react'
 import { Icon, Menu } from 'antd/es'
+import { ReactComponent as Component } from './assets/icons/folder-react-components.svg'
+const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
-export default function SideMenu({ allComponents, icons, selectItem }) {
+export default function SideMenu({ allComponentInfo, selectItem }) {
+  const allIcons = allComponentInfo.reduce(
+    (acc, { componentName, icon }) => ({
+      ...acc,
+      [componentName]: icon
+    }),
+    {}
+  )
   const data = {
     Component: (() => {
       // console.log('allComopnents: ', allComponentss)
       const menuTree = {}
-      for (const [componentName, eachComponent] of Object.entries(
-        allComponents
-      )) {
-        const groupName = eachComponent.class
+      allComponentInfo.forEach(eachComponentInfo => {
+        const groupName = eachComponentInfo.class
         if (!menuTree[groupName]) menuTree[groupName] = []
-        menuTree[groupName].push(eachComponent.componentName || componentName)
-      }
+        menuTree[groupName].push(eachComponentInfo.componentName)
+      })
       return menuTree
     })()
   }
@@ -24,7 +31,7 @@ export default function SideMenu({ allComponents, icons, selectItem }) {
         const createMenuItem = itemName => {
           return (
             <Menu.Item key={itemName}>
-              <Icon component={icons[itemName]} />
+              <Icon component={allIcons[itemName]} />
               <span>{itemName}</span>
             </Menu.Item>
           )
@@ -44,7 +51,7 @@ export default function SideMenu({ allComponents, icons, selectItem }) {
             key={category}
             title={
               <>
-                <Icon component={icons[category]} />
+                <Icon component={categoryIcons[category]} />
                 <span>{category}</span>
               </>
             }
