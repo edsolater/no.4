@@ -1,7 +1,7 @@
 const componentInfo = {
   class: 'navigation',
   name: 'PageHeader',
-  icon: require('./component-icons').PageHeader,
+  icon: require('./icons').PageHeader,
   api: [
     {
       type: 'table',

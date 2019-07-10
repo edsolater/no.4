@@ -1,4 +1,4 @@
-import { Tree } from './component-icons'
+import { Tree } from './icons'
 const componentInfo = {
   class: 'data display',
   name: 'Tree',

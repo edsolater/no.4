@@ -2,7 +2,7 @@ const componentInfo = {
   class: '其他',
   name: 'ConfigProvider',
   name_cn:'全局化配置',
-  icon: require('./component-icons').ConfigProvider,
+  icon: require('./icons').ConfigProvider,
   api: [
     {
       type: 'comment',

@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Slider',
-  icon: require('./component-icons').Slider,
+  icon: require('./icons').Slider,
   api: [
     {
       type: 'table',

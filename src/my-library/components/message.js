@@ -1,4 +1,4 @@
-import { Message } from './component-icons'
+import { Message } from './icons'
 const componentInfo = {
   class: 'feedback',
   name: 'Message',

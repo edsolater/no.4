@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Select',
-  icon: require('./component-icons').Select,
+  icon: require('./icons').Select,
   api: [
     {
       type: 'table',

@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据展示',
   name: 'Avatar',
-  icon: require('./component-icons').Avatar,
+  icon: require('./icons').Avatar,
   api: [
     {
       type: 'table',

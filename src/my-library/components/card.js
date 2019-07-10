@@ -1,4 +1,4 @@
-import { Card } from './component-icons'
+import { Card } from './icons'
 const componentInfo = {
   class: 'data display',
   name: 'Card',

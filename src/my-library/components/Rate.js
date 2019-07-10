@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Rate',
-  icon: require('./component-icons').Rate,
+  icon: require('./icons').Rate,
   api: [
     {
       type: 'table',

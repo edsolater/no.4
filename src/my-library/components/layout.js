@@ -1,4 +1,4 @@
-import { Layout } from './component-icons'
+import { Layout } from './icons'
 const componentInfo = {
   class: 'layout',
   name: 'Layout',

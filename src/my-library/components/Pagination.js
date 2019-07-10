@@ -1,7 +1,7 @@
 const componentInfo = {
   class: 'navigation',
   name: 'Pagination',
-  icon: require('./component-icons').Pagination,
+  icon: require('./icons').Pagination,
   api: [
     {
       type: 'table',

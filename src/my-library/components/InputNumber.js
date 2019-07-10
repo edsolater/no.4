@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'InputNumber',
-  icon: require('./component-icons').InputNumber,
+  icon: require('./icons').InputNumber,
   api: [
     {
       type: 'table',

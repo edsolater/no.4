@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Checkbox',
-  icon: require('./component-icons').Checkbox,
+  icon: require('./icons').Checkbox,
   api: [
     {
       type: 'table',

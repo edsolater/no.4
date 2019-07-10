@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '反馈',
   name: 'Result',
-  icon: require('./component-icons').Result,
+  icon: require('./icons').Result,
   api: [
     {
       type: 'comment',

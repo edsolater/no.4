@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据展示',
   name: 'Carousel',
-  icon: require('./component-icons').Carousel,
+  icon: require('./icons').Carousel,
   api: [
     {
       type: 'table',

@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据展示',
   name: 'Tooltip',
-  icon: require('./component-icons').Tooltip,
+  icon: require('./icons').Tooltip,
   api: [
     {
       type: 'table',

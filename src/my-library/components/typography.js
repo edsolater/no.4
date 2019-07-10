@@ -1,4 +1,4 @@
-import { Typography } from './component-icons'
+import { Typography } from './icons'
 const componentInfo = {
   class: 'general',
   name: 'Typography',

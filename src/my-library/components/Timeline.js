@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据展示',
   name: 'Timeline',
-  icon: require('./component-icons').Timeline,
+  icon: require('./icons').Timeline,
   api: [
     {
       type: 'table',

@@ -1,8 +1,11 @@
-import { Button } from './component-icons'
+console.log(require('./doc'))
 const allComponents = {
   class: 'general',
-  name:'Button',
-  icon: Button,
+  name: 'Button',
+  icon: require('./icons').Button,
+  doc: fetch(require('./doc').button)
+    .then(res => res.text())
+    .catch(e => console.log('fail to fatch button.md', e)),
   api: [
     {
       type: 'comment',

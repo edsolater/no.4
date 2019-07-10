@@ -1,4 +1,4 @@
-import { Grid } from './component-icons'
+import { Grid } from './icons'
 const componentInfo = {
   class: 'layout',
   name: 'Grid',

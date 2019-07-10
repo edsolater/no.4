@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '反馈',
   name: 'Drawer',
-  icon: require('./component-icons').Drawer,
+  icon: require('./icons').Drawer,
   api: [
     {
       type: 'comment',

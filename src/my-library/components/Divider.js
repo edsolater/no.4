@@ -2,7 +2,7 @@ const componentInfo = {
   class: '其他',
   name: 'Divider',
   name_cn:'分割线',
-  icon: require('./component-icons').Divider,
+  icon: require('./icons').Divider,
   api: [
     {
       type: 'comment',

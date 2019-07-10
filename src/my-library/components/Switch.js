@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Switch',
-  icon: require('./component-icons').Switch,
+  icon: require('./icons').Switch,
   api: [
     {
       type: 'table',

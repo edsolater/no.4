@@ -2,7 +2,7 @@ const componentInfo = {
   class: '其他',
   name: 'LocaleProvider',
   name_cn:'国际化',
-  icon: require('./component-icons').LocaleProvider,
+  icon: require('./icons').LocaleProvider,
   api: [
     {
       type: 'comment',

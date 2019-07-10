@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'TimePicker',
-  icon: require('./component-icons').TimePicker,
+  icon: require('./icons').TimePicker,
   api: [
     {
       type: 'table',

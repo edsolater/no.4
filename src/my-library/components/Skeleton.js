@@ -2,7 +2,7 @@ const componentInfo = {
   class: '反馈',
   name: 'Skeleton',
   name_cn:'骨架屏',
-  icon: require('./component-icons').Skeleton,
+  icon: require('./icons').Skeleton,
   api: [
     {
       type: 'comment',

@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据展示',
   name: 'Collapse',
-  icon: require('./component-icons').Collapse,
+  icon: require('./icons').Collapse,
   api: [
     {
       type: 'table',

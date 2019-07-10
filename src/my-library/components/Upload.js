@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Upload',
-  icon: require('./component-icons').Upload,
+  icon: require('./icons').Upload,
   api: [
     {
       type: 'table',

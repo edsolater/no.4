@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Menu',
-  icon: require('./component-icons').Menu,
+  icon: require('./icons').Menu,
   api: [
     {
       type: 'table',

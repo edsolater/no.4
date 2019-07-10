@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据展示',
   name: 'Tag',
-  icon: require('./component-icons').Tag,
+  icon: require('./icons').Tag,
   api: [
     {
       type: 'table',

@@ -1,4 +1,4 @@
-import { Icon } from './component-icons'
+import { Icon } from './icons'
 const componentInfo = {
   class: 'general',
   name: 'Icon',

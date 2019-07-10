@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '反馈',
   name: 'Modal',
-  icon: require('./component-icons').Modal,
+  icon: require('./icons').Modal,
   api: [
     {
       type: 'comment',

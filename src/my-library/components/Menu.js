@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '导航',
   name: 'Menu',
-  icon: require('./component-icons').Menu,
+  icon: require('./icons').Menu,
   api: [
     {
       type: 'table',

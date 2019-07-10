@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Cascader',
-  icon: require('./component-icons').Cascader,
+  icon: require('./icons').Cascader,
   api: [
     {
       type: 'table',

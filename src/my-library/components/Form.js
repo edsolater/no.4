@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Form',
-  icon: require('./component-icons').Form,
+  icon: require('./icons').Form,
   api: [
     {
       type: 'table',

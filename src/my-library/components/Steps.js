@@ -1,7 +1,7 @@
 const componentInfo = {
   class: 'navigation',
   name: 'AutoComplete',
-  icon: require('./component-icons').AutoComplete,
+  icon: require('./icons').AutoComplete,
   api: [
     {
       type: 'table',

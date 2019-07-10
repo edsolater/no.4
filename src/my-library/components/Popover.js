@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据展示',
   name: 'Popover',
-  icon: require('./component-icons').Popover,
+  icon: require('./icons').Popover,
   api: [
     {
       type: 'table',

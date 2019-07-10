@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据展示',
   name: 'Badge',
-  icon: require('./component-icons').Badge,
+  icon: require('./icons').Badge,
   api: [
     {
       type: 'table',

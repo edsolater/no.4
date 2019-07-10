@@ -2,7 +2,7 @@ const componentInfo = {
   class: '导航',
   name: 'Breadcrumb',
   name_cn:'面包屑',
-  icon: require('./component-icons').Breadcrumb,
+  icon: require('./icons').Breadcrumb,
   api: [
     {
       type: 'table',

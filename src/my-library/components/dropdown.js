@@ -1,7 +1,7 @@
 const componentInfo = {
   class: 'navigation',
   name: 'Dropdown',
-  icon: require('./component-icons').Dropdown,
+  icon: require('./icons').Dropdown,
   api: [
     {
       type: 'table',

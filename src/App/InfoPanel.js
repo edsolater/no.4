@@ -1,5 +1,25 @@
 import React from 'react'
+import ReactMarkdown from 'react-markdown'
 import { Table, Card } from 'antd/es'
+
+// react component
+export default function InfoPanel({ selectedComponent }) {
+  const [md, setMd] = React.useState("havn't fetched yet")
+  selectedComponent.doc.then(doc => setMd(doc))
+
+  return (
+    <div style={{ padding: 10 }}>
+      <Card title="API">
+        <APITable
+          apiArray={selectedComponent.api.filter(
+            ({ type }) => type === 'table'
+          )}
+        />
+        <ReactMarkdown source={md} />
+      </Card>
+    </div>
+  )
+}
 
 // react-component
 function APITable({ apiArray }) {
@@ -21,17 +41,5 @@ function APITable({ apiArray }) {
         />
       ))}
     </>
-  )
-}
-// react component
-export default function InfoPanel({ selectedComponent }) {
-  return (
-    <div style={{ padding: 10 }}>
-      <Card title="API">
-        <APITable
-          apiArray={selectedComponent.api.filter(({ type }) => type === 'table')}
-        />
-      </Card>
-    </div>
   )
 }

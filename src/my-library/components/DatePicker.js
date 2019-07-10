@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'DatePicker',
-  icon: require('./component-icons').DatePicker,
+  icon: require('./icons').DatePicker,
   api: [
     {
       type: 'table',

@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据录入',
   name: 'Transfer',
-  icon: require('./component-icons').Transfer,
+  icon: require('./icons').Transfer,
   api: [
     {
       type: 'table',

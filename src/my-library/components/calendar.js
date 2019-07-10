@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '数据展示',
   name: 'Calender',
-  icon: require('./component-icons').Calender,
+  icon: require('./icons').Calender,
   api: [
     {
       type: 'table',

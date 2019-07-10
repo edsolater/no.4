@@ -1,4 +1,4 @@
-import { Alert } from './component-icons'
+import { Alert } from './icons'
 const componentInfo = {
   class: '反馈',
   name: 'Alert',
