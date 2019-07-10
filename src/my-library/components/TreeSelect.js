@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据录入',
-  componentName: 'TreeSelect',
+  name: 'TreeSelect',
   icon: require('./component-icons').TreeSelect,
   api: [
     {

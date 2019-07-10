@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Badge',
+  name: 'Badge',
   icon: require('./component-icons').Badge,
   api: [
     {

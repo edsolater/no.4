@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Tabs',
+  name: 'Tabs',
   icon: require('./component-icons').Tabs,
   api: [
     {

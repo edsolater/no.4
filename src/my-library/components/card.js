@@ -1,7 +1,7 @@
 import { Card } from './component-icons'
 const componentInfo = {
   class: 'data display',
-  componentName: 'Card',
+  name: 'Card',
   icon: Card,
   api: [
     {

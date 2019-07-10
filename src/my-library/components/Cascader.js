@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据录入',
-  componentName: 'Cascader',
+  name: 'Cascader',
   icon: require('./component-icons').Cascader,
   api: [
     {

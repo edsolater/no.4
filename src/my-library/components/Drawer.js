@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '反馈',
-  componentName: 'Drawer',
+  name: 'Drawer',
   icon: require('./component-icons').Drawer,
   api: [
     {

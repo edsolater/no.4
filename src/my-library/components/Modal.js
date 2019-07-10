@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '反馈',
-  componentName: 'Modal',
+  name: 'Modal',
   icon: require('./component-icons').Modal,
   api: [
     {

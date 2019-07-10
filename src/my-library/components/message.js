@@ -1,7 +1,7 @@
 import { Message } from './component-icons'
 const componentInfo = {
   class: 'feedback',
-  componentName: 'Message',
+  name: 'Message',
   icon: Message,
   api: [
     {

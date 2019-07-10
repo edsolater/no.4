@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '其他',
-  componentName: 'Anchor',
-  componentName_cn:'锚点',
+  name: 'Anchor',
+  name_cn:'锚点',
   icon: require('./component-icons').Anchor,
   api: [
     {

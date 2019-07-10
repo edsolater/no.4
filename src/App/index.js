@@ -7,24 +7,30 @@ import SideMenu from './SideMenu'
 import InfoPanel from './InfoPanel'
 const { Header, Sider, Content } = Layout
 
-
 const App = () => {
   const [selectedComponentName, selectComponentName] = React.useState('Button')
-  let selectedComponent = myLibrary.components[selectedComponentName.toLowerCase()]
+  const selectedComponent =
+    myLibrary.components[selectedComponentName.toLowerCase()]
+  const [headerColor, setHeaderColor] = React.useState(
+    selectedComponent.color || '#b6aee4'
+  )
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
-      <Header style={{ height: 40, background: '#000c17' }}>
-        <TopIndicator selectedItem={selectedComponent} />
+      <Header style={{ height: 40, background: headerColor }}>
+        <TopIndicator
+          selectedComponent={selectedComponent}
+          setHeaderColor={setHeaderColor}
+        />
       </Header>
       <Layout>
-        <Sider>
+        <Sider width={300} theme="light">
           <SideMenu
             allComponents={Object.values(myLibrary.components)}
             selectComponentName={selectComponentName}
           />
         </Sider>
         <Content>
-          <InfoPanel selectedItem={selectedComponent} />
+          <InfoPanel selectedComponent={selectedComponent} />
         </Content>
       </Layout>
     </Layout>

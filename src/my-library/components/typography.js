@@ -1,7 +1,7 @@
 import { Typography } from './component-icons'
 const componentInfo = {
   class: 'general',
-  componentName: 'Typography',
+  name: 'Typography',
   icon: Typography,
   api: [
     {

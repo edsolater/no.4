@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据录入',
-  componentName: 'TimePicker',
+  name: 'TimePicker',
   icon: require('./component-icons').TimePicker,
   api: [
     {

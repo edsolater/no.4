@@ -1,7 +1,7 @@
 import { Icon } from './component-icons'
 const componentInfo = {
   class: 'general',
-  componentName: 'Icon',
+  name: 'Icon',
   icon: Icon,
   api: [
     {

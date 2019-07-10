@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '导航',
-  componentName: 'Affix',
-  componentName_cn:'固钉',
+  name: 'Affix',
+  name_cn:'固钉',
   icon: require('./component-icons').Affix,
   api: [
     {

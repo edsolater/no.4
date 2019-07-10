@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '反馈',
-  componentName: 'Spin',
-  componentName_cn:'加载中',
+  name: 'Spin',
+  name_cn:'加载中',
   icon: require('./component-icons').Spin,
   api: [
     {

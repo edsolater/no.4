@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '反馈',
-  componentName: 'Progress',
+  name: 'Progress',
   icon: require('./component-icons').Progress,
   api: [
     {

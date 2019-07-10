@@ -1,7 +1,7 @@
 import { Layout } from './component-icons'
 const componentInfo = {
   class: 'layout',
-  componentName: 'Layout',
+  name: 'Layout',
   icon: Layout,
   api: [
     {

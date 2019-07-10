@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '导航',
-  componentName: 'Menu',
+  name: 'Menu',
   icon: require('./component-icons').Menu,
   api: [
     {

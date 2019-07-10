@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Collapse',
+  name: 'Collapse',
   icon: require('./component-icons').Collapse,
   api: [
     {

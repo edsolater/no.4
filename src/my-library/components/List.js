@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'List',
+  name: 'List',
   icon: require('./component-icons').List,
   api: [
     {

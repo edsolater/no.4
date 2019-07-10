@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Popover',
+  name: 'Popover',
   icon: require('./component-icons').Popover,
   api: [
     {

@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '反馈',
-  componentName: 'Result',
+  name: 'Result',
   icon: require('./component-icons').Result,
   api: [
     {

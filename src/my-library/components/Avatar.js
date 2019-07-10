@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Avatar',
+  name: 'Avatar',
   icon: require('./component-icons').Avatar,
   api: [
     {

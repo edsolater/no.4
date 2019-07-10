@@ -1,7 +1,7 @@
 import { Tree } from './component-icons'
 const componentInfo = {
   class: 'data display',
-  componentName: 'Tree',
+  name: 'Tree',
   icon: Tree,
   "api": [
     {

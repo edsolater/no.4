@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据录入',
-  componentName: 'InputNumber',
+  name: 'InputNumber',
   icon: require('./component-icons').InputNumber,
   api: [
     {

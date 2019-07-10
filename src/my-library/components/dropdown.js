@@ -1,6 +1,6 @@
 const componentInfo = {
   class: 'navigation',
-  componentName: 'Dropdown',
+  name: 'Dropdown',
   icon: require('./component-icons').Dropdown,
   api: [
     {

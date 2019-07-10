@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据录入',
-  componentName: 'Switch',
+  name: 'Switch',
   icon: require('./component-icons').Switch,
   api: [
     {

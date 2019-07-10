@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Empty',
+  name: 'Empty',
   icon: require('./component-icons').Empty,
   api: [
     {

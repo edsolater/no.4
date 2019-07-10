@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Carousel',
+  name: 'Carousel',
   icon: require('./component-icons').Carousel,
   api: [
     {

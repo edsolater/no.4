@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Tooltip',
+  name: 'Tooltip',
   icon: require('./component-icons').Tooltip,
   api: [
     {

@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '反馈',
-  componentName: 'Popconfirm',
+  name: 'Popconfirm',
   icon: require('./component-icons').Popconfirm,
   api: [
     {

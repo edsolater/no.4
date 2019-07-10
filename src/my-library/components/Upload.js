@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据录入',
-  componentName: 'Upload',
+  name: 'Upload',
   icon: require('./component-icons').Upload,
   api: [
     {

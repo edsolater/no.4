@@ -24,12 +24,12 @@ function APITable({ apiArray }) {
   )
 }
 // react component
-export default function InfoPanel({ selectedItem }) {
+export default function InfoPanel({ selectedComponent }) {
   return (
     <div style={{ padding: 10 }}>
       <Card title="API">
         <APITable
-          apiArray={selectedItem.api.filter(({ type }) => type === 'table')}
+          apiArray={selectedComponent.api.filter(({ type }) => type === 'table')}
         />
       </Card>
     </div>

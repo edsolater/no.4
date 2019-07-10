@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Statistic',
+  name: 'Statistic',
   icon: require('./component-icons').Statistic,
   api: [
     {

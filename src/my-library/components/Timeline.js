@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Timeline',
+  name: 'Timeline',
   icon: require('./component-icons').Timeline,
   api: [
     {

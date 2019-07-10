@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icon } from 'antd/es'
 
-const TopIndicator = ({ selectedItem }) => {
+const TopIndicator = ({ selectedComponent }) => {
   return (
     <div
       style={{
@@ -18,9 +18,9 @@ const TopIndicator = ({ selectedItem }) => {
           alignItems: 'center'
         }}
       >
-        <Icon component={selectedItem.icon} />
-        <span style={{ marginLeft: 16, color: 'hsla(0, 0%, 100%, 0.4)' }}>
-          {selectedItem.componentName || selectedItem.componentName_en}
+        <Icon component={selectedComponent.icon} />
+        <span style={{ marginLeft: 16, color: 'white' }}>
+          {selectedComponent.name || selectedComponent.name_en}
         </span>
       </div>
     </div>

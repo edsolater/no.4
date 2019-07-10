@@ -5,13 +5,7 @@ const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
 export default function SideMenu({ allComponents, selectComponentName }) {
-  const allIcons = allComponents.reduce(
-    (acc, { componentName, icon }) => ({
-      ...acc,
-      [componentName]: icon
-    }),
-    {}
-  )
+  // 根据所有组件蕴含的属性信息，抽离出组织结构树
   const data = {
     Component: (() => {
       // console.log('allComopnents: ', allComponentss)
@@ -19,75 +13,64 @@ export default function SideMenu({ allComponents, selectComponentName }) {
       allComponents.forEach(eachComponent => {
         const groupName = eachComponent.class
         if (!menuTree[groupName]) menuTree[groupName] = []
-        menuTree[groupName].push(
-          eachComponent.componentName || eachComponent.componentName_en
-        )
+        menuTree[groupName].push(eachComponent)
       })
       return menuTree
     })()
   }
-  const createMenu = data => {
-    const createSubMenus = data => {
-      const createMenuItemGroup = group => {
-        const [groupName, itemNames] = group
-        const createMenuItem = itemName => {
-          return (
-            <Menu.Item key={itemName}>
-              <Icon component={allIcons[itemName]} />
-              <span>{itemName}</span>
-            </Menu.Item>
-          )
-        }
+  const createSubMenus = subMenuData => {
+    const createMenuItemGroup = groupedItemData => {
+      const [groupName, components] = groupedItemData
+      const createMenuItem = component => {
         return (
-          <ItemGroup key={groupName} title={<span>{groupName}</span>}>
-            {/* {console.log('groupName: ', groupName)} */}
-            {/* {console.log('itemNames: ', itemNames)} */}
-            {itemNames.map(itemName => createMenuItem(itemName))}
-          </ItemGroup>
+          <Menu.Item key={component.name}>
+            <Icon component={component.icon} />
+            <span>{component.name}</span>
+            <span style={{ marginLeft: 20, opacity: 0.6, fontSize: '.8em' }}>
+              {component.name_cn}
+            </span>
+          </Menu.Item>
         )
       }
-      // console.log('data: ', data)
-      return [
-        Object.entries(data).map(([category, groups]) => (
-          <SubMenu
-            key={category}
-            title={
-              <>
-                <Icon component={categoryIcons[category]} />
-                <span>{category}</span>
-              </>
-            }
-          >
-            {/* {console.log('category: ', category)} */}
-            {/* {console.log('groups: ', groups)} */}
-            {Object.entries(groups).map(group => createMenuItemGroup(group))}
-          </SubMenu>
-        ))
-      ]
+      return (
+        <ItemGroup key={groupName} title={<span>{groupName}</span>}>
+          {/* {console.log('groupName: ', groupName)} */}
+          {/* {console.log('itemNames: ', itemNames)} */}
+          {components.map(item => createMenuItem(item))}
+        </ItemGroup>
+      )
     }
-    return (
-      <Menu
-        mode="inline"
-        theme="dark"
-        style={{ height: '100%' }}
-        defaultOpenKeys={['Component']}
-        defaultSelectedKeys={['Button']}
-        onSelect={({ key }) => selectComponentName(key)}
-      >
-        {createSubMenus(data)}
-      </Menu>
-    )
+    // console.log('data: ', data)
+    return [
+      Object.entries(subMenuData).map(([category, groups]) => (
+        <SubMenu
+          key={category}
+          title={
+            <>
+              <Icon component={categoryIcons[category]} />
+              <span>{category}</span>
+            </>
+          }
+        >
+          {/* {console.log('category: ', category)} */}
+          {/* {console.log('groups: ', groups)} */}
+          {Object.entries(groups).map(group => createMenuItemGroup(group))}
+        </SubMenu>
+      ))
+    ]
   }
   return (
-    <div
-      style={{
-        gridArea: 'sider',
-        background: '#fff'
-      }}
+    <Menu
+      mode="inline"
+      // theme="dark"
+      style={{ height: '100%', overflowX: 'hidden', overflowY: 'scroll' }}
+      defaultOpenKeys={['Component']}
+      defaultSelectedKeys={['Button']}
+      onSelect={({ key }) => selectComponentName(key)}
     >
-      {createMenu(data)}
-    </div>
+      {createSubMenus(data)}
+    </Menu>
   )
 }
 
-// 需要改用更符合语义的 Menu 组件
+// TODO: 组件加上中文名称

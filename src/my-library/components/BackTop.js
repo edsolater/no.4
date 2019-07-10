@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '其他',
-  componentName: 'BackTop',
-  componentName_cn:'回到顶部',
+  name: 'BackTop',
+  name_cn:'回到顶部',
   icon: require('./component-icons').BackTop,
   api: [
     {

@@ -1,7 +1,7 @@
 import { Grid } from './component-icons'
 const componentInfo = {
   class: 'layout',
-  componentName: 'Grid',
+  name: 'Grid',
   icon: Grid,
   api: [
     {

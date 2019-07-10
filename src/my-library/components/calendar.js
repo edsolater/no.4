@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Calender',
+  name: 'Calender',
   icon: require('./component-icons').Calender,
   api: [
     {

@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '反馈',
-  componentName: 'Notification',
+  name: 'Notification',
   icon: require('./component-icons').Notification,
   api: [
     {

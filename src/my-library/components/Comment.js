@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Comment',
+  name: 'Comment',
   icon: require('./component-icons').Comment,
   api: [
     {

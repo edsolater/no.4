@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据录入',
-  componentName: 'Radio',
+  name: 'Radio',
   icon: require('./component-icons').Radio,
   api: [
     {

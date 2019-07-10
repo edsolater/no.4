@@ -1,7 +1,7 @@
 const componentInfo = {
   class: '其他',
-  componentName: 'LocaleProvider',
-  componentName_cn:'国际化',
+  name: 'LocaleProvider',
+  name_cn:'国际化',
   icon: require('./component-icons').LocaleProvider,
   api: [
     {

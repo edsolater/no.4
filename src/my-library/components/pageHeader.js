@@ -1,6 +1,6 @@
 const componentInfo = {
   class: 'navigation',
-  componentName: 'PageHeader',
+  name: 'PageHeader',
   icon: require('./component-icons').PageHeader,
   api: [
     {

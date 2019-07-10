@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据展示',
-  componentName: 'Tag',
+  name: 'Tag',
   icon: require('./component-icons').Tag,
   api: [
     {

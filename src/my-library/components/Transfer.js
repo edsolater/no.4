@@ -1,6 +1,6 @@
 const componentInfo = {
   class: '数据录入',
-  componentName: 'Transfer',
+  name: 'Transfer',
   icon: require('./component-icons').Transfer,
   api: [
     {
