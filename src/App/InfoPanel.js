@@ -3,9 +3,9 @@ import ReactMarkdown from 'react-markdown'
 import { Table, Card } from 'antd/es'
 
 // react component
-export default function InfoPanel({ selectedComponent }) {
-  const [md, setMd] = React.useState("havn't fetched yet")
-  selectedComponent.doc.then(doc => setMd(doc))
+export default  function InfoPanel({ selectedComponent }) {
+  const [md, setMd] = React.useState('')
+  selectedComponent.getMarkdownAsync().then(text=>setMd(text))
 
   return (
     <div style={{ padding: 10 }}>

@@ -1,11 +1,26 @@
-console.log(require('./doc'))
+const componentName = 'button'
+let icon
+try {
+  icon = require('./icons')[componentName]
+} catch (e) {
+  console.log('e: ', e)
+}
+
 const allComponents = {
   class: 'general',
-  name: 'Button',
-  icon: require('./icons').Button,
-  doc: fetch(require('./doc').button)
-    .then(res => res.text())
-    .catch(e => console.log('fail to fatch button.md', e)),
+  name: componentName,
+  icon: icon,
+  async getMarkdownAsync() {
+    try {
+      const fillPath = require('./doc')[componentName]
+      const res = await fetch(fillPath)
+      const text = await res.text()
+      return text
+    } catch (e) {
+      console.log('e: ', e)
+      return undefined
+    }
+  },
   api: [
     {
       type: 'comment',
