@@ -1,9 +1,7 @@
-import { Alert } from './component-icons'
 const componentInfo = {
   class: '反馈',
-  componentName: 'Alert',
-  componentName_cn:'固钉',
-  icon: Alert,
+  componentName: 'Popconfirm',
+  icon: require('./component-icons').Popconfirm,
   api: [
     {
       type: 'comment',

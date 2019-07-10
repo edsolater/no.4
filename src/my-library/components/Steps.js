@@ -1,8 +1,7 @@
 const componentInfo = {
-  class: '导航',
-  componentName: 'Breadcrumb',
-  componentName_cn:'面包屑',
-  icon: require('./component-icons').Breadcrumb,
+  class: 'navigation',
+  componentName: 'AutoComplete',
+  icon: require('./component-icons').AutoComplete,
   api: [
     {
       type: 'table',

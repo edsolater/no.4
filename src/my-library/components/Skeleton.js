@@ -1,9 +1,8 @@
-import { Alert } from './component-icons'
 const componentInfo = {
   class: '反馈',
-  componentName: 'Alert',
-  componentName_cn:'固钉',
-  icon: Alert,
+  componentName: 'Skeleton',
+  componentName_cn:'骨架屏',
+  icon: require('./component-icons').Skeleton,
   api: [
     {
       type: 'comment',

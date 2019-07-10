@@ -1,7 +1,7 @@
 const componentInfo = {
-  class: 'navigation',
-  componentName: 'Breadcrumb',
-  icon: require('./component-icons').Breadcrumb,
+  class: '数据展示',
+  componentName: 'Collapse',
+  icon: require('./component-icons').Collapse,
   api: [
     {
       type: 'table',

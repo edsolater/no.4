@@ -1,8 +1,7 @@
 const componentInfo = {
-  class: '导航',
-  componentName: 'Breadcrumb',
-  componentName_cn:'面包屑',
-  icon: require('./component-icons').Breadcrumb,
+  class: '数据录入',
+  componentName: 'InputNumber',
+  icon: require('./component-icons').InputNumber,
   api: [
     {
       type: 'table',

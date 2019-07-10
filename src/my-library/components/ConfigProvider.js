@@ -1,9 +1,8 @@
-import { Alert } from './component-icons'
 const componentInfo = {
-  class: '反馈',
-  componentName: 'Alert',
-  componentName_cn:'固钉',
-  icon: Alert,
+  class: '其他',
+  componentName: 'ConfigProvider',
+  componentName_cn:'全局化配置',
+  icon: require('./component-icons').ConfigProvider,
   api: [
     {
       type: 'comment',

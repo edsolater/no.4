@@ -9,22 +9,22 @@ const { Header, Sider, Content } = Layout
 
 
 const App = () => {
-  const [selectedItemName, selectItemName] = React.useState('Button')
-  let selectedItem = myLibrary.components[selectedItemName.toLowerCase()]
+  const [selectedComponentName, selectComponentName] = React.useState('Button')
+  let selectedComponent = myLibrary.components[selectedComponentName.toLowerCase()]
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
       <Header style={{ height: 40, background: '#000c17' }}>
-        <TopIndicator selectedItem={selectedItem} />
+        <TopIndicator selectedItem={selectedComponent} />
       </Header>
       <Layout>
         <Sider>
           <SideMenu
-            allComponentInfo={Object.values(myLibrary.components)}
-            selectItem={selectItemName}
+            allComponents={Object.values(myLibrary.components)}
+            selectComponentName={selectComponentName}
           />
         </Sider>
         <Content>
-          <InfoPanel selectedItem={selectedItem} />
+          <InfoPanel selectedItem={selectedComponent} />
         </Content>
       </Layout>
     </Layout>

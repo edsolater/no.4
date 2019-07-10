@@ -4,8 +4,8 @@ import { ReactComponent as Component } from './assets/icons/folder-react-compone
 const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
-export default function SideMenu({ allComponentInfo, selectItem }) {
-  const allIcons = allComponentInfo.reduce(
+export default function SideMenu({ allComponents, selectComponentName }) {
+  const allIcons = allComponents.reduce(
     (acc, { componentName, icon }) => ({
       ...acc,
       [componentName]: icon
@@ -16,10 +16,12 @@ export default function SideMenu({ allComponentInfo, selectItem }) {
     Component: (() => {
       // console.log('allComopnents: ', allComponentss)
       const menuTree = {}
-      allComponentInfo.forEach(eachComponentInfo => {
-        const groupName = eachComponentInfo.class
+      allComponents.forEach(eachComponent => {
+        const groupName = eachComponent.class
         if (!menuTree[groupName]) menuTree[groupName] = []
-        menuTree[groupName].push(eachComponentInfo.componentName)
+        menuTree[groupName].push(
+          eachComponent.componentName || eachComponent.componentName_en
+        )
       })
       return menuTree
     })()
@@ -70,7 +72,7 @@ export default function SideMenu({ allComponentInfo, selectItem }) {
         style={{ height: '100%' }}
         defaultOpenKeys={['Component']}
         defaultSelectedKeys={['Button']}
-        onSelect={({ key }) => selectItem(key)}
+        onSelect={({ key }) => selectComponentName(key)}
       >
         {createSubMenus(data)}
       </Menu>

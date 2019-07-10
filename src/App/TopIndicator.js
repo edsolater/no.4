@@ -20,7 +20,7 @@ const TopIndicator = ({ selectedItem }) => {
       >
         <Icon component={selectedItem.icon} />
         <span style={{ marginLeft: 16, color: 'hsla(0, 0%, 100%, 0.4)' }}>
-          {selectedItem.componentName}
+          {selectedItem.componentName || selectedItem.componentName_en}
         </span>
       </div>
     </div>

@@ -1,9 +1,8 @@
-import { Alert } from './component-icons'
 const componentInfo = {
-  class: '反馈',
-  componentName: 'Alert',
-  componentName_cn:'固钉',
-  icon: Alert,
+  class: '其他',
+  componentName: 'Divider',
+  componentName_cn:'分割线',
+  icon: require('./component-icons').Divider,
   api: [
     {
       type: 'comment',
