@@ -1,3 +1,6 @@
+import React from 'react'
+import { Button } from 'antd/es'
+
 const componentName = 'button'
 let icon
 try {
@@ -7,8 +10,10 @@ try {
 }
 
 const allComponents = {
-  class: 'general',
+  class: '通用',
+  classNumber:0,
   name: componentName,
+  tags: ['antd'],
   icon: icon,
   async getMarkdownAsync() {
     try {
@@ -23,12 +28,6 @@ const allComponents = {
   },
   api: [
     {
-      type: 'comment',
-      content:
-        '通过设置 Button 的属性来产生不同的按钮样式，推荐顺序为：type -> shape -> size -> loading -> disabled。'
-    },
-    {
-      type: 'table',
       title: 'Button',
       data: [
         {
@@ -106,6 +105,14 @@ const allComponents = {
         }
       ],
       notifacion: '支持原生 button 的其他所有属性。'
+    }
+  ],
+  example: [
+    {
+      title: '0配置',
+      component: function Button1() {
+        return <Button>Button</Button>
+      }
     }
   ]
 }

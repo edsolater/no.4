@@ -5,18 +5,37 @@ const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
 export default function SideMenu({ allComponents, selectComponentName }) {
+  const classifyComponent = () => {
+    // console.log('allComopnents: ', allComponentss)
+    const groupOrder = {
+      通用: [],
+      布局: [],
+      导航: [],
+      数据录入: [],
+      数据展示: [],
+      反馈: [],
+      其他: []
+    }
+    const mapClassName = name => {
+      const patterns = [
+        { pattern: /general|通用/, output: '通用' },
+        { pattern: /layout|布局/, output: '布局' },
+        { pattern: /navigation|导航/, output: '导航' },
+        { pattern: /data entry|数据录入/, output: '数据录入' },
+        { pattern: /data display|数据展示/, output: '数据展示' },
+        { pattern: /feedback|反馈/, output: '反馈' },
+        { pattern: /./, output: '其他' }
+      ]
+      return patterns.find(({ pattern }) => pattern.test(name)).output
+    }
+    allComponents.forEach(eachComponent => {
+      groupOrder[mapClassName(eachComponent.class)].push(eachComponent)
+    })
+    return groupOrder
+  }
   // 根据所有组件蕴含的属性信息，抽离出组织结构树
   const data = {
-    Component: (() => {
-      // console.log('allComopnents: ', allComponentss)
-      const menuTree = {}
-      allComponents.forEach(eachComponent => {
-        const groupName = eachComponent.class
-        if (!menuTree[groupName]) menuTree[groupName] = []
-        menuTree[groupName].push(eachComponent)
-      })
-      return menuTree
-    })()
+    Component: classifyComponent()
   }
   const createSubMenus = subMenuData => {
     const createMenuItemGroup = groupedItemData => {

@@ -1,6 +1,6 @@
 import { Icon } from './icons'
 const componentInfo = {
-  class: 'general',
+  class: '通用',
   name: 'Icon',
   icon: Icon,
   api: [
