@@ -1,4 +1,4 @@
-export { ReactComponent as Button } from './Button.svg'
+export { ReactComponent as button } from './Button.svg'
 export { ReactComponent as Icon } from './Icon.svg'
 export { ReactComponent as Image } from './component-image.svg'
 export { ReactComponent as Typography } from './Typography.svg'

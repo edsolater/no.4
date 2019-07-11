@@ -2,29 +2,15 @@ import React from 'react'
 import { Button } from 'antd/es'
 
 const componentName = 'button'
-let icon
-try {
-  icon = require('./icons')[componentName]
-} catch (e) {
-  console.log('e: ', e)
-}
 
-const allComponents = {
+export default {
   class: '通用',
-  classNumber:0,
+  classNumber: 0,
   name: componentName,
   tags: ['antd'],
-  icon: icon,
-  async getMarkdownAsync() {
-    try {
-      const fillPath = require('./doc')[componentName]
-      const res = await fetch(fillPath)
-      const text = await res.text()
-      return text
-    } catch (e) {
-      console.log('e: ', e)
-      return undefined
-    }
+  icon: require('./icons')[componentName],
+  previewComponent: function Button1() {
+    return <Button>Button</Button>
   },
   api: [
     {
@@ -106,15 +92,6 @@ const allComponents = {
       ],
       notifacion: '支持原生 button 的其他所有属性。'
     }
-  ],
-  example: [
-    {
-      title: '0配置',
-      component: function Button1() {
-        return <Button>Button</Button>
-      }
-    }
   ]
 }
 
-export default allComponents

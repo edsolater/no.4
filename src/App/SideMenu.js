@@ -34,7 +34,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
     })
     return groupOrder
   }
-  // 根据所有组件蕴含的属性信息，抽离出组织结构树
+  // menu的组织结构树
   const data = {
     Component: classifyComponent()
   }
