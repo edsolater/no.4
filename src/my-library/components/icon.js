@@ -1,8 +1,7 @@
-import { Icon } from './icons'
 const componentInfo = {
   class: '通用',
   name: 'Icon',
-  icon: Icon,
+  icon: require('./icons').Icon,
   api: [
     {
       type: 'table',
