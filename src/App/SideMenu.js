@@ -5,6 +5,7 @@ const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
 export default function SideMenu({ allComponents, selectComponentName }) {
+  // 按规则智能分类组件
   const classifyComponent = () => {
     // console.log('allComopnents: ', allComponentss)
     const groupOrder = {
