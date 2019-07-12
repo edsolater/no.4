@@ -4,7 +4,7 @@ import { Layout } from 'antd/es'
 // 子组件
 import TopIndicator from './TopIndicator'
 import SideMenu from './SideMenu'
-import InfoPanel from './InfoPanel'
+import Dashboard from './Dashboard'
 const { Header, Sider, Content } = Layout
 
 const App = () => {
@@ -30,7 +30,7 @@ const App = () => {
           />
         </Sider>
         <Content>
-          <InfoPanel selectedComponent={selectedComponent} />
+          <Dashboard selectedComponent={selectedComponent} />
         </Content>
       </Layout>
     </Layout>
