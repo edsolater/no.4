@@ -1,5 +1,5 @@
 import React from 'react'
-import * as myLibrary from '../my-library'
+import * as myLibrary from '../lib'
 import { Layout } from 'antd/es'
 // 子组件
 import TopIndicator from './TopIndicator'
@@ -7,18 +7,10 @@ import SideMenu from './SideMenu'
 import Dashboard from './Dashboard'
 const { Header, Sider, Content } = Layout
 
-const toCamelCase = (str)=>{
-  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
-    return index == 0 ? word.toLowerCase() : word.toUpperCase();
-  }).replace(/\s+/g, '');
-}
-
 const App = () => {
   const [selectedComponentName, selectComponentName] = React.useState('button')
   const selectedComponent =
-    myLibrary.components[toCamelCase(selectedComponentName)]
-    console.log(selectedComponentName)
-    console.log(toCamelCase(selectedComponentName))
+    myLibrary.components[selectedComponentName]
   const [headerColor, setHeaderColor] = React.useState(
     selectedComponent.color || '#b6aee4'
   )

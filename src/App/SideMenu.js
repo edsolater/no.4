@@ -9,7 +9,7 @@ const toCamelCase = str => {
   return str
     .replace(
       /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
-      (word, index) => (index == 0 ? word.toLowerCase() : word.toUpperCase()) //处于首位的字母转换成小写形式，其他被选中的均准换成大写
+      (word, offset) => (offset === 0 ? word.toLowerCase() : word.toUpperCase()) //处于首位的字母转换成小写形式，其他被选中的均准换成大写
     )
     .replace(/\s+/g, '') // 去除分割符中可能有的所有空格
 }
