@@ -11,7 +11,7 @@ import {
 
 export default function Dashboard({ selectedComponent }) {
   // 组件的API文档可能是一个数组，也可能是一个对象（数组只有一项时的简写）
-  // 如果是对象就包一层数据的壳
+  // 如果是对象就包一层数组的壳
   const api = Array.isArray(selectedComponent.api)
     ? selectedComponent.api
     : [selectedComponent.api]
@@ -24,7 +24,7 @@ export default function Dashboard({ selectedComponent }) {
 
   // [useEffect]: 最初先加载一次默认样式
   React.useEffect(() => {
-    set(selectedComponent.preset[0])
+    if(selectedComponent.preset) set(selectedComponent.preset[0])
   }, [set, selectedComponent]) //  这两项在传入的 Props 不变的情况下永远不变
 
   // 预览组件 + 设定选项 + 预设置参数
@@ -111,32 +111,32 @@ export default function Dashboard({ selectedComponent }) {
                       />
                     )
                   }
-                  if (/Function.*|\(.*?\) ?=> ?.*/.test(record.type)) {
-                    const [, ...keyWords] = record.type.match(
-                      /\((?<param1>\w+)(?:, (\w*))?(?:, (\w*))?(?:, (\w*))?\) ?=> ?(\w+)/
-                    ) // 最多可识别4个参数
-                    const output = keyWords[keyWords.length - 1]
-                    const params = keyWords.slice(0, keyWords.length - 1)
-                    return (
-                      <>
-                        <p>
-                          传入：
-                          {params.map((param, idx) => (
-                            <span
-                              key={param || idx}
-                              style={{ marginRight: 10 }}
-                            >
-                              {param}
-                            </span>
-                          ))}
-                        </p>
-                        <p>
-                          返回：
-                          <span>{output}</span>
-                        </p>
-                      </>
-                    )
-                  }
+                  // if (/Function.*|\(.*?\) ?=> ?.*/.test(record.type)) {
+                  //   const [, ...keyWords] = record.type.match(
+                  //     /\((?<param1>\w+)(?:, (\w*))?(?:, (\w*))?(?:, (\w*))?\) ?=> ?(\w+)/
+                  //   ) // 最多可识别4个参数
+                  //   const output = keyWords[keyWords.length - 1]
+                  //   const params = keyWords.slice(0, keyWords.length - 1)
+                  //   return (
+                  //     <>
+                  //       <p>
+                  //         传入：
+                  //         {params.map((param, idx) => (
+                  //           <span
+                  //             key={param || idx}
+                  //             style={{ marginRight: 10 }}
+                  //           >
+                  //             {param}
+                  //           </span>
+                  //         ))}
+                  //       </p>
+                  //       <p>
+                  //         返回：
+                  //         <span>{output}</span>
+                  //       </p>
+                  //     </>
+                  //   )
+                  // }
                 }
               }
             ]}

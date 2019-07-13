@@ -1,10 +1,19 @@
-const componentInfo = {
+import React from 'react'
+import { Icon } from 'antd/es'
+
+const componentName = 'icon'
+
+export default {
   class: '通用',
-  name: 'Icon',
-  icon: require('./icons').Icon,
+  name: componentName,
+  tags: ['antd'],
+  icon: require('./icons')[componentName],
+  Preview({ children, ...props }) {
+    return <Icon {...props}>{children}</Icon>
+  },
   api: [
     {
-      type: 'table',
+      
       title: 'Icon',
       data: [
         {
@@ -30,7 +39,7 @@ const componentInfo = {
           property: 'spin',
           description: '是否有旋转动画',
           type: 'boolean',
-          default: 'false'
+          default: false
         },
         {
           property: 'rotate',
@@ -53,7 +62,11 @@ const componentInfo = {
         }
       ]
     }
+  ],
+  preset: [
+    {
+      children: 'BUTTON',
+      type: 'primary'
+    }
   ]
 }
-
-export default componentInfo

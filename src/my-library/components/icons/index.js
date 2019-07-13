@@ -1,30 +1,30 @@
 // 通用
-export { ReactComponent as button } from './Button.svg'
-export { ReactComponent as Icon } from './Icon.svg'
-export { ReactComponent as Image } from './component-image.svg'
-export { ReactComponent as Typography } from './Typography.svg'
+export { ReactComponent as button } from './button.svg'
+export { ReactComponent as icon } from './icon.svg'
+export { ReactComponent as image } from './image.svg'
+export { ReactComponent as typography } from './typography.svg'
 
 // 布局
-export { ReactComponent as Grid } from './Grid.svg'
-export { ReactComponent as Layout } from './Layout.svg'
+export { ReactComponent as grid } from './grid.svg'
+export { ReactComponent as layout } from './layout.svg'
 
 // 导航
 export { ReactComponent as verticalNavigator } from './vertical-navigator.svg'
-export { ReactComponent as Breadcrumb } from './component-breadcrumb.svg'
+export { ReactComponent as breadcrumb } from './breadcrumb.svg'
 
 // 控件
 export { ReactComponent as slider } from './slider.svg'
 
 // 数据展示
-export { ReactComponent as Card } from './Card.svg'
-export { ReactComponent as Tree } from './component-tree.svg'
-export { ReactComponent as Collapse } from './Collapse.svg'
-export { ReactComponent as Table } from './component-table.svg'
+export { ReactComponent as card } from './card.svg'
+export { ReactComponent as tree } from './tree.svg'
+export { ReactComponent as collapse } from './collapse.svg'
+export { ReactComponent as table } from './table.svg'
 
 // 反馈
-export { ReactComponent as Alert } from './Alert.svg'
-export { ReactComponent as Message } from './Message.svg'
-export { ReactComponent as Modal } from './Modal.svg'
-export { ReactComponent as Notification } from './Notification.svg'
-export { ReactComponent as Progress } from './Progress.svg'
-export { ReactComponent as Popconfirm } from './Popconfirm.svg'
+export { ReactComponent as alert } from './alert.svg'
+export { ReactComponent as message } from './message.svg'
+export { ReactComponent as modal } from './modal.svg'
+export { ReactComponent as notification } from './notification.svg'
+export { ReactComponent as progress } from './progress.svg'
+export { ReactComponent as popconfirm } from './popconfirm.svg'

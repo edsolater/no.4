@@ -4,6 +4,26 @@ import { ReactComponent as Component } from './assets/icons/folder-react-compone
 const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
+//转换一切字符串分割形式为 camelCase
+const toCamelCase = str => {
+  return str
+    .replace(
+      /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
+      (word, index) => (index == 0 ? word.toLowerCase() : word.toUpperCase()) //处于首位的字母转换成小写形式，其他被选中的均准换成大写
+    )
+    .replace(/\s+/g, '') // 去除分割符中可能有的所有空格
+}
+
+//转换一切字符串分割形式为 PascalCase
+const toPascalCase = str => {
+  return str
+    .replace(
+      /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
+      word => word.toUpperCase() // 转换成大写形式
+    )
+    .replace(/\s+/g, '') // 去除分割符中可能有的所有空格
+}
+
 export default function SideMenu({ allComponents, selectComponentName }) {
   // 智能分类组件名
   const classifyComponent = () => {
@@ -47,7 +67,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
         return (
           <Menu.Item key={component.name}>
             <Icon component={component.icon} />
-            <span>{component.name}</span>
+            <span>{toPascalCase(component.name)}</span>
             <span style={{ marginLeft: 20, opacity: 0.6, fontSize: '.8em' }}>
               {component.name_cn}
             </span>
@@ -84,7 +104,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
       style={{ height: '100%', overflowX: 'hidden', overflowY: 'scroll' }}
       defaultOpenKeys={['Component']}
       defaultSelectedKeys={['Button']}
-      onSelect={({ key }) => selectComponentName(key)}
+      onSelect={({ key }) => selectComponentName(toCamelCase(key))}
     >
       {createSubMenus(data)}
     </Menu>
