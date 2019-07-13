@@ -6,6 +6,7 @@ const componentName = 'menu'
 export default {
   class: '导航',
   name: componentName,
+  name_cn: '导航菜单',
   tags: ['antd'],
   icon: require('./icons')[componentName],
   Preview({ children, ...props }) {

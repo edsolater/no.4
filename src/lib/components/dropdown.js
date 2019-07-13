@@ -6,6 +6,7 @@ const componentName = 'dropdown'
 export default {
   class: '导航',
   name: componentName,
+  name_cn: '下拉菜单',
   tags: ['antd'],
   icon: require('./icons')[componentName],
   Preview({ children, ...props }) {

@@ -6,7 +6,8 @@ import {
   Switch,
   Input,
   Slider,
-  InputNumber
+  InputNumber,
+  Radio
 } from 'antd/es'
 
 export default function Dashboard({ selectedComponent }) {
@@ -24,8 +25,116 @@ export default function Dashboard({ selectedComponent }) {
 
   // [useEffect]: 最初先加载一次默认样式
   React.useEffect(() => {
-    if(selectedComponent.preset) set(selectedComponent.preset[0])
-  }, [set, selectedComponent]) //  这两项在传入的 Props 不变的情况下永远不变
+    if (selectedComponent.preset) set(selectedComponent.preset[0])
+  }, [set, selectedComponent]) //  这两项在传入的 Props 不变的情况下永远不会改变，由此 useEffect 变成了 ComponentDidMount 模式
+
+  // 控件
+  // TODO:
+  // 想在控件中保存 state，必须得小心改变 dashboardSetting值所引起的强制刷新。
+  // 猜测不能 setProperty 每次都上传一个完整的配置对象，这是强制刷新所有控件的原因。但没必要现在修正这个问题
+  function DataWidget({ record }) {
+    const widgetValue = dashboardSetting[record.property]
+    const patterns = [
+      // boolean
+      {
+        pattern: /^boolean$/,
+        render() {
+          return (
+            <Switch
+              checked={widgetValue}
+              onChange={checked => {
+                setProperty(record.property, checked)
+              }}
+            />
+          )
+        }
+      },
+      // number
+      {
+        pattern: /^number$/,
+        render() {
+          return (
+            <>
+              <Slider
+                defaultValue={record.default}
+                value={widgetValue}
+                onChange={number => setProperty(record.property, number)}
+              />
+              <InputNumber
+                value={
+                  widgetValue ||
+                  (record.default === '-' ? undefined : record.default)
+                }
+                onChange={number => setProperty(record.property, number)}
+              />
+            </>
+          )
+        }
+      },
+      // string / any
+      {
+        pattern: /^string$|^any$/,
+        render() {
+          return (
+            <Input
+              placeholder={
+                typeof record.default === 'string' ? record.default : undefined
+              }
+              value={widgetValue}
+              onChange={e => setProperty(record.property, e.target.value)}
+            />
+          )
+        }
+      },
+      // enum的可选值（有 '' 包裹）
+      {
+        pattern: /^'\w+'$/,
+        render() {
+          return record.type.replace(/'/g, '')
+        }
+      },
+      // function
+      {
+        pattern: /^\(.*?\) => .*$/,
+        render() {
+          return <span>{record.type}</span> // 何必管这么多呢？直接原封不动返回就是
+        }
+      },
+
+      // 类型中有 “ | ” 的情况
+      {
+        pattern: /.* \| .*/,
+        render() {
+          const types = record.type.split(' | ')
+          return (
+            <Radio.Group
+              value={typeof widgetValue}
+              // onChange={1. Radio.Group 的 value 变成选中的Radio的value; 2. 强制setPropty一下 Radio 内部控件的值}
+            >
+              {types.map((type, idx) => (
+                <Radio
+                  key={idx}
+                  style={{ display: 'block' }}
+                  value={type} // 因为 Radio.Group 启用了 Value， 所以单个 Radio 是否被选中，必须由 value 判断
+                >
+                  {DataWidget({ record: { ...record, type: type } })}
+                </Radio>
+              ))}
+            </Radio.Group>
+          )
+        }
+      }
+    ]
+    let matchedObj
+    return (
+      ((matchedObj = patterns.find(({ pattern }) =>
+        pattern.test(record.type)
+      )) &&
+        matchedObj.render &&
+        matchedObj.render()) ||
+      null
+    )
+  }
 
   // 预览组件 + 设定选项 + 预设置参数
   return (
@@ -56,88 +165,7 @@ export default function Dashboard({ selectedComponent }) {
               {
                 title: '控件',
                 key: '控件',
-                render(record){
-                  if (/^boolean$/.test(record.type)) {
-                    return (
-                      <Switch
-                        defaultChecked={record.default}
-                        value={dashboardSetting[record.property]}
-                        onChange={checked =>
-                          setProperty(record.property, checked)
-                        }
-                      />
-                    )
-                  }
-                  if (/^number$/.test(record.type)) {
-                    return (
-                      <>
-                        <Slider
-                          defaultValue={record.default}
-                          value={dashboardSetting[record.property]}
-                          onChange={number =>
-                            setProperty(record.property, number)
-                          }
-                        />
-                        <InputNumber
-                          value={
-                            dashboardSetting[record.property] || record.default
-                          }
-                          onChange={number =>
-                            setProperty(record.property, number)
-                          }
-                        />
-                      </>
-                    )
-                  }
-                  if (/^string$/.test(record.type)) {
-                    return (
-                      <Input
-                        placeholder={record.default}
-                        value={dashboardSetting[record.property]}
-                        onChange={e =>
-                          setProperty(record.property, e.target.value)
-                        }
-                      />
-                    )
-                  }
-                  if (/^any$/.test(record.type)) {
-                    return (
-                      <Input
-                        placeholder={record.default}
-                        value={dashboardSetting[record.property]}
-                        onChange={e =>
-                          setProperty(record.property, e.target.value)
-                        }
-                      />
-                    )
-                  }
-                  // if (/Function.*|\(.*?\) ?=> ?.*/.test(record.type)) {
-                  //   const [, ...keyWords] = record.type.match(
-                  //     /\((?<param1>\w+)(?:, (\w*))?(?:, (\w*))?(?:, (\w*))?\) ?=> ?(\w+)/
-                  //   ) // 最多可识别4个参数
-                  //   const output = keyWords[keyWords.length - 1]
-                  //   const params = keyWords.slice(0, keyWords.length - 1)
-                  //   return (
-                  //     <>
-                  //       <p>
-                  //         传入：
-                  //         {params.map((param, idx) => (
-                  //           <span
-                  //             key={param || idx}
-                  //             style={{ marginRight: 10 }}
-                  //           >
-                  //             {param}
-                  //           </span>
-                  //         ))}
-                  //       </p>
-                  //       <p>
-                  //         返回：
-                  //         <span>{output}</span>
-                  //       </p>
-                  //     </>
-                  //   )
-                  // }
-                }
+                render: record => DataWidget({ record }) // 如果这里写成组件的形式，则会出现 <Input> 一次只能输入一个字符的情况。解耦不完全？实验下来还是强制刷新的问题
               }
             ]}
             dataSource={table.data}
@@ -148,26 +176,3 @@ export default function Dashboard({ selectedComponent }) {
     </div>
   )
 }
-
-// 显示组件的预期效果与代码示例
-// function Example({ examples }) {
-//   return (
-//     <>
-//       {examples.map(api => (
-//         <Table
-//           key={api.title}
-//           rowKey="property" //每一行数据的 rowKey 即使该对象的 property 属性
-//           title={() => <p>{api.title}</p>}
-//           columns={[
-//             { title: 'Property', dataIndex: 'property' },
-//             { title: '说明', dataIndex: 'description' },
-//             { title: '值类型', dataIndex: 'type' },
-//             { title: '默认值', dataIndex: 'default' }
-//           ]}
-//           dataSource={api.data}
-//           pagination={false}
-//         />
-//       ))}
-//     </>
-//   )
-// }

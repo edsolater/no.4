@@ -9,8 +9,14 @@ export { ReactComponent as grid } from './grid.svg'
 export { ReactComponent as layout } from './layout.svg'
 
 // 导航
-export { ReactComponent as verticalNavigator } from './vertical-navigator.svg'
 export { ReactComponent as breadcrumb } from './breadcrumb.svg'
+export { ReactComponent as affix } from './affix.svg'
+export { ReactComponent as menu } from './menu.svg'
+export { ReactComponent as dropdown } from './dropdown.svg'
+export { ReactComponent as pagination } from './pagination.svg'
+export { ReactComponent as pageHeader } from './pageHeader.svg'
+export { ReactComponent as steps } from './steps.svg'
+export { ReactComponent as verticalNavigator } from './vertical-navigator.svg' //自创组件
 
 // 控件
 export { ReactComponent as slider } from './slider.svg'

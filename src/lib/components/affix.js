@@ -6,6 +6,7 @@ const componentName = 'affix'
 export default {
   class: '导航',
   name: componentName,
+  name_cn: '固钉',
   tags: ['antd'],
   icon: require('./icons')[componentName],
   Preview({ children, ...props }) {

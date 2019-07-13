@@ -6,6 +6,7 @@ const componentName = 'grid'
 export default {
   class: '布局',
   name: componentName,
+  name_cn: '栅格',
   tags: ['antd'],
   icon: require('./icons')[componentName],
   Preview({ children, ...props }) {

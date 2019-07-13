@@ -6,6 +6,7 @@ const componentName = 'icon'
 export default {
   class: '通用',
   name: componentName,
+  name_cn: '图标',
   tags: ['antd'],
   icon: require('./icons')[componentName],
   Preview({ children, ...props }) {

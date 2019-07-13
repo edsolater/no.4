@@ -6,6 +6,7 @@ const componentName = 'layout'
 export default {
   class: '布局',
   name: componentName,
+  name_cn: '布局',
   tags: ['antd'],
   icon: require('./icons')[componentName],
   Preview({ children, ...props }) {

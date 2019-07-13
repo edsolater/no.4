@@ -6,6 +6,7 @@ const componentName = 'typography'
 export default {
   class: '通用',
   name: componentName,
+  name_cn: '排版',
   tags: ['antd'],
   icon: require('./icons')[componentName],
   Preview({ children, ...props }) {

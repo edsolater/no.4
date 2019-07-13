@@ -6,6 +6,7 @@ const componentName = 'pagination'
 export default {
   class: '导航',
   name: componentName,
+  name_cn: '分页',
   tags: ['antd'],
   icon: require('./icons')[componentName],
   Preview({ children, ...props }) {

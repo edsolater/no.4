@@ -31,7 +31,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
       通用: [],
       布局: [],
       导航: [],
-      控件: [],
+      '控件（以下未竣工）': [],
       数据展示: [],
       反馈: [],
       其他: []
@@ -41,7 +41,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
         { pattern: /general|通用/, output: '通用' },
         { pattern: /layout|布局/, output: '布局' },
         { pattern: /navigation|导航/, output: '导航' },
-        { pattern: /data entry|数据录入|控件/, output: '控件' },
+        { pattern: /data entry|数据录入|控件/, output: '控件（以下未竣工）' },
         { pattern: /data display|数据展示/, output: '数据展示' },
         { pattern: /feedback|反馈/, output: '反馈' },
         { pattern: /./, output: '其他' }
