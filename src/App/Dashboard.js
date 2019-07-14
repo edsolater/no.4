@@ -10,15 +10,6 @@ import {
   Radio
 } from 'antd/es'
 
-const toPascalCase = str => {
-  return str
-    .replace(
-      /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
-      word => word.toUpperCase() // 转换成大写形式
-    )
-    .replace(/\s+/g, '') // 去除分割符中可能有的所有空格
-}
-
 export default function Dashboard({ selectedComponent }) {
   // 组件的API文档可能是一个数组，也可能是一个对象（数组只有一项时的简写）
   // 如果是对象就包一层数组的壳
@@ -66,7 +57,9 @@ export default function Dashboard({ selectedComponent }) {
           return (
             <>
               <Slider
-                defaultValue={record.default}
+                defaultValue={
+                  typeof record.default === 'number' ? record.default : 0
+                }
                 value={recordValue}
                 onChange={number => setProperty(record.property, number)}
               />
@@ -125,11 +118,12 @@ export default function Dashboard({ selectedComponent }) {
       },
 
       // 类型中有 “ | ” 的情况
+      // 目前的切换逻辑只能用于标准值，这个bug不能现在整体还不成熟时解决
       {
         pattern: /.* \| .*/,
         render() {
           const types = record.type.split(' | ')
-          const chooseValueType = (recordValue, typeStr) => {
+          const changeValueByType = (recordValue, typeStr) => {
             if (/boolean/.test(typeStr)) return Boolean(recordValue)
             if (/number/.test(typeStr)) return Number(recordValue)
             if (/Object|^{.*}$/) return typeStr
@@ -144,7 +138,7 @@ export default function Dashboard({ selectedComponent }) {
               onChange={e => {
                 setProperty(
                   record.property,
-                  chooseValueType(recordValue, e.target.value)
+                  changeValueByType(recordValue, e.target.value)
                 ) // 例： eval(toPascalCase('boolean'))('asd') = true
               }}
             >
