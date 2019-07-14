@@ -54,7 +54,7 @@ export default {
       {
         property: 'loading',
         description: '设置按钮载入状态',
-        type: 'boolean | { delay: number }',
+        type: 'boolean | string',
         default: false
       },
       {
@@ -66,7 +66,7 @@ export default {
       {
         property: 'size',
         description: '设置按钮大小，可选值为 small large 或者不设',
-        type: 'string',
+        type: 'Enum: small | large',
         default: 'default'
       },
       {
