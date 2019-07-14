@@ -16,6 +16,12 @@ export default {
     title: componentName,
     data: [
       {
+        property: 'copyable',
+        description: '是否可拷贝，为对象时可设置复制文本以回调函数',
+        type: '{ text: string, onCopy: (e) => void }',
+        default: false
+      },
+      {
         property: 'children',
         description: '按钮中间显示的文字，可能不是文字也行',
         type: 'any',

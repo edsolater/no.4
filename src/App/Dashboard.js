@@ -36,7 +36,7 @@ export default function Dashboard({ selectedComponent }) {
   function DataWidget({ record }) {
     const recordValue = dashboardSetting[record.property]
     const patterns = [
-      // boolean
+      // boolean 控件
       {
         pattern: /^boolean$/,
         render() {
@@ -50,7 +50,7 @@ export default function Dashboard({ selectedComponent }) {
           )
         }
       },
-      // number
+      // number 控件
       {
         pattern: /^number$/,
         render() {
@@ -74,7 +74,7 @@ export default function Dashboard({ selectedComponent }) {
           )
         }
       },
-      // string / any
+      // string / any 控件
       {
         pattern: /^string$|^any$/,
         render() {
@@ -89,7 +89,7 @@ export default function Dashboard({ selectedComponent }) {
           )
         }
       },
-      // enum的可选值（有 '' 包裹）
+      // Enum （规定字符串形式的可选值）
       {
         pattern: /^Enum:.*$/,
         render() {
@@ -109,7 +109,41 @@ export default function Dashboard({ selectedComponent }) {
           )
         }
       },
-      // function
+      // Object 递归控件
+      {
+        pattern: /^{.*}$/,
+        render() {
+          const [, matched] = record.type.match(/^{(.*)}$/)
+          const entries = matched
+            .trim()
+            .split(', ')
+            .map(entry => entry.split(': '))
+          return (
+            <div>
+              {'{'}
+              <div style={{ marginLeft: 32 }}>
+                {entries.map(([property, valueType]) => (
+                  <div style={{ display: 'flex' }}>
+                    <span
+                      style={{
+                        marginRight: 20,
+                        opacity: 0.6,
+                        flex: 0,
+                        whiteSpace: 'nowrap'
+                      }}
+                    >{`${property} :   `}</span>
+                    {DataWidget({
+                      record: { ...record, type: valueType }
+                    })}
+                  </div>
+                ))}
+              </div>
+              {'}'}
+            </div>
+          )
+        }
+      },
+      // function 控件
       {
         pattern: /^\(.*?\) => .*$/,
         render() {
@@ -117,7 +151,7 @@ export default function Dashboard({ selectedComponent }) {
         }
       },
 
-      // 类型中有 “ | ” 的情况
+      // 类型中有 “ | ” 的情况  递归控件
       // 目前的切换逻辑只能用于标准值，这个bug不能现在整体还不成熟时解决
       {
         pattern: /.* \| .*/,
@@ -149,7 +183,7 @@ export default function Dashboard({ selectedComponent }) {
                   value={type} // 如果 Radio.Group 启用了 Value， 所以单个 Radio 是否被选中，必须由 value 判断 // value 设定为不同值才能使互斥的
                 >
                   {DataWidget({
-                    record: { ...record, type: type, isGrouped: true }
+                    record: { ...record, type: type }
                   })}
                 </Radio>
               ))}
