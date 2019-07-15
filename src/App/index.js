@@ -13,7 +13,7 @@ const App = () => {
     myLibrary.components[selectedComponentName]
   const [headerColor, setHeaderColor] = React.useState(
     selectedComponent.color || '#b6aee4'
-  )
+  ) // TODO: 未来需要标题栏的颜色依组件图标的颜色而改变
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
       <Header style={{ height: 40, background: headerColor }}>

@@ -186,7 +186,13 @@ export default function Dashboard({ selectedComponent }) {
       {
         pattern: /.* \| .*/,
         render() {
-          const types = record.type.split(' | ')
+          const types = record.type.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
+          function getValueTypeByRecordType(definedType){
+            if (/^{.*}$/.test(definedType)) return 'object'
+            if (/^\(.*?\) => .*$/.test(definedType)) return 'function'
+            if (/^\[.*\|.*\]$/) return 'enum'
+            return definedType
+          }
           const changeValueByType = (recordValue, typeStr) => {
             if (/boolean/.test(typeStr)) return Boolean(recordValue)
             if (/number/.test(typeStr)) return Number(recordValue)
@@ -195,11 +201,12 @@ export default function Dashboard({ selectedComponent }) {
           }
           return (
             <Radio.Group
-              // TODO: 问题的原因：value永远是 typeof 的值
+              // TODO: 问题的原因：value永远是 typeof 返回的几个值
               value={typeof recordValue}
               //value //为了与 Radio的 value匹配的，手动设定 checked 的话，就没必要了
               // onChange={1. Radio.Group 的 value 变成选中的Radio的value; 2. 强制setPropty一下 Radio 内部控件的值}
               onChange={e => {
+                console.log('e.target.value: ', e.target.value)
                 setProperty(
                   record.property,
                   changeValueByType(recordValue, e.target.value)
@@ -254,11 +261,6 @@ export default function Dashboard({ selectedComponent }) {
                     <span>{text}</span>
                   </Tooltip>
                 )
-              },
-              {
-                // 这条只是个参考，最终要去除
-                title: '值类型',
-                dataIndex: 'type'
               },
               {
                 title: '控件',
