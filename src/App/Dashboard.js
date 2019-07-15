@@ -33,9 +33,19 @@ export default function Dashboard({ selectedComponent }) {
   // TODO:
   // 想在控件中保存 state，必须得小心改变 dashboardSetting对象 所引起的强制刷新。
   // 猜测不能 setProperty 每次都上传一个完整的配置对象，这是强制刷新所有控件的原因。但没必要现在修正这个问题
-  // 内部逻辑混乱
-  function DataWidget({ record }) {
-    const recordValue = dashboardSetting[record.property]
+  // TOFIX: 内部逻辑混乱
+  function DataWidget({
+    parentSetting = dashboardSetting,
+    record,
+    setValue = value => {},
+    hasParent
+  }) {
+    if (hasParent) {
+      console.log('parentSetting: ', parentSetting)
+      console.log('record: ', record)
+    }
+    record = Object(record)
+    const recordValue = parentSetting[record.property]
     const patterns = [
       // boolean 控件
       {
@@ -45,7 +55,7 @@ export default function Dashboard({ selectedComponent }) {
             <Switch
               checked={Boolean(recordValue)}
               onChange={checked => {
-                setProperty(record.property, checked)
+                setValue(checked)
               }}
             />
           )
@@ -59,17 +69,19 @@ export default function Dashboard({ selectedComponent }) {
             <div>
               <InputNumber
                 value={
-                  recordValue ||
-                  (record.default === '-' ? undefined : record.default)
+                  (typeof recordValue === 'number' ? recordValue : undefined) ||
+                  (typeof record.default === 'number'
+                    ? record.default
+                    : undefined)
                 }
-                onChange={number => setProperty(record.property, number)}
+                onChange={number => setValue(number)}
               />
               <Slider
                 defaultValue={
                   typeof record.default === 'number' ? record.default : 0
                 }
                 value={recordValue}
-                onChange={number => setProperty(record.property, number)}
+                onChange={number => setValue(number)}
               />
             </div>
           )
@@ -85,7 +97,7 @@ export default function Dashboard({ selectedComponent }) {
                 typeof record.default === 'string' ? record.default : undefined
               }
               value={recordValue}
-              onChange={e => setProperty(record.property, e.target.value)}
+              onChange={e => setValue(e.target.value)}
             />
           )
         }
@@ -135,8 +147,8 @@ export default function Dashboard({ selectedComponent }) {
             <div>
               {'{'}
               <div style={{ marginLeft: 32 }}>
-                {entries.map(([property, valueType]) => (
-                  <div style={{ display: 'flex' }}>
+                {entries.map(([key, valueType]) => (
+                  <div style={{ display: 'flex' }} key={`${key}`}>
                     <span
                       style={{
                         marginRight: 20,
@@ -144,9 +156,14 @@ export default function Dashboard({ selectedComponent }) {
                         flex: 0,
                         whiteSpace: 'nowrap'
                       }}
-                    >{`${property} :   `}</span>
+                    >{`${key} :   `}</span>
                     {DataWidget({
-                      record: { ...record, type: valueType }
+                      record: { property: key, type: valueType },
+                      setValue: value => {
+                        setValue({ ...recordValue, [key]: value })
+                      },
+                      parentSetting: recordValue || {},
+                      hasParent: true
                     })}
                   </div>
                 ))}
@@ -196,7 +213,8 @@ export default function Dashboard({ selectedComponent }) {
                   value={type} // 如果 Radio.Group 启用了 Value， 所以单个 Radio 是否被选中，必须由 value 判断 // value 设定为不同值才能使互斥的
                 >
                   {DataWidget({
-                    record: { ...record, type: type }
+                    record: { ...record, type: type },
+                    setValue: setValue
                   })}
                 </Radio>
               ))}
@@ -245,7 +263,11 @@ export default function Dashboard({ selectedComponent }) {
               {
                 title: '控件',
                 key: '控件',
-                render: record => DataWidget({ record }) // TOFIX: 如果这里写成组件的形式，则会出现 <Input> 一次只能输入一个字符的情况。
+                render: record =>
+                  DataWidget({
+                    record,
+                    setValue: value => setProperty(record.property, value)
+                  }) // TOFIX: 如果这里写成组件的形式，则会出现 <Input> 一次只能输入一个字符的情况。
                 // 猜测1：是Table的内部机制会强制刷新所有cell，于是新组件强行覆盖了原来位置的组件。
                 // 猜测2：因为直接用props，一旦props改变会刷新组件，于是重新绘制了组件的组件而没有transition。要么把组件树维持在只更新一层（useState传入对象是危险的行为，因为任何改变都会全部刷新），要么用state规避问题，要么用useMemo阻止刷新
                 // 返回的是组件，自身却不被React记录在案（不用<>激活，React感知不到），于是就不能用state了，这是无法忍受的。

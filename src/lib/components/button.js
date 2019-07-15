@@ -60,7 +60,7 @@ export default {
       {
         property: 'loading',
         description: '设置按钮载入状态',
-        type: 'boolean | { delay: number }',
+        type: 'boolean | { delay: number, text: string }',
         default: false
       },
       {
