@@ -66,14 +66,14 @@ export default {
       {
         property: 'shape',
         description: '设置按钮形状，可选值为 circle、 round 或者不设',
-        type: 'string',
+        type: "['circle' | 'round']",
         default: '-'
       },
       {
         property: 'size',
-        description: '设置按钮大小，可选值为 small large 或者不设',
-        type: 'Enum: small | large',
-        default: 'default'
+        description: '设置按钮大小',
+        type: "['small' | 'large']",
+        default: '-'
       },
       {
         property: 'target',
@@ -85,7 +85,7 @@ export default {
         property: 'type',
         description:
           '设置按钮类型，可选值为 primary dashed danger link(3.17 中增加) 或者不设',
-        type: 'string',
+        type: "['primary' | 'dashed' | 'danger' | 'link']",
         default: '-'
       },
       {
