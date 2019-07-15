@@ -56,14 +56,7 @@ export default function Dashboard({ selectedComponent }) {
         pattern: /^number$/,
         render() {
           return (
-            <>
-              <Slider
-                defaultValue={
-                  typeof record.default === 'number' ? record.default : 0
-                }
-                value={recordValue}
-                onChange={number => setProperty(record.property, number)}
-              />
+            <div>
               <InputNumber
                 value={
                   recordValue ||
@@ -71,13 +64,20 @@ export default function Dashboard({ selectedComponent }) {
                 }
                 onChange={number => setProperty(record.property, number)}
               />
-            </>
+              <Slider
+                defaultValue={
+                  typeof record.default === 'number' ? record.default : 0
+                }
+                value={recordValue}
+                onChange={number => setProperty(record.property, number)}
+              />
+            </div>
           )
         }
       },
       // string / any 控件
       {
-        pattern: /^string$|^any$/,
+        pattern: /^string.*$|^any$/,
         render() {
           return (
             <Input
@@ -192,7 +192,7 @@ export default function Dashboard({ selectedComponent }) {
               {types.map((type, idx) => (
                 <Radio
                   key={idx}
-                  style={{ display: 'block' , marginBottom:8}}
+                  style={{ display: 'block', marginBottom: 8 }}
                   value={type} // 如果 Radio.Group 启用了 Value， 所以单个 Radio 是否被选中，必须由 value 判断 // value 设定为不同值才能使互斥的
                 >
                   {DataWidget({

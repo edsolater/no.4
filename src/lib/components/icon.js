@@ -14,7 +14,6 @@ export default {
   },
   api: [
     {
-      
       title: 'Icon',
       data: [
         {
@@ -33,8 +32,8 @@ export default {
           property: 'theme',
           description:
             '图标主题风格。可选实心、描线、双色等主题风格，适用于官方图标',
-          type: "'filled' | 'outlined' | 'twoTone'",
-          default: "'filled' | 'outlined' | 'twoTone'"
+          type: "['filled' | 'outlined' | 'twoTone']",
+          default: '-'
         },
         {
           property: 'spin',
