@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Menu } from 'antd/es'
+import { Icon, Menu, Tag, Tooltip } from 'antd/es'
 import { ReactComponent as Component } from './assets/icons/folder-react-components.svg'
 const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
@@ -67,9 +67,12 @@ export default function SideMenu({ allComponents, selectComponentName }) {
         return (
           <Menu.Item key={component.name}>
             <Icon component={component.icon} />
-            <span>{toPascalCase(component.name)}</span>
-            <span style={{ marginLeft: 20, opacity: 0.6, fontSize: '.8em' }}>
-              {component.name_cn}
+            <Tooltip title={component.name_cn}>
+              <span>{toPascalCase(component.name)}</span>
+            </Tooltip>
+            <span style={{ marginLeft: 12 }}>
+              {component.tags &&
+                component.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
             </span>
           </Menu.Item>
         )
