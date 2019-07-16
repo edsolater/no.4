@@ -1,29 +1,42 @@
 import React from 'react'
-import { Icon } from 'antd/es'
+import { Layout, Icon } from 'antd/es'
+
+const groupColors = {
+  通用: '#8567ca',
+  布局: 'gray',
+  导航: '#185a65'
+}
 
 const TopIndicator = ({ selectedComponent }) => {
   return (
-    <div
+    <Layout.Header
       style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        height: 24,
+        background: groupColors[selectedComponent.class] || 'lightgray'
       }}
     >
       <div
         style={{
+          width: '100%',
+          height: '100%',
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
-        <Icon component={selectedComponent.icon} />
-        <span style={{ marginLeft: 16, color: 'white' }}>
-          {selectedComponent.name || selectedComponent.name_en}
-        </span>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          <Icon component={selectedComponent.icon} />
+          <span style={{ marginLeft: 16, color: 'white' }}>
+            {selectedComponent.name || selectedComponent.name_en}
+          </span>
+        </div>
       </div>
-    </div>
+    </Layout.Header>
   )
 }
 

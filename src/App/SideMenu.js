@@ -73,7 +73,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
           <Menu.Item key={component.name}>
             <Icon
               component={component.icon}
-              style={{ color: component.color || 'currentColor' }}
+              style={{ color: groupColors[component.class] || 'gray' }}
             />
             <Tooltip placement="right" title={component.name_cn}>
               <span>{toPascalCase(component.name)}</span>
@@ -86,11 +86,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
         )
       }
       return (
-        <ItemGroup
-          key={groupName}
-          title={<span>{groupName}</span>}
-          style={{ color: groupColors[groupName] || 'lightgray' }}
-        >
+        <ItemGroup key={groupName} title={<span>{groupName}</span>}>
           {components.map(item => createMenuItem(item))}
         </ItemGroup>
       )
