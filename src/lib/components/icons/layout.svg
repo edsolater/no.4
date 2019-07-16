@@ -1,5 +1,5 @@
 <svg id="Group_49" data-name="Group 49" xmlns="http://www.w3.org/2000/svg" width="20.406" height="18" viewBox="0 0 20.406 18">
-  <rect id="Rectangle_89" data-name="Rectangle 89" width="20.406" height="3" fill="#666"/>
-  <rect id="Rectangle_90" data-name="Rectangle 90" width="5.442" height="15" transform="translate(0 3)" fill="#666" opacity="0.5"/>
-  <rect id="Rectangle_91" data-name="Rectangle 91" width="14.965" height="15" transform="translate(5.442 3)" fill="#666" opacity="0.1"/>
+  <rect id="Rectangle_89" data-name="Rectangle 89" width="20.406" height="3" />
+  <rect id="Rectangle_90" data-name="Rectangle 90" width="5.442" height="15" transform="translate(0 3)"  opacity="0.5"/>
+  <rect id="Rectangle_91" data-name="Rectangle 91" width="14.965" height="15" transform="translate(5.442 3)"  opacity="0.1"/>
 </svg>
