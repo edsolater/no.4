@@ -54,6 +54,11 @@ export default function SideMenu({ allComponents, selectComponentName }) {
     return groupOrder
   }
 
+  const groupColors = {
+    通用: '#8567ca',
+    布局: 'gray',
+    导航: '#185a65'
+  }
   // 数据：menu的组织结构树
   const data = {
     Component: classifyComponent()
@@ -66,8 +71,11 @@ export default function SideMenu({ allComponents, selectComponentName }) {
       const createMenuItem = component => {
         return (
           <Menu.Item key={component.name}>
-            <Icon component={component.icon} />
-            <Tooltip placement='right' title={component.name_cn}>
+            <Icon
+              component={component.icon}
+              style={{ color: component.color || 'currentColor' }}
+            />
+            <Tooltip placement="right" title={component.name_cn}>
               <span>{toPascalCase(component.name)}</span>
             </Tooltip>
             <span style={{ marginLeft: 12 }}>
@@ -78,7 +86,11 @@ export default function SideMenu({ allComponents, selectComponentName }) {
         )
       }
       return (
-        <ItemGroup key={groupName} title={<span>{groupName}</span>}>
+        <ItemGroup
+          key={groupName}
+          title={<span>{groupName}</span>}
+          style={{ color: groupColors[groupName] || 'lightgray' }}
+        >
           {components.map(item => createMenuItem(item))}
         </ItemGroup>
       )
