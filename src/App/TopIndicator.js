@@ -1,18 +1,14 @@
 import React from 'react'
 import { Layout, Icon } from 'antd/es'
+import {color} from './settings/style'
 
-const groupColors = {
-  通用: '#8567ca',
-  布局: 'gray',
-  导航: '#185a65'
-}
 
 const TopIndicator = ({ selectedComponent }) => {
   return (
     <Layout.Header
       style={{
         height: 24,
-        background: groupColors[selectedComponent.class] || 'lightgray'
+        background: color.componentColorInGroup[selectedComponent.class] || 'lightgray'
       }}
     >
       <div

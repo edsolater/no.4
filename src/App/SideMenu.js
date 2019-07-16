@@ -1,6 +1,7 @@
 import React from 'react'
 import { Icon, Menu, Tag, Tooltip } from 'antd/es'
 import { ReactComponent as Component } from './assets/icons/folder-react-components.svg'
+import {color} from './settings/style'
 const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
@@ -54,11 +55,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
     return groupOrder
   }
 
-  const groupColors = {
-    通用: '#8567ca',
-    布局: 'gray',
-    导航: '#185a65'
-  }
+
   // 数据：menu的组织结构树
   const data = {
     Component: classifyComponent()
@@ -73,7 +70,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
           <Menu.Item key={component.name}>
             <Icon
               component={component.icon}
-              style={{ color: groupColors[component.class] || 'gray' }}
+              style={{ color: color.componentColorInGroup[component.class] || 'gray' }}
             />
             <Tooltip placement="right" title={component.name_cn}>
               <span>{toPascalCase(component.name)}</span>
