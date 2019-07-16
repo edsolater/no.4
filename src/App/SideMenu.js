@@ -67,7 +67,7 @@ export default function SideMenu({ allComponents, selectComponentName }) {
         return (
           <Menu.Item key={component.name}>
             <Icon component={component.icon} />
-            <Tooltip title={component.name_cn}>
+            <Tooltip placement='right' title={component.name_cn}>
               <span>{toPascalCase(component.name)}</span>
             </Tooltip>
             <span style={{ marginLeft: 12 }}>
