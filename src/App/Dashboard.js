@@ -44,14 +44,6 @@ export default function Dashboard({ selectedComponent }) {
                   activeValue: dashboardSetting[propInfo.name],
                   setValue: value => setProperty(propInfo.name, value)
                 })}
-                {/* {
-                  <Switch
-                    checked={dashboardSetting[propInfo.name]}
-                    onChange={checked => {
-                      setProperty(propInfo.name, checked)
-                    }}
-                  />
-                } */}
               </div>
             </List.Item>
           ))}
@@ -189,45 +181,44 @@ const getPropWidget = ({ propInfo, activeValue, setValue }) => {
         )
       }
     },
-    // // Object 递归控件
-    // {
-    //   pattern: /^{.*}$/,
-    //   render() {
-    //     const [, matched] = propInfo.type.match(/^{(.*)}$/)
-    //     const entries = matched
-    //       .trim()
-    //       .split(', ')
-    //       .map(entry => entry.split(': '))
-    //     return (
-    //       <div>
-    //         {'{'}
-    //         <div style={{ marginLeft: 32 }}>
-    //           {entries.map(([key, valueType]) => (
-    //             <div style={{ display: 'flex' }} key={`${key}`}>
-    //               <span
-    //                 style={{
-    //                   marginRight: 20,
-    //                   opacity: 0.6,
-    //                   flex: 0,
-    //                   whiteSpace: 'nowrap'
-    //                 }}
-    //               >{`${key} :   `}</span>
-    //               {DataWidget({
-    //                 propInfo: { property: key, type: valueType },
-    //                 setValue: value => {
-    //                   setValue({ ...activeValue, [key]: value })
-    //                 },
-    //                 parentSetting: activeValue || {},
-    //                 hasParent: true
-    //               })}
-    //             </div>
-    //           ))}
-    //         </div>
-    //         {'}'}
-    //       </div>
-    //     )
-    //   }
-    // },
+    // Object 递归控件
+    {
+      pattern: /^{.*}$/,
+      render() {
+        const [, matched] = propInfo.type.match(/^{(.*)}$/)
+        const entries = matched
+          .trim()
+          .split(', ')
+          .map(entry => entry.split(': '))
+        return (
+          <div>
+            {'{'}
+            <div style={{ marginLeft: 32 }}>
+              {entries.map(([key, valueType]) => (
+                <div style={{ display: 'flex' }} key={`${key}`}>
+                  <span
+                    style={{
+                      marginRight: 20,
+                      opacity: 0.6,
+                      flex: 0,
+                      whiteSpace: 'nowrap'
+                    }}
+                  >{`${key} :   `}</span>
+                  {getPropWidget({
+                    propInfo: { property: key, type: valueType },
+                    setValue: value => {
+                      setValue({ ...activeValue, [key]: value })
+                    },
+                    activeValue: activeValue || {},
+                  })}
+                </div>
+              ))}
+            </div>
+            {'}'}
+          </div>
+        )
+      }
+    },
     // function 控件
     {
       pattern: /^\(.*?\) => .*$/,
@@ -275,7 +266,7 @@ const getPropWidget = ({ propInfo, activeValue, setValue }) => {
     //   }
     // }
 
-    // 万能匹配着，为 default 而生
+    // default 的情况
     {
       pattern: /.*/,
       render() {
@@ -283,9 +274,7 @@ const getPropWidget = ({ propInfo, activeValue, setValue }) => {
       }
     }
   ]
-  const Widget = patterns.find(({ pattern }) => pattern.test(propInfo.type))
-    .render
-  return <Widget />
+  return patterns.find(({ pattern }) => pattern.test(propInfo.type)).render()
 }
 // 控件
 // TODO:
