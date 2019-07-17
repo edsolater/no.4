@@ -10,6 +10,7 @@ import {
   Radio,
   Button
 } from 'antd/es'
+import { List } from './components/List'
 
 export default function Dashboard({ selectedComponent }) {
   // 组件的API文档可能是一个数组，也可能是一个对象（数组只有一项时的简写）
@@ -37,13 +38,8 @@ export default function Dashboard({ selectedComponent }) {
   function DataWidget({
     parentSetting = dashboardSetting,
     record,
-    setValue = value => {},
-    hasParent
+    setValue = value => {}
   }) {
-    if (hasParent) {
-      console.log('parentSetting: ', parentSetting)
-      console.log('record: ', record)
-    }
     record = Object(record)
     const recordValue = parentSetting[record.property]
     const patterns = [
@@ -187,7 +183,7 @@ export default function Dashboard({ selectedComponent }) {
         pattern: /.* \| .*/,
         render() {
           const types = record.type.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
-          function getValueTypeByRecordType(definedType){
+          function getValueTypeByRecordType(definedType) {
             if (/^{.*}$/.test(definedType)) return 'object'
             if (/^\(.*?\) => .*$/.test(definedType)) return 'function'
             if (/^\[.*\|.*\]$/) return 'enum'
@@ -206,7 +202,6 @@ export default function Dashboard({ selectedComponent }) {
               //value //为了与 Radio的 value匹配的，手动设定 checked 的话，就没必要了
               // onChange={1. Radio.Group 的 value 变成选中的Radio的value; 2. 强制setPropty一下 Radio 内部控件的值}
               onChange={e => {
-                console.log('e.target.value: ', e.target.value)
                 setProperty(
                   record.property,
                   changeValueByType(recordValue, e.target.value)
@@ -240,10 +235,14 @@ export default function Dashboard({ selectedComponent }) {
       null
     )
   }
-
   // 预览组件 + 设定选项 + 预设置参数
   return (
     <div style={{ padding: 10 }}>
+      <List>
+        <List.Item>hello</List.Item>
+        <List.Item>hello</List.Item>
+        <div>hello</div>
+      </List>
       <Card title={selectedComponent.name}>
         <selectedComponent.Preview {...dashboardSetting} />
         {api.map(table => (
