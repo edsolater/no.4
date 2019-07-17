@@ -229,14 +229,17 @@ export default function Dashboard({ selectedComponent }) {
       null
     )
   }
-  // 预览组件 + 设定选项 + 预设置参数
+  //组件的UI设置
   return (
     <div style={{ padding: 10 }}>
-      <List>
-        <List.Item>hello</List.Item>
-        <List.Item>hello</List.Item>
-        <div>hello</div>
-      </List>
+      {api.map((table, idx) => (
+        <List key={idx}>
+          <List.Title>{table.title}</List.Title>
+          {table.data.map(({ property }, idx) => (
+            <List.Item key={idx}>{property}</List.Item>
+          ))}
+        </List>
+      ))}
       <Card title={selectedComponent.name}>
         <selectedComponent.Preview {...dashboardSetting} />
         {api.map(table => (
