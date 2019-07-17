@@ -1,5 +1,4 @@
 import React from 'react'
-import { Affix } from 'antd/es'
 
 const componentName = 'affix'
 

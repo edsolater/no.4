@@ -1,5 +1,4 @@
 import React from 'react'
-import { Pagination } from 'antd/es'
 
 const componentName = 'pagination'
 

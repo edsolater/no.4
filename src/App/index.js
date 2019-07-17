@@ -5,21 +5,17 @@ import { Layout } from 'antd/es'
 import TopIndicator from './TopIndicator'
 import SideMenu from './SideMenu'
 import Dashboard from './Dashboard'
-const { Header, Sider, Content } = Layout
+const { Sider, Content } = Layout
 
 const App = () => {
   const [selectedComponentName, selectComponentName] = React.useState('button')
   const selectedComponent =
     myLibrary.components[selectedComponentName]
-  const [headerColor, setHeaderColor] = React.useState(
-    selectedComponent.color || '#b6aee4'
-  ) // TODO: 未来需要标题栏的颜色依组件图标的颜色而改变
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
       
         <TopIndicator
           selectedComponent={selectedComponent}
-          setHeaderColor={setHeaderColor}
         />
       <Layout>
         <Sider width={300} theme="light">

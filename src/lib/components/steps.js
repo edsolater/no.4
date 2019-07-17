@@ -1,5 +1,4 @@
 import React from 'react'
-import { Steps } from 'antd/es'
 
 const componentName = 'steps'
 

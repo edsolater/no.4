@@ -183,12 +183,6 @@ export default function Dashboard({ selectedComponent }) {
         pattern: /.* \| .*/,
         render() {
           const types = record.type.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
-          function getValueTypeByRecordType(definedType) {
-            if (/^{.*}$/.test(definedType)) return 'object'
-            if (/^\(.*?\) => .*$/.test(definedType)) return 'function'
-            if (/^\[.*\|.*\]$/) return 'enum'
-            return definedType
-          }
           const changeValueByType = (recordValue, typeStr) => {
             if (/boolean/.test(typeStr)) return Boolean(recordValue)
             if (/number/.test(typeStr)) return Number(recordValue)

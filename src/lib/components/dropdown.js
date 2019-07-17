@@ -1,5 +1,4 @@
 import React from 'react'
-import { Dropdown } from 'antd/es'
 
 const componentName = 'dropdown'
 
