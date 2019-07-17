@@ -17,7 +17,8 @@ const toCamelCase = str => {
 
 //转换一切字符串分割形式为 PascalCase
 const toPascalCase = str => {
-  return str
+  console.log('str: ', str)
+  return str&&str
     .replace(
       /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
       word => word.toUpperCase() // 转换成大写形式

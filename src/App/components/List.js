@@ -26,9 +26,7 @@ export const List = ({ children = [], title }) => {
 }
 
 //附属组件（可能只有配置而不返回 UI）
-List.Item = props => {
-  return <li {...props} />
-}
+List.Item = props => <li {...props} />
 List.Item.displayName = 'Item'
 
 //附属组件
