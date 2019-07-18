@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icon, Menu, Tag, Tooltip } from 'antd/es'
 import { ReactComponent as Component } from './assets/icons/folder-react-components.svg'
-import {color} from './settings/style'
+import { color } from './settings/style'
 const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
@@ -17,13 +17,15 @@ const toCamelCase = str => {
 
 //转换一切字符串分割形式为 PascalCase
 const toPascalCase = str => {
-  console.log('str: ', str)
-  return str&&str
-    .replace(
-      /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
-      word => word.toUpperCase() // 转换成大写形式
-    )
-    .replace(/\s+/g, '') // 去除分割符中可能有的所有空格
+  return (
+    str &&
+    str
+      .replace(
+        /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
+        word => word.toUpperCase() // 转换成大写形式
+      )
+      .replace(/\s+/g, '')
+  ) // 去除分割符中可能有的所有空格
 }
 
 export default function SideMenu({ allComponents, selectComponentName }) {
@@ -56,7 +58,6 @@ export default function SideMenu({ allComponents, selectComponentName }) {
     return groupOrder
   }
 
-
   // 数据：menu的组织结构树
   const data = {
     Component: classifyComponent()
@@ -71,7 +72,9 @@ export default function SideMenu({ allComponents, selectComponentName }) {
           <Menu.Item key={component.name}>
             <Icon
               component={component.icon}
-              style={{ color: color.componentColorInGroup[component.class] || 'gray' }}
+              style={{
+                color: color.componentColorInGroup[component.class] || 'gray'
+              }}
             />
             <Tooltip placement="right" title={component.name_cn}>
               <span>{toPascalCase(component.name)}</span>

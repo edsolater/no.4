@@ -4,19 +4,15 @@ import { Layout } from 'antd/es'
 // 子组件
 import TopIndicator from './TopIndicator'
 import SideMenu from './SideMenu'
-import Dashboard from './Dashboard'
+import { Dashboard } from './Dashboard'
 const { Sider, Content } = Layout
 
 const App = () => {
   const [selectedComponentName, selectComponentName] = React.useState('button')
-  const selectedComponent =
-    myLibrary.components[selectedComponentName]
+  const selectedComponent = myLibrary.components[selectedComponentName]
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
-      
-        <TopIndicator
-          selectedComponent={selectedComponent}
-        />
+      <TopIndicator selectedComponent={selectedComponent} />
       <Layout>
         <Sider width={300} theme="light">
           <SideMenu

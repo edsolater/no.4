@@ -12,7 +12,7 @@ import {
 } from 'antd/es'
 import { List } from './components/List'
 
-export default function Dashboard({ selectedComponent }) {
+export const Dashboard = ({ selectedComponent }) => {
   // 组件的API文档可能是一个对象，也可能是一个数组（组件没有附属子组件时的简写）
   // 格式化
   const reactProps = Array.isArray(selectedComponent.reactProps)
@@ -36,66 +36,37 @@ export default function Dashboard({ selectedComponent }) {
       {Object.entries(reactProps).map(([name, properties]) => (
         <List key={name} title={name}>
           {properties.map(propInfo => (
-            <List.Item key={propInfo.name} style={{ display: 'flex' }}>
-              <div>{propInfo.name}</div>
+            <List.Item
+              key={propInfo.name}
+              style={{ display: 'flex', marginBottom: 16 }}
+            >
+              <div style={{ width: 180 }}>{propInfo.name}</div>
               <div>
-                {getPropWidget({
-                  propInfo: propInfo, //当前 prop 的情报体
-                  activeValue: dashboardSetting[propInfo.name],
-                  setValue: value => setProperty(propInfo.name, value)
-                })}
+                <PropWidget
+                  propInfo={propInfo} //当前 prop 的情报体
+                  activeValue={dashboardSetting[propInfo.name]}
+                  setValue={value => setProperty(propInfo.name, value)}
+                />
               </div>
             </List.Item>
           ))}
         </List>
       ))}
-      {/* <Card title={selectedComponent.name}>
-        <selectedComponent.Preview {...dashboardSetting} />
-        {api.map(table => (
-          // Dashboard中的控件们
-          <Table
-            key={table.title || 'no title'}
-            rowKey="property" // 使用每行(record)的 property 属性
-            title={() => <p>{table.title}</p>}
-            columns={[
-              {
-                title: 'Property',
-                dataIndex: 'property',
-                render: (text, record) => (
-                  <Tooltip title={record.description}>
-                    <span>{text}</span>
-                  </Tooltip>
-                )
-              },
-              {
-                title: '控件',
-                key: '控件',
-                render: record =>
-                  DataWidget({
-                    record,
-                    setValue: value => setProperty(record.propName, value)
-                  }) // TOFIX: 如果这里写成组件的形式，则会出现 <Input> 一次只能输入一个字符的情况。
-                // 猜测1：是Table的内部机制会强制刷新所有cell，于是新组件强行覆盖了原来位置的组件。
-                // 猜测2：因为直接用props，一旦props改变会刷新组件，于是重新绘制了组件的组件而没有transition。要么把组件树维持在只更新一层（useState传入对象是危险的行为，因为任何改变都会全部刷新），要么用state规避问题，要么用useMemo阻止刷新
-                // 返回的是组件，自身却不被React记录在案（不用<>激活，React感知不到），于是就不能用state了，这是无法忍受的。
-                // Table机制不适合 Dashboard。因此必须要实现自己的 dashboard 组件。现在暂且忍耐一下
-              }
-            ]}
-            dataSource={table.data}
-            pagination={false}
-          />
-        ))}
-      </Card> */}
     </div>
   )
 }
 
-const getPropWidget = ({ propInfo, activeValue, setValue }) => {
-  const patterns = [
-    // boolean 控件
-    {
+const PropWidget = ({ propInfo, activeValue, setValue }) => {
+  const [selectedRadioIndex, changeRadioIndex] = React.useState(undefined)
+  const [activeRadioValue, setRadioValue] = React.useState({})
+  function setValueByRadioIndex(value, index) {
+    setRadioValue({ ...activeRadioValue, [index]: value })
+  }
+
+  const widget = {
+    boolean: {
       pattern: /^boolean$/,
-      render() {
+      widget() {
         return (
           <Switch
             checked={Boolean(activeValue)}
@@ -106,10 +77,9 @@ const getPropWidget = ({ propInfo, activeValue, setValue }) => {
         )
       }
     },
-    // number 控件
-    {
+    number: {
       pattern: /^number$/,
-      render() {
+      widget() {
         return (
           <div>
             <InputNumber
@@ -122,20 +92,16 @@ const getPropWidget = ({ propInfo, activeValue, setValue }) => {
               onChange={number => setValue(number)}
             />
             <Slider
-              defaultValue={
-                typeof propInfo.default === 'number' ? propInfo.default : 0
-              }
-              value={activeValue}
+              value={typeof activeValue === 'number' ? activeValue : 0}
               onChange={number => setValue(number)}
             />
           </div>
         )
       }
     },
-    // string / any 控件
-    {
+    string: {
       pattern: /^string.*$|^any$/,
-      render() {
+      widget() {
         return (
           <Input
             placeholder={
@@ -149,10 +115,9 @@ const getPropWidget = ({ propInfo, activeValue, setValue }) => {
         )
       }
     },
-    // Enum （规定字符串形式的可选值）
-    {
+    enum: {
       pattern: /^\[.*\|.*\]$/,
-      render() {
+      widget() {
         const [, matched] = propInfo.type.match(/^\[(.*)\]$/)
         const enumStrings = matched
           .trim()
@@ -181,10 +146,9 @@ const getPropWidget = ({ propInfo, activeValue, setValue }) => {
         )
       }
     },
-    // Object 递归控件
-    {
+    object: {
       pattern: /^{.*}$/,
-      render() {
+      widget() {
         const [, matched] = propInfo.type.match(/^{(.*)}$/)
         const entries = matched
           .trim()
@@ -204,13 +168,13 @@ const getPropWidget = ({ propInfo, activeValue, setValue }) => {
                       whiteSpace: 'nowrap'
                     }}
                   >{`${key} :   `}</span>
-                  {getPropWidget({
-                    propInfo: { property: key, type: valueType },
-                    setValue: value => {
+                  <PropWidget
+                    propInfo={{ property: key, type: valueType }}
+                    setValue={value => {
                       setValue({ ...activeValue, [key]: value })
-                    },
-                    activeValue: activeValue || {},
-                  })}
+                    }}
+                    activeValue={activeValue || {}}
+                  />
                 </div>
               ))}
             </div>
@@ -219,250 +183,56 @@ const getPropWidget = ({ propInfo, activeValue, setValue }) => {
         )
       }
     },
-    // function 控件
-    {
+    function: {
       pattern: /^\(.*?\) => .*$/,
-      render() {
+      widget() {
         return <span>{propInfo.type}</span> // 何必管这么多呢？直接原封不动返回就是
       }
     },
-
-    // 类型中有 “ | ” 的情况  递归控件
-    // 目前的切换逻辑只能用于标准值，这个bug不能现在整体还不成熟时解决
-    // {
-    //   pattern: /.* \| .*/,
-    //   render() {
-    //     const types = record.type.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
-    //     const changeValueByType = (activeValue, typeStr) => {
-    //       if (/boolean/.test(typeStr)) return Boolean(activeValue)
-    //       if (/number/.test(typeStr)) return Number(activeValue)
-    //       if (/Object|^{.*}$/) return typeStr
-    //       return String(typeStr.replace(/'/g, '')) // 如果是类似 'fill' 'outline' 这种形式一概算作string，并且把两头的 '' 去除
-    //     }
-    //     return (
-    //       <Radio.Group
-    //         // TODO: 问题的原因：value永远是 typeof 返回的几个值
-    //         value={typeof activeValue}
-    //         //value //为了与 Radio的 value匹配的，手动设定 checked 的话，就没必要了
-    //         // onChange={1. Radio.Group 的 value 变成选中的Radio的value; 2. 强制setPropty一下 Radio 内部控件的值}
-    //         onChange={e => {
-    //           setValue(changeValueByType(activeValue, e.target.value)) // 例： eval(toPascalCase('boolean'))('asd') = true
-    //         }}
-    //       >
-    //         {types.map((type, idx) => (
-    //           <Radio
-    //             key={idx}
-    //             style={{ display: 'block', marginBottom: 8 }}
-    //             value={type} // 如果 Radio.Group 启用了 Value， 所以单个 Radio 是否被选中，必须由 value 判断 // value 设定为不同值才能使互斥的
-    //           >
-    //             {DataWidget({
-    //               record: { ...record, type: type },
-    //               setValue: setValue
-    //             })}
-    //           </Radio>
-    //         ))}
-    //       </Radio.Group>
-    //     )
-    //   }
-    // }
-
-    // default 的情况
-    {
-      pattern: /.*/,
-      render() {
-        return null
-      }
-    }
-  ]
-  return patterns.find(({ pattern }) => pattern.test(propInfo.type)).render()
-}
-// 控件
-// TODO:
-// 想在控件中保存 state，必须得小心改变 dashboardSetting对象 所引起的强制刷新。
-// 猜测不能 setProperty 每次都上传一个完整的配置对象，这是强制刷新所有控件的原因。但没必要现在修正这个问题
-// TOFIX: 内部逻辑混乱
-const DataWidget = ({ parentSetting, record, setValue = value => {} }) => {
-  record = Object(record)
-  const recordValue = parentSetting[record.propName]
-  const patterns = [
-    // boolean 控件
-    {
-      pattern: /^boolean$/,
-      render() {
-        return (
-          <Switch
-            checked={Boolean(recordValue)}
-            onChange={checked => {
-              setValue(checked)
-            }}
-          />
-        )
-      }
-    },
-    // number 控件
-    {
-      pattern: /^number$/,
-      render() {
-        return (
-          <div>
-            <InputNumber
-              value={
-                (typeof recordValue === 'number' ? recordValue : undefined) ||
-                (typeof record.default === 'number'
-                  ? record.default
-                  : undefined)
-              }
-              onChange={number => setValue(number)}
-            />
-            <Slider
-              defaultValue={
-                typeof record.default === 'number' ? record.default : 0
-              }
-              value={recordValue}
-              onChange={number => setValue(number)}
-            />
-          </div>
-        )
-      }
-    },
-    // string / any 控件
-    {
-      pattern: /^string.*$|^any$/,
-      render() {
-        return (
-          <Input
-            placeholder={
-              typeof record.default === 'string' ? record.default : undefined
-            }
-            value={recordValue}
-            onChange={e => setValue(e.target.value)}
-          />
-        )
-      }
-    },
-    // Enum （规定字符串形式的可选值）
-    {
-      pattern: /^\[.*\|.*\]$/,
-      render() {
-        const [, matched] = record.type.match(/^\[(.*)\]$/)
-        const enumStrings = matched
-          .trim()
-          .split('|')
-          .map(str => str.trim().replace(/'|"/g, ''))
-        return (
-          <div>
-            <Button
-              style={{ marginRight: 20 }}
-              onClick={() => setValue(undefined)}
-            >
-              unset
-            </Button>
-            <Radio.Group
-              buttonStyle="solid"
-              onChange={e => setValue(e.target.value)}
-              value={recordValue || record.default}
-            >
-              {enumStrings.map(str => (
-                <Radio.Button key={str} value={str}>
-                  {str}
-                </Radio.Button>
-              ))}
-            </Radio.Group>
-          </div>
-        )
-      }
-    },
-    // Object 递归控件
-    {
-      pattern: /^{.*}$/,
-      render() {
-        const [, matched] = record.type.match(/^{(.*)}$/)
-        const entries = matched
-          .trim()
-          .split(', ')
-          .map(entry => entry.split(': '))
-        return (
-          <div>
-            {'{'}
-            <div style={{ marginLeft: 32 }}>
-              {entries.map(([key, valueType]) => (
-                <div style={{ display: 'flex' }} key={`${key}`}>
-                  <span
-                    style={{
-                      marginRight: 20,
-                      opacity: 0.6,
-                      flex: 0,
-                      whiteSpace: 'nowrap'
-                    }}
-                  >{`${key} :   `}</span>
-                  {DataWidget({
-                    record: { property: key, type: valueType },
-                    setValue: value => {
-                      setValue({ ...recordValue, [key]: value })
-                    },
-                    parentSetting: recordValue || {},
-                    hasParent: true
-                  })}
-                </div>
-              ))}
-            </div>
-            {'}'}
-          </div>
-        )
-      }
-    },
-    // function 控件
-    {
-      pattern: /^\(.*?\) => .*$/,
-      render() {
-        return <span>{record.type}</span> // 何必管这么多呢？直接原封不动返回就是
-      }
-    },
-
-    // 类型中有 “ | ” 的情况  递归控件
-    // 目前的切换逻辑只能用于标准值，这个bug不能现在整体还不成熟时解决
-    {
+    radioGroup: {
       pattern: /.* \| .*/,
-      render() {
-        const types = record.type.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
-        const changeValueByType = (recordValue, typeStr) => {
-          if (/boolean/.test(typeStr)) return Boolean(recordValue)
-          if (/number/.test(typeStr)) return Number(recordValue)
+      widget() {
+        const types = propInfo.type.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
+        const changeValueByType = (activeValue, typeStr) => {
+          if (/boolean/.test(typeStr)) return Boolean(activeValue)
+          if (/number/.test(typeStr)) return Number(activeValue)
           if (/Object|^{.*}$/) return typeStr
           return String(typeStr.replace(/'/g, '')) // 如果是类似 'fill' 'outline' 这种形式一概算作string，并且把两头的 '' 去除
         }
         return (
           <Radio.Group
-            // TODO: 问题的原因：value永远是 typeof 返回的几个值
-            value={typeof recordValue}
+            value={selectedRadioIndex}
             //value //为了与 Radio的 value匹配的，手动设定 checked 的话，就没必要了
             // onChange={1. Radio.Group 的 value 变成选中的Radio的value; 2. 强制setPropty一下 Radio 内部控件的值}
             onChange={e => {
-              setValue(changeValueByType(recordValue, e.target.value)) // 例： eval(toPascalCase('boolean'))('asd') = true
+              const targetIndex = e.target.value
+              changeRadioIndex(targetIndex)
+              setValue(changeValueByType(activeValue, targetIndex)) // 例： eval(toPascalCase('boolean'))('asd') = true
             }}
           >
             {types.map((type, idx) => (
               <Radio
                 key={idx}
+                value={idx} // 如果 Radio.Group 启用了 Value， 所以单个 Radio 是否被选中，必须由 value 判断 // value 设定为不同值才能使互斥的
                 style={{ display: 'block', marginBottom: 8 }}
-                value={type} // 如果 Radio.Group 启用了 Value， 所以单个 Radio 是否被选中，必须由 value 判断 // value 设定为不同值才能使互斥的
               >
-                {DataWidget({
-                  record: { ...record, type: type },
-                  setValue: setValue
-                })}
+                <PropWidget
+                  activeValue={activeRadioValue[idx]}
+                  propInfo={{ ...propInfo, type: type }}
+                  setValue={value => setValueByRadioIndex(value, idx)}
+                />
               </Radio>
             ))}
           </Radio.Group>
         )
       }
+    },
+    default: {
+      pattern: /.*/,
+      widget() {
+        return null
+      }
     }
-  ]
-  let matchedObj
-  return (
-    ((matchedObj = patterns.find(({ pattern }) => pattern.test(record.type))) &&
-      matchedObj.render &&
-      matchedObj.render()) ||
-    null
-  )
+  }
+  return Object.values(widget).find(({ pattern }) => pattern.test(propInfo.type)).widget()
 }
