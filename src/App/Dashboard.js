@@ -40,7 +40,9 @@ export const Dashboard = ({ selectedComponent }) => {
               key={propInfo.name}
               style={{ display: 'flex', marginBottom: 16 }}
             >
-              <div style={{ width: 180 }}>{propInfo.name}</div>
+              <div style={{ width: 180 }}>
+                <Tooltip title={propInfo.description}>{propInfo.name}</Tooltip>
+              </div>
               <div>
                 <PropWidget
                   propInfo={propInfo} //当前 prop 的情报体
@@ -234,5 +236,7 @@ const PropWidget = ({ propInfo, activeValue, setValue }) => {
       }
     }
   }
-  return Object.values(widget).find(({ pattern }) => pattern.test(propInfo.type)).widget()
+  return Object.values(widget)
+    .find(({ pattern }) => pattern.test(propInfo.type))
+    .widget()
 }
