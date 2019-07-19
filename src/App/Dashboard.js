@@ -68,7 +68,6 @@ const Widget = ({
   availableType,
   defaultValue,
 
-  fromObj,
   onChangeValue
 }) => {
   function getWidgetTypeByOriginalType(originalType) {
@@ -101,7 +100,8 @@ const Widget = ({
     return typeObj
   }
   const defaultWidgetType = getWidgetTypeByValue(defaultValue)
-  //适用于RadioGroup组
+
+  //RadioGroup控件们的状态
   const [activeRadioType, changeSelectedRadioType] = React.useState(
     getWidgetTypeByValue(activeValue)
   ) // 根据默认值类型自动判断默认选择项
@@ -112,7 +112,7 @@ const Widget = ({
     onChangeValue(value)
   }
 
-  //适用于number组，联动 Slider 与 InputNumber
+  //number控件的状态
   const [sliderNumber, setSliderNumber] = React.useState(defaultValue || 0)
   function handleInputNumber(inputNumber) {
     setSliderNumber(inputNumber)
@@ -155,7 +155,7 @@ const Widget = ({
         .split('|')
         .map(str => str.trim().replace(/'|"/g, ''))
       return (
-        <div>
+        <>
           <Button
             style={{ marginRight: 20 }}
             onClick={() => onChangeValue(undefined)}
@@ -173,7 +173,7 @@ const Widget = ({
               </Radio.Button>
             ))}
           </Radio.Group>
-        </div>
+        </>
       )
     },
     object() {
@@ -206,7 +206,6 @@ const Widget = ({
                     onChangeValue={value => {
                       onChangeValue({ ...activeValue, [key]: value })
                     }}
-                    fromObj
                   />
                 </div>
               )
@@ -220,7 +219,8 @@ const Widget = ({
       return <span>{availableType}</span> // 何必管这么多呢？直接原封不动返回就是
     },
     radioGroup() {
-      const originalTypes = availableType.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
+      const originalTypes = availableType.split(/ \| (?!'|")/) //前置判断报错，是babel的关系？
+      console.log('originalTypes: ', originalTypes)
       return (
         <Radio.Group
           value={activeRadioType} // 可用 useMemo 优化
