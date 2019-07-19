@@ -112,11 +112,8 @@ const Widget = ({
   }
 
   //适用于number组，联动 Slider 与 InputNumber
-  const defaultSliderNumber =
-    typeof defaultValue === 'number' ? defaultValue : 0
-  const [sliderNumber, setSliderNumber] = React.useState(
-    typeof activeValue === 'number' ? activeValue : 0
-  )
+  const defaultSliderNumber = defaultValue || 0
+  const [sliderNumber, setSliderNumber] = React.useState(activeValue || 0)
   function handleInputNumber(inputNumber) {
     setSliderNumber(inputNumber)
     onChangeValue(inputNumber)
@@ -196,11 +193,12 @@ const Widget = ({
       )
     },
     object() {
-      const [, matched] = availableType.match(/^{(.*)}$/)
+      const [, matched] = availableType.trim().match(/^{(.*)}$/)
       const entries = matched
         .trim()
         .split(', ')
         .map(entry => entry.split(': '))
+      console.log('matched: ', matched)
       return (
         <div>
           {'{'}
@@ -219,7 +217,7 @@ const Widget = ({
                   <Widget
                     activeValue={Object(activeValue)[key]}
                     availableType={valueType}
-                    defaultValue={defaultValue[key]}
+                    defaultValue={defaultValue && defaultValue[key]}
                     isObjectChild
                     onChangeValue={value => {
                       onChangeValue({ ...activeValue, [key]: value })
@@ -237,7 +235,7 @@ const Widget = ({
       return <span>{availableType}</span> // 何必管这么多呢？直接原封不动返回就是
     },
     radioGroup() {
-      const types = availableType.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
+      const originalTypes = availableType.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
       return (
         <Radio.Group
           value={activeRadioType} // 可用 useMemo 优化
@@ -249,8 +247,8 @@ const Widget = ({
             setValueByRadioType(radioValue, widgetType)
           }}
         >
-          {types.map((type, index) => {
-            const widgetType = getWidgetTypeByOriginalType(type)
+          {originalTypes.map((originalType, index) => {
+            const widgetType = getWidgetTypeByOriginalType(originalType)
             return (
               <Radio
                 key={index}
@@ -262,7 +260,7 @@ const Widget = ({
                   defaultValue={
                     widgetType === defaultWidgetType ? defaultValue : undefined
                   }
-                  availableType={widgetType}
+                  availableType={originalType}
                   onChangeValue={value => {
                     setValueByRadioType(value, widgetType)
                   }}
