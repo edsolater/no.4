@@ -44,9 +44,10 @@ export const Dashboard = ({ selectedComponent }) => {
               </div>
               <div>
                 <Widget
-                  valueType={propInfo.type}
-                  defaultValue={propInfo.default}
                   activeValue={dashboardSetting[propInfo.name]}
+                  availableType={propInfo.type}
+                  defaultValue={propInfo.default}
+                  defaultValueType={propInfo.defaultType}
                   onChangeValue={value => setProperty(propInfo.name, value)}
                 />
               </div>
@@ -63,20 +64,50 @@ export const Dashboard = ({ selectedComponent }) => {
  * @param {boolean} isObjectChild
  */
 const Widget = ({
-  valueType,
-  defaultValue,
   activeValue,
-
-  inRadio = false,
+  availableType,
+  defaultValue,
 
   onChangeValue
 }) => {
+  function getWidgetTypeByOriginalType(originalType) {
+    if (/^boolean$|^string$|^number$/.test(originalType)) {
+      return originalType
+    } else {
+      if (/^\(.*?\) => .*$/.test(originalType)) return 'function'
+      if (/^{.*}$/.test(originalType)) return 'object'
+      if (/^\[.*\|.*\]$/.test(originalType)) return 'enum'
+      if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
+      if (/any/.test(originalType)) return 'string'
+    }
+    return 'unknown'
+  }
+  function getInitValueByOriginalType(originalType) {
+    const regex = [[/^boolean$/, false], [/.*/, undefined]]
+    return regex.find(([pattern]) => pattern.test(originalType))[1]
+  }
+  function getWidgetTypeByValue(value) {
+    return typeof value
+    value = typeof value !== 'object' ? String(value) : value.toSource()
+    const regex = [
+      [/^true$|^false$/, { type: 'boolean', init: false }],
+      [/^\d+$/, { type: 'number', init: 0 }],
+      [/^'.*'*$|^".*"*$/, { type: 'string', init: '' }],
+      [/^\({.*}\)$/, { type: 'object', init: {} }]
+    ]
+    const matched = regex.find(([pattern]) => pattern.test(value))
+    const typeObj = matched ? matched[1] : {}
+    return typeObj
+  }
+  const defaultWidgetType = getWidgetTypeByValue(defaultValue)
   //适用于RadioGroup组
-  const [activeRadioIndex, changeRadioIndex] = React.useState(undefined) // 根据默认值类型自动判断默认选择项
-  const [radioGroupValues, setRadioGroupValues] = React.useState({}) //初始状态下，setRadioValue是空的，
-  function setValueByRadioIndex(value, index) {
-    changeRadioIndex(index)
-    setRadioGroupValues({ ...radioGroupValues, [index]: value })
+  const [activeRadioType, changeSelectedRadioType] = React.useState(
+    getWidgetTypeByValue(activeValue)
+  ) // 根据默认值类型自动判断默认选择项
+  const [radioGroupValues, setRadioGroupValues] = React.useState({}) //用于保存 Radio 的状态值
+  function setValueByRadioType(value, widgetType) {
+    changeSelectedRadioType(widgetType)
+    setRadioGroupValues({ ...radioGroupValues, [widgetType]: value })
     onChangeValue(value)
   }
 
@@ -91,186 +122,161 @@ const Widget = ({
     onChangeValue(inputNumber)
   }
 
-  // 用于判断适用组件
-  const regex = {
-    boolean: {
-      pattern: /^boolean$/,
-      widget() {
-        return (
-          <Switch
-            defaultChecked={defaultValue}
-            onChange={checked => {
-              // console.log('checked: ', checked)
-              onChangeValue(checked)
-            }}
+  // 所有控件设置
+  const widgets = {
+    boolean() {
+      return (
+        <Switch
+          defaultChecked={defaultValue}
+          checked={Boolean(activeValue)}
+          onChange={checked => {
+            // console.log('checked: ', checked)
+            onChangeValue(checked)
+          }}
+        />
+      )
+    },
+    number() {
+      return (
+        <div>
+          <InputNumber
+            defaultValue={defaultSliderNumber}
+            value={sliderNumber}
+            onChange={handleInputNumber}
           />
-        )
-      }
-    },
-    number: {
-      pattern: /^number$/,
-      widget() {
-        return (
-          <div>
-            <InputNumber
-              defaultValue={defaultSliderNumber}
-              value={sliderNumber}
-              onChange={handleInputNumber}
-            />
-            <Slider
-              defaultValue={defaultSliderNumber}
-              value={sliderNumber}
-              onChange={handleInputNumber}
-            />
-          </div>
-        )
-      }
-    },
-    string: {
-      pattern: /^string.*$|^any$/,
-      widget() {
-        return (
-          <Input
-            defaultValue={
-              (typeof defaultValue === 'string' && defaultValue) ||
-              activeValue ||
-              undefined
-            }
-            onChange={e => {
-              onChangeValue(e.target.value)
-            }}
+          <Slider
+            defaultValue={defaultSliderNumber}
+            value={sliderNumber}
+            onChange={handleInputNumber}
           />
-        )
-      }
+        </div>
+      )
     },
-    enum: {
-      pattern: /^\[.*\|.*\]$/,
-      widget() {
-        const [, matched] = valueType.match(/^\[(.*)\]$/)
-        const enumStrings = matched
-          .trim()
-          .split('|')
-          .map(str => str.trim().replace(/'|"/g, ''))
-        return (
-          <div>
-            <Button
-              style={{ marginRight: 20 }}
-              onClick={() => onChangeValue(undefined)}
-            >
-              unset
-            </Button>
-            <Radio.Group
-              buttonStyle="solid"
-              onChange={e => onChangeValue(e.target.value)}
-              value={activeValue || defaultValue}
-            >
-              {enumStrings.map(str => (
-                <Radio.Button key={str} value={str}>
-                  {str}
-                </Radio.Button>
-              ))}
-            </Radio.Group>
-          </div>
-        )
-      }
+    string() {
+      return (
+        <Input
+          defaultValue={
+            (typeof defaultValue === 'string' && defaultValue) ||
+            activeValue ||
+            undefined
+          }
+          value={activeValue}
+          onChange={e => {
+            onChangeValue(e.target.value)
+          }}
+        />
+      )
     },
-    object: {
-      pattern: /^{.*}$/,
-      widget() {
-        const [, matched] = valueType.match(/^{(.*)}$/)
-        const entries = matched
-          .trim()
-          .split(', ')
-          .map(entry => entry.split(': '))
-        return (
-          <div>
-            {'{'}
-            <div style={{ marginLeft: 32 }}>
-              {entries.map(([key, valueType]) => {
-                return (
-                  <div style={{ display: 'flex' }} key={`${key}`}>
-                    <span
-                      style={{
-                        marginRight: 20,
-                        opacity: 0.6,
-                        flex: 0,
-                        whiteSpace: 'nowrap'
-                      }}
-                    >{`${key} :   `}</span>
-                    <Widget
-                      activeValue={Object(activeValue)[key]}
-                      defaultValue={defaultValue[key]}
-                      valueType={valueType}
-                      isObjectChild
-                      onChangeValue={value => {
-                        onChangeValue({ ...activeValue, [key]: value })
-                      }}
-                    />
-                  </div>
-                )
-              })}
-            </div>
-            {'}'}
-          </div>
-        )
-      }
-    },
-    function: {
-      pattern: /^\(.*?\) => .*$/,
-      widget() {
-        return <span>{valueType}</span> // 何必管这么多呢？直接原封不动返回就是
-      }
-    },
-    radioGroup: {
-      pattern: /.* \| .*/,
-      widget() {
-        console.log('group defaultValue: ', defaultValue)
-        const types = valueType.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
-        return (
-          <Radio.Group
-            value={activeRadioIndex}
-            //value //为了与 Radio的 value匹配的，手动设定 checked 的话，就没必要了
-            // onChange={1. Radio.Group 的 value 变成选中的Radio的value; 2. 强制setPropty一下 Radio 内部控件的值}
-            onChange={e => {
-              const targetIndex = e.target.value
-              let radioValue = radioGroupValues[targetIndex]
-              if (!(radioValue)) {
-                // 附上控件的默认值
-                // 如果要识别控件的类型yi
-              }
-              setValueByRadioIndex(radioValue, targetIndex)
-            }}
+    enum() {
+      const [, matched] = availableType.match(/^\[(.*)\]$/)
+      const enumStrings = matched
+        .trim()
+        .split('|')
+        .map(str => str.trim().replace(/'|"/g, ''))
+      return (
+        <div>
+          <Button
+            style={{ marginRight: 20 }}
+            onClick={() => onChangeValue(undefined)}
           >
-            {types.map((type, index) => {
+            unset
+          </Button>
+          <Radio.Group
+            buttonStyle="solid"
+            onChange={e => onChangeValue(e.target.value)}
+            value={activeValue || defaultValue}
+          >
+            {enumStrings.map(str => (
+              <Radio.Button key={str} value={str}>
+                {str}
+              </Radio.Button>
+            ))}
+          </Radio.Group>
+        </div>
+      )
+    },
+    object() {
+      const [, matched] = availableType.match(/^{(.*)}$/)
+      const entries = matched
+        .trim()
+        .split(', ')
+        .map(entry => entry.split(': '))
+      return (
+        <div>
+          {'{'}
+          <div style={{ marginLeft: 32 }}>
+            {entries.map(([key, valueType]) => {
               return (
-                <Radio
-                  key={index}
-                  value={index}
-                  style={{ display: 'block', marginBottom: 8 }}
-                >
+                <div style={{ display: 'flex' }} key={`${key}`}>
+                  <span
+                    style={{
+                      marginRight: 20,
+                      opacity: 0.6,
+                      flex: 0,
+                      whiteSpace: 'nowrap'
+                    }}
+                  >{`${key} :   `}</span>
                   <Widget
-                    activeValue={radioGroupValues[index]}
-                    defaultValue={defaultValue}
-                    valueType={type}
+                    activeValue={Object(activeValue)[key]}
+                    availableType={valueType}
+                    defaultValue={defaultValue[key]}
+                    isObjectChild
                     onChangeValue={value => {
-                      setValueByRadioIndex(value, index)
+                      onChangeValue({ ...activeValue, [key]: value })
                     }}
                   />
-                </Radio>
+                </div>
               )
             })}
-          </Radio.Group>
-        )
-      }
+          </div>
+          {'}'}
+        </div>
+      )
     },
-    default: {
-      pattern: /.*/,
-      widget() {
-        return null
-      }
+    function() {
+      return <span>{availableType}</span> // 何必管这么多呢？直接原封不动返回就是
+    },
+    radioGroup() {
+      const types = availableType.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
+      return (
+        <Radio.Group
+          value={activeRadioType} // 可用 useMemo 优化
+          onChange={({ target: { value: widgetType } }) => {
+            const radioValue =
+              radioGroupValues[widgetType] || //状态中设定的控件值
+              (defaultWidgetType === widgetType && defaultValue) || //Property的默认值中的（该控件的）值
+              getInitValueByOriginalType(widgetType) //该控件为设定时的值
+            setValueByRadioType(radioValue, widgetType)
+          }}
+        >
+          {types.map((type, index) => {
+            const widgetType = getWidgetTypeByOriginalType(type)
+            return (
+              <Radio
+                key={index}
+                value={widgetType}
+                style={{ display: 'block', marginBottom: 8 }}
+              >
+                <Widget
+                  activeValue={radioGroupValues[widgetType]}
+                  defaultValue={
+                    widgetType === defaultWidgetType ? defaultValue : undefined
+                  }
+                  availableType={widgetType}
+                  onChangeValue={value => {
+                    setValueByRadioType(value, widgetType)
+                  }}
+                />
+              </Radio>
+            )
+          })}
+        </Radio.Group>
+      )
+    },
+    unknown() {
+      return null
     }
   }
-  return Object.values(regex)
-    .find(({ pattern }) => pattern.test(valueType))
-    .widget()
+  const widgetType = getWidgetTypeByOriginalType(availableType)
+  return widgets[widgetType]()
 }

@@ -6,20 +6,23 @@
 
 ### ✨ 应用能自由切换 dark/light mode
 
-### ✨ 控件的状态色随组件图标的主题色改变 `简单`
+### ✨ 一键删除冗余配置（即，与默认设置相同的设置）
 
 ### ✨ 制作 List 组件
 
-### ✨💥 制作 Dashboard 组件
+### ✨ 制作 Dashboard 组件 `长期`
 
 - 不妨引入生物学分类的方法，使 Dashboard 作为 List 的一种变种
 
 ### 🐞💥 Dashboard 中有返回组件的函数，是它成为能保存 state 的单独组件，但组件得能自然地过渡状态而不是被强制刷新覆盖。
 
+### ✨ RadioGroup 的 value 为 widget 内的值的名称 `困难``意外地困难`
+
 ### 🎈 完善每个组件的配置 API
 
 # 成就
-### ✨ 完善RadioGroup的逻辑（RadioGroup的父组件，能保存 RadioGroup 的状态）
+
+### ✨ 完善 RadioGroup 的逻辑（RadioGroup 的父组件，能保存 RadioGroup 的状态）
 
 ### 🐞💥 改变 Widget 的 props 设置，使 Widget 的责任更清晰、更独立 `中等`
 
