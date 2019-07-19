@@ -18,13 +18,13 @@ export default {
         name: 'copyable',
         description: '是否可拷贝，为对象时可设置复制文本以回调函数',
         type: '{ text: string, onCopy: (e) => void }',
-        default: false
+        default: { text: 'hello' }
       },
       {
         name: 'children',
         description: '按钮中间显示的文字，可能不是文字也行',
         type: 'any',
-        default: '-'
+        default: undefined
       },
       {
         name: 'disabled',
@@ -36,13 +36,13 @@ export default {
         name: 'ghost',
         description: '幽灵属性，使按钮背景透明，版本 2.7 中增加',
         type: 'boolean',
-        default: false
+        default: true
       },
       {
         name: 'href',
         description: '点击跳转的地址，指定此属性 button 的行为和 a 链接一致',
         type: 'string',
-        default: '-'
+        default: 'world'
       },
       {
         name: 'htmlType',
@@ -54,44 +54,44 @@ export default {
         name: 'icon',
         description: '设置按钮的图标类型',
         type: 'string',
-        default: '-'
+        default: undefined
       },
       {
         name: 'loading',
         description: '设置按钮载入状态',
         type: 'boolean | { delay: number, text: string }',
-        default: "{ text: 'hello' }"
+        default: { text: 'hello' }
       },
       {
         name: 'shape',
         description: '设置按钮形状，可选值为 circle、 round 或者不设',
         type: "['circle' | 'round']",
-        default: '-'
+        default: undefined
       },
       {
         name: 'size',
         description: '设置按钮大小',
         type: "['small' | 'large']",
-        default: '-'
+        default: undefined
       },
       {
         name: 'target',
         description: '相当于 a 链接的 target 属性，href 存在时生效',
         type: 'string',
-        default: '-'
+        default: undefined
       },
       {
         name: 'type',
         description:
           '设置按钮类型，可选值为 primary dashed danger link(3.17 中增加) 或者不设',
         type: "['primary' | 'dashed' | 'danger' | 'link']",
-        default: '-'
+        default: undefined
       },
       {
         name: 'onClick',
         description: '点击按钮时的回调',
         type: '(event, number) => void',
-        default: '-'
+        default: undefined
       },
       {
         name: 'block',

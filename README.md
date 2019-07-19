@@ -20,6 +20,8 @@
 
 # 成就
 
+### 🐞💥 改变 Widget 的 props 设置，使 Widget 的责任更清晰、更独立 `中等`
+
 ### Dashboard 的 PropWidget 变成了一个组件，并且改变了判断使用何种控件的逻辑
 
 ### 🔬 重写组件的配置文件（目前只关心 button.js ）
