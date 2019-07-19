@@ -113,8 +113,7 @@ const Widget = ({
   }
 
   //适用于number组，联动 Slider 与 InputNumber
-  const defaultSliderNumber = defaultValue || 0
-  const [sliderNumber, setSliderNumber] = React.useState(defaultSliderNumber)
+  const [sliderNumber, setSliderNumber] = React.useState(defaultValue || 0)
   function handleInputNumber(inputNumber) {
     setSliderNumber(inputNumber)
     onChangeValue(inputNumber)
@@ -125,7 +124,6 @@ const Widget = ({
     boolean() {
       return (
         <Switch
-          defaultChecked={defaultValue}
           checked={Boolean(activeValue)}
           onChange={checked => {
             // console.log('checked: ', checked)
@@ -138,12 +136,10 @@ const Widget = ({
       return (
         <div>
           <InputNumber
-            defaultValue={defaultSliderNumber}
             value={sliderNumber}
             onChange={handleInputNumber}
           />
           <Slider
-            defaultValue={defaultSliderNumber}
             value={sliderNumber}
             onChange={handleInputNumber}
           />
@@ -153,7 +149,7 @@ const Widget = ({
     string() {
       return (
         <Input
-          defaultValue={
+          placeholder={
             (typeof defaultValue === 'string' && defaultValue) ||
             activeValue ||
             undefined
