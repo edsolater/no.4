@@ -60,7 +60,7 @@ export default {
         name: 'loading',
         description: '设置按钮载入状态',
         type: 'boolean | { delay: number, text: string }',
-        // default: { delay: 3 }
+        default: { delay: 3 }
       },
       {
         name: 'shape',
@@ -104,7 +104,7 @@ export default {
   presets: [
     {
       children: 'BUTTON',
-      type: 'dashed'
+      type: 'primary'
     }
   ]
 }

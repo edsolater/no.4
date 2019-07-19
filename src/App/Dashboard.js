@@ -68,6 +68,7 @@ const Widget = ({
   availableType,
   defaultValue,
 
+  fromObj,
   onChangeValue
 }) => {
   function getWidgetTypeByOriginalType(originalType) {
@@ -113,7 +114,7 @@ const Widget = ({
 
   //适用于number组，联动 Slider 与 InputNumber
   const defaultSliderNumber = defaultValue || 0
-  const [sliderNumber, setSliderNumber] = React.useState(activeValue || 0)
+  const [sliderNumber, setSliderNumber] = React.useState(defaultSliderNumber)
   function handleInputNumber(inputNumber) {
     setSliderNumber(inputNumber)
     onChangeValue(inputNumber)
@@ -198,7 +199,7 @@ const Widget = ({
         .trim()
         .split(', ')
         .map(entry => entry.split(': '))
-      console.log('matched: ', matched)
+      console.log('matched: ', defaultValue)
       return (
         <div>
           {'{'}
@@ -222,6 +223,7 @@ const Widget = ({
                     onChangeValue={value => {
                       onChangeValue({ ...activeValue, [key]: value })
                     }}
+                    fromObj
                   />
                 </div>
               )
