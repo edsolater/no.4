@@ -1,7 +1,5 @@
 import React from 'react'
 import {
-  Table,
-  Card,
   Tooltip,
   Switch,
   Input,
@@ -46,8 +44,8 @@ export const Dashboard = ({ selectedComponent }) => {
               <div>
                 <PropWidget
                   propInfo={propInfo} //当前 prop 的情报体
-                  activeValue={dashboardSetting[propInfo.name]}
-                  setValue={value => setProperty(propInfo.name, value)}
+                  activeWidghtValue={dashboardSetting[propInfo.name]}
+                  setWidghtValue={value => setProperty(propInfo.name, value)}
                 />
               </div>
             </List.Item>
@@ -58,22 +56,40 @@ export const Dashboard = ({ selectedComponent }) => {
   )
 }
 
-const PropWidget = ({ propInfo, activeValue, setValue }) => {
+const PropWidget = ({
+  propInfo,
+  activeWidghtValue,
+  setWidghtValue,
+  isChildWidget
+}) => {
+  //适用于RadioGroup组
   const [selectedRadioIndex, changeRadioIndex] = React.useState(undefined)
   const [activeRadioValue, setRadioValue] = React.useState({})
   function setValueByRadioIndex(value, index) {
     setRadioValue({ ...activeRadioValue, [index]: value })
   }
 
-  const widget = {
+  //适用于number组
+  const defaultSliderNumber =
+    typeof propInfo.default === 'number' ? propInfo.default : 0
+  const [sliderNumber, setSliderNumber] = React.useState(
+    typeof activeWidghtValue === 'number' ? activeWidghtValue : 0
+  )
+  function handleInputNumber(inputNumber) {
+    setSliderNumber(inputNumber)
+    setWidghtValue(inputNumber)
+  }
+
+  // 判断适用组件
+  const regex = {
     boolean: {
       pattern: /^boolean$/,
       widget() {
         return (
           <Switch
-            checked={Boolean(activeValue)}
+            defaultChecked={Boolean(activeWidghtValue)}
             onChange={checked => {
-              setValue(checked)
+              setWidghtValue(checked)
             }}
           />
         )
@@ -85,17 +101,14 @@ const PropWidget = ({ propInfo, activeValue, setValue }) => {
         return (
           <div>
             <InputNumber
-              value={
-                (typeof activeValue === 'number' ? activeValue : undefined) ||
-                (typeof propInfo.default === 'number'
-                  ? propInfo.default
-                  : undefined)
-              }
-              onChange={number => setValue(number)}
+              defaultValue={defaultSliderNumber}
+              value={sliderNumber}
+              onChange={handleInputNumber}
             />
             <Slider
-              value={typeof activeValue === 'number' ? activeValue : 0}
-              onChange={number => setValue(number)}
+              defaultValue={defaultSliderNumber}
+              value={sliderNumber}
+              onChange={handleInputNumber}
             />
           </div>
         )
@@ -106,13 +119,15 @@ const PropWidget = ({ propInfo, activeValue, setValue }) => {
       widget() {
         return (
           <Input
-            placeholder={
-              typeof propInfo.default === 'string'
-                ? propInfo.default
-                : undefined
+            defaultValue={
+              (typeof propInfo.default === 'string' && propInfo.default) ||
+              activeWidghtValue ||
+              undefined
             }
-            value={activeValue}
-            onChange={e => setValue(e.target.value)}
+            onChange={e => {
+              console.log('setWidghtValue: ', setWidghtValue)
+              setWidghtValue(e.target.value)
+            }}
           />
         )
       }
@@ -129,14 +144,14 @@ const PropWidget = ({ propInfo, activeValue, setValue }) => {
           <div>
             <Button
               style={{ marginRight: 20 }}
-              onClick={() => setValue(undefined)}
+              onClick={() => setWidghtValue(undefined)}
             >
               unset
             </Button>
             <Radio.Group
               buttonStyle="solid"
-              onChange={e => setValue(e.target.value)}
-              value={activeValue || propInfo.default}
+              onChange={e => setWidghtValue(e.target.value)}
+              value={activeWidghtValue || propInfo.default}
             >
               {enumStrings.map(str => (
                 <Radio.Button key={str} value={str}>
@@ -172,10 +187,11 @@ const PropWidget = ({ propInfo, activeValue, setValue }) => {
                   >{`${key} :   `}</span>
                   <PropWidget
                     propInfo={{ property: key, type: valueType }}
-                    setValue={value => {
-                      setValue({ ...activeValue, [key]: value })
+                    setWidghtValue={value => {
+                      setWidghtValue({ ...activeWidghtValue, [key]: value })
                     }}
-                    activeValue={activeValue || {}}
+                    activeWidghtValue={Object(activeWidghtValue)[key]}
+                    isChildWidget
                   />
                 </div>
               ))}
@@ -195,9 +211,9 @@ const PropWidget = ({ propInfo, activeValue, setValue }) => {
       pattern: /.* \| .*/,
       widget() {
         const types = propInfo.type.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
-        const changeValueByType = (activeValue, typeStr) => {
-          if (/boolean/.test(typeStr)) return Boolean(activeValue)
-          if (/number/.test(typeStr)) return Number(activeValue)
+        const changeValueByType = (activeWidghtValue, typeStr) => {
+          if (/boolean/.test(typeStr)) return Boolean(activeWidghtValue)
+          if (/number/.test(typeStr)) return Number(activeWidghtValue)
           if (/Object|^{.*}$/) return typeStr
           return String(typeStr.replace(/'/g, '')) // 如果是类似 'fill' 'outline' 这种形式一概算作string，并且把两头的 '' 去除
         }
@@ -209,7 +225,7 @@ const PropWidget = ({ propInfo, activeValue, setValue }) => {
             onChange={e => {
               const targetIndex = e.target.value
               changeRadioIndex(targetIndex)
-              setValue(changeValueByType(activeValue, targetIndex)) // 例： eval(toPascalCase('boolean'))('asd') = true
+              setWidghtValue(changeValueByType(activeWidghtValue, targetIndex)) // 例： eval(toPascalCase('boolean'))('asd') = true
             }}
           >
             {types.map((type, idx) => (
@@ -219,9 +235,9 @@ const PropWidget = ({ propInfo, activeValue, setValue }) => {
                 style={{ display: 'block', marginBottom: 8 }}
               >
                 <PropWidget
-                  activeValue={activeRadioValue[idx]}
+                  activeWidghtValue={activeRadioValue[idx]}
                   propInfo={{ ...propInfo, type: type }}
-                  setValue={value => setValueByRadioIndex(value, idx)}
+                  setWidghtValue={value => setValueByRadioIndex(value, idx)}
                 />
               </Radio>
             ))}
@@ -236,7 +252,7 @@ const PropWidget = ({ propInfo, activeValue, setValue }) => {
       }
     }
   }
-  return Object.values(widget)
+  return Object.values(regex)
     .find(({ pattern }) => pattern.test(propInfo.type))
     .widget()
 }

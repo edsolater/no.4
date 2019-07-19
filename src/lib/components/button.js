@@ -60,7 +60,7 @@ export default {
         name: 'loading',
         description: '设置按钮载入状态',
         type: 'boolean | { delay: number, text: string }',
-        default: false
+        default: "{ text: 'hello' }"
       },
       {
         name: 'shape',
@@ -99,7 +99,7 @@ export default {
         type: 'boolean',
         default: false
       }
-    ],
+    ]
   },
   presets: [
     {
