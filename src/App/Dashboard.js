@@ -125,35 +125,22 @@ const Widget = ({
       return (
         <Switch
           checked={Boolean(activeValue)}
-          onChange={checked => {
-            // console.log('checked: ', checked)
-            onChangeValue(checked)
-          }}
+          onChange={checked => onChangeValue(checked)}
         />
       )
     },
     number() {
       return (
         <div>
-          <InputNumber
-            value={sliderNumber}
-            onChange={handleInputNumber}
-          />
-          <Slider
-            value={sliderNumber}
-            onChange={handleInputNumber}
-          />
+          <InputNumber value={sliderNumber} onChange={handleInputNumber} />
+          <Slider value={sliderNumber} onChange={handleInputNumber} />
         </div>
       )
     },
     string() {
       return (
         <Input
-          placeholder={
-            (typeof defaultValue === 'string' && defaultValue) ||
-            activeValue ||
-            undefined
-          }
+          placeholder={defaultValue}
           value={activeValue}
           onChange={e => {
             onChangeValue(e.target.value)
