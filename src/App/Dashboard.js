@@ -67,18 +67,20 @@ const Widget = ({
   defaultValue,
   activeValue,
 
-  isRadioGroupChild = false,
+  inRadio = false,
 
   onChangeValue
 }) => {
   //适用于RadioGroup组
-  const [selectedRadioIndex, changeRadioIndex] = React.useState(undefined)
-  const [activeRadioValue, setRadioValue] = React.useState({})
+  const [activeRadioIndex, changeRadioIndex] = React.useState(undefined) // 根据默认值类型自动判断默认选择项
+  const [radioGroupValues, setRadioGroupValues] = React.useState({}) //初始状态下，setRadioValue是空的，
   function setValueByRadioIndex(value, index) {
-    setRadioValue({ ...activeRadioValue, [index]: value })
+    changeRadioIndex(index)
+    setRadioGroupValues({ ...radioGroupValues, [index]: value })
+    onChangeValue(value)
   }
 
-  //适用于number组
+  //适用于number组，联动 Slider 与 InputNumber
   const defaultSliderNumber =
     typeof defaultValue === 'number' ? defaultValue : 0
   const [sliderNumber, setSliderNumber] = React.useState(
@@ -98,6 +100,7 @@ const Widget = ({
           <Switch
             defaultChecked={defaultValue}
             onChange={checked => {
+              // console.log('checked: ', checked)
               onChangeValue(checked)
             }}
           />
@@ -221,38 +224,41 @@ const Widget = ({
     radioGroup: {
       pattern: /.* \| .*/,
       widget() {
+        console.log('group defaultValue: ', defaultValue)
         const types = valueType.split(' | ') // TODO:  增加对 object、Function、enum 值类型的判断。但这要使render成为组件，并能拥有状态再去解决，也就是要解决强制刷新问题。现在先把问题放一放。
-        const changeValueByType = (activeValue, typeStr) => {
-          if (/boolean/.test(typeStr)) return Boolean(activeValue)
-          if (/number/.test(typeStr)) return Number(activeValue)
-          if (/Object|^{.*}$/) return typeStr
-          return String(typeStr.replace(/'/g, '')) // 如果是类似 'fill' 'outline' 这种形式一概算作string，并且把两头的 '' 去除
-        }
         return (
           <Radio.Group
-            value={selectedRadioIndex}
+            value={activeRadioIndex}
             //value //为了与 Radio的 value匹配的，手动设定 checked 的话，就没必要了
             // onChange={1. Radio.Group 的 value 变成选中的Radio的value; 2. 强制setPropty一下 Radio 内部控件的值}
             onChange={e => {
               const targetIndex = e.target.value
-              changeRadioIndex(targetIndex)
-              onChangeValue(changeValueByType(activeValue, targetIndex)) // 例： eval(toPascalCase('boolean'))('asd') = true
+              let radioValue = radioGroupValues[targetIndex]
+              if (!(radioValue)) {
+                // 附上控件的默认值
+                // 如果要识别控件的类型yi
+              }
+              setValueByRadioIndex(radioValue, targetIndex)
             }}
           >
-            {types.map((type, idx) => (
-              <Radio
-                key={idx}
-                value={idx} // 如果 Radio.Group 启用了 Value， 所以单个 Radio 是否被选中，必须由 value 判断 // value 设定为不同值才能使互斥的
-                style={{ display: 'block', marginBottom: 8 }}
-              >
-                <Widget
-                  activeValue={activeRadioValue[idx]}
-                  defaultValue={defaultValue}
-                  valueType={type}
-                  onChangeValue={value => setValueByRadioIndex(value, idx)}
-                />
-              </Radio>
-            ))}
+            {types.map((type, index) => {
+              return (
+                <Radio
+                  key={index}
+                  value={index}
+                  style={{ display: 'block', marginBottom: 8 }}
+                >
+                  <Widget
+                    activeValue={radioGroupValues[index]}
+                    defaultValue={defaultValue}
+                    valueType={type}
+                    onChangeValue={value => {
+                      setValueByRadioIndex(value, index)
+                    }}
+                  />
+                </Radio>
+              )
+            })}
           </Radio.Group>
         )
       }

@@ -19,6 +19,7 @@
 ### 🎈 完善每个组件的配置 API
 
 # 成就
+### ✨ 完善RadioGroup的逻辑（RadioGroup的父组件，能保存 RadioGroup 的状态）
 
 ### 🐞💥 改变 Widget 的 props 设置，使 Widget 的责任更清晰、更独立 `中等`
 
