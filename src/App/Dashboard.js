@@ -79,19 +79,19 @@ const Widget = ({
       if (/^\[.*\|.*\]$/.test(originalType)) return 'enum'
       if (/any/.test(originalType)) return 'string'
       if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
-    } 
+    }
     throw new Error("can't get widgetType by typeString")
   }
   function getWidgetTypeByValue(value) {
     // 没有 RadioGroup 的 value
-    if(typeof value === 'string' && availableType.match(value)) return 'enum' // 自定义的模式
+    if (typeof value === 'string' && availableType.match(value)) return 'enum' // 自定义的模式
     return typeof value
   }
   const defaultWidgetType = getWidgetTypeByValue(defaultValue)
 
   // RadioGroup控件们的状态
   const [activeRadioType, changeSelectedRadioType] = React.useState(
-    getWidgetTypeByValue(activeValue)
+    getWidgetTypeByValue(activeValue || defaultValue)
   ) // 根据默认值类型自动判断默认选择项
   const [radioGroupValues, setRadioGroupValues] = React.useState({}) // 用于保存 Radio 的状态值
   function setValueByRadioType(value, widgetType) {
@@ -148,7 +148,7 @@ const Widget = ({
             style={{ marginRight: 20 }}
             onClick={() => onChangeValue(undefined)}
           >
-            unset
+            reset
           </Button>
           <Radio.Group
             buttonStyle="solid"
@@ -217,7 +217,6 @@ const Widget = ({
         ]
         return regex.find(([pattern]) => pattern.test(originalType))[1]
       }
-      console.log('activeRadioType: ', activeRadioType) // TOFIX: unknown
       return (
         <Radio.Group
           value={activeRadioType} // 可用 useMemo 优化
