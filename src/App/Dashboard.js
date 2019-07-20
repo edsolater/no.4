@@ -82,11 +82,8 @@ const Widget = ({
     }
     return 'unknown'
   }
-  function getInitValueByOriginalType(originalType) {
-    const regex = [[/^boolean$/, false], [/.*/, undefined]]
-    return regex.find(([pattern]) => pattern.test(originalType))[1]
-  }
-  function getWidgetTypeByValue(value) {
+  function getWidgetTypeByValue(value, availableType) {
+    // TODO:
     return typeof value
     value = typeof value !== 'object' ? String(value) : value.toSource()
     const regex = [
@@ -100,7 +97,6 @@ const Widget = ({
     return typeObj
   }
   const defaultWidgetType = getWidgetTypeByValue(defaultValue)
-
   //RadioGroup控件们的状态
   const [activeRadioType, changeSelectedRadioType] = React.useState(
     getWidgetTypeByValue(activeValue)
@@ -124,7 +120,7 @@ const Widget = ({
     boolean() {
       return (
         <Switch
-          checked={Boolean(activeValue)}
+          checked={Boolean(activeValue || defaultValue)}
           onChange={checked => onChangeValue(checked)}
         />
       )
@@ -220,7 +216,15 @@ const Widget = ({
     },
     radioGroup() {
       const originalTypes = availableType.split(/ \| (?!'|")/) //前置判断报错，是babel的关系？
-      console.log('originalTypes: ', originalTypes)
+      function getInitValueByOriginalType(originalType) {
+        const regex = [
+          [/^boolean$/, false],
+          [/^string$/, ''],
+          [/^number$/, 0],
+          [/.*/, undefined]
+        ]
+        return regex.find(([pattern]) => pattern.test(originalType))[1]
+      }
       return (
         <Radio.Group
           value={activeRadioType} // 可用 useMemo 优化

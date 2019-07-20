@@ -58,6 +58,12 @@ export default {
         name: 'loading',
         description: '设置按钮载入状态',
         type: "boolean | ['hello' | 'world']",
+        default: true
+      },
+      {
+        // name: 'loading2',
+        description: '设置按钮载入状态',
+        // type: "['hello' | 'world'] | boolean | number" => [ "['hello' | 'world']", "boolean", "number"],
         default: 'hello'
       },
       {
