@@ -119,6 +119,9 @@ const Widget = ({
     return regex.find(([pattern]) => pattern.test(widgetType))[1]
   }
 
+  // TODO: 所有控件都不直接管default逻辑
+  function getWidgetValue(widgetType) {}
+
   // const [widgetInitValue, setWidghtDefaultValue] = React.useState(
   //   getInitValueByWidgetType(getWidgetTypeByTypeString(availableType))
   // ) // 设定该控件的默认值
@@ -150,8 +153,14 @@ const Widget = ({
     boolean() {
       return (
         <Switch
-          checked={Boolean(activeValue || defaultValue)}
-          onChange={checked => onChangeValue(checked)}
+          checked={
+            typeof activeValue === 'boolean' ? activeValue : defaultValue
+          }
+          onChange={checked => {
+            console.log('activeValue: ', activeValue)
+            console.log('checked: ', checked)
+            onChangeValue(checked)
+          }}
         />
       )
     },
