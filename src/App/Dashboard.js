@@ -62,7 +62,7 @@ export const Dashboard = ({ selectedComponent }) => {
                   activeValue={dashboardSetting[propInfo.name]}
                   availableType={propInfo.type}
                   defaultValue={propInfo.default}
-                  onChangeValue={value => {
+                  onChange={value => {
                     handleChangeWidgetValue({
                       type: 'change value',
                       itemKey: propInfo.name,
@@ -89,7 +89,7 @@ const Widget = ({
   availableType,
   defaultValue,
 
-  onChangeValue
+  onChange
 }) => {
   // TODO: 可以提取这三个算法的共性，以优化
   function getWidgetTypeByTypeString(originalType) {
@@ -136,7 +136,7 @@ const Widget = ({
   function setValueByRadioType(value, widgetType) {
     changeSelectedRadioType(widgetType)
     setRadioGroupValues({ ...radioGroupValues, [widgetType]: value })
-    onChangeValue(value)
+    onChange(value)
   }
 
   // ------------number控件的状态------------
@@ -145,7 +145,7 @@ const Widget = ({
   const [sliderNumber, setSliderNumber] = React.useState(defaultValue || 0)
   function handleInputNumber(inputNumber) {
     setSliderNumber(inputNumber)
-    onChangeValue(inputNumber)
+    onChange(inputNumber)
   }
 
   // ------------所有的可用控件------------
@@ -159,7 +159,7 @@ const Widget = ({
           onChange={checked => {
             console.log('activeValue: ', activeValue)
             console.log('checked: ', checked)
-            onChangeValue(checked)
+            onChange(checked)
           }}
         />
       )
@@ -178,7 +178,7 @@ const Widget = ({
           placeholder={defaultValue}
           value={activeValue}
           onChange={e => {
-            onChangeValue(e.target.value)
+            onChange(e.target.value)
           }}
         />
       )
@@ -193,13 +193,13 @@ const Widget = ({
         <>
           <Button
             style={{ marginRight: 20 }}
-            onClick={() => onChangeValue(undefined)}
+            onClick={() => onChange(undefined)}
           >
             reset
           </Button>
           <Radio.Group
             buttonStyle="solid"
-            onChange={e => onChangeValue(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             value={activeValue || defaultValue}
           >
             {enumStrings.map(str => (
@@ -237,8 +237,8 @@ const Widget = ({
                     availableType={valueType}
                     defaultValue={defaultValue && defaultValue[key]}
                     isObjectChild
-                    onChangeValue={value => {
-                      onChangeValue({ ...activeValue, [key]: value })
+                    onChange={value => {
+                      onChange({ ...activeValue, [key]: value })
                     }}
                   />
                 </div>
@@ -282,7 +282,7 @@ const Widget = ({
                   activeValue={radioGroupValues[widgetType]}
                   defaultValue={getWidgetDefaultValue(widgetType)}
                   availableType={originalType}
-                  onChangeValue={value => {
+                  onChange={value => {
                     setValueByRadioType(value, widgetType)
                   }}
                 />
