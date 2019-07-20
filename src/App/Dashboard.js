@@ -11,71 +11,81 @@ import {
 import { List } from './components/List'
 
 export const Dashboard = ({ selectedComponent }) => {
-  // 组件的API文档可能是一个对象，也可能是一个数组（组件没有附属子组件时的简写）
-  // 格式化
-  const reactProps = Array.isArray(selectedComponent.reactProps)
-    ? { [selectedComponent.name]: selectedComponent.reactProps }
-    : selectedComponent.reactProps
+  // dashboard的全部 widgets配置
+  const [widgets, dispatchWidgetSetting] = React.useReducer(
+    (state, { type, itemKey, itemValue, totalSetting }) => {
+      switch (type) {
+        case 'itemly set':
+          const newValue = itemValue
+          const newBackgroundColor = '#ddd'
+          return {
+            ...state,
+            [itemKey]: {
+              value: newValue,
+              backgroundColor: newBackgroundColor
+            }
+          }
+        case 'wholly set':
+          return totalSetting
+        default:
+          throw new Error('unknown action type for dashboard setting')
+      }
+    },
+    {}
+  )
 
-  // [useState]: Preview的配置
-  const [dashboardSetting, set] = React.useState({})
-  const setProperty = (property, value) => {
-    set({ ...dashboardSetting, [property]: value })
-  }
-
-  // List.Item background
-  const [itemBackgroundColor, setBackgroundColor] = React.useState({})
-  function handleChangeWidgetValue({ type, itemKey, value }) {
-    switch (type) {
-      case 'change value':
-        setBackgroundColor({ ...itemBackgroundColor, [itemKey]: '#eee' })
-        break
-      default:
-        throw new Error('no type defined')
-    }
-  }
-
-  // [useEffect]: 最初先加载一次默认样式
+  // 如果有的话，最初先加载一次默认样式
   React.useEffect(() => {
-    if (selectedComponent.presets) set(selectedComponent.presets[0])
-  }, [set, selectedComponent]) //  这两项在传入的 Props 不变的情况下永远不会改变，由此 useEffect 变成了 ComponentDidMount 模式
+    if (selectedComponent.presets)
+      dispatchWidgetSetting({
+        type: 'wholly set',
+        totalSetting: selectedComponent.presets[0]
+      })
+  }, [dispatchWidgetSetting, selectedComponent]) //  这两项在传入的 Props 不变的情况下永远不会改变，由此 useEffect 变成了 ComponentDidMount 模式
 
   //组件的UI设置
   return (
     <div style={{ padding: 10 }}>
-      {Object.entries(reactProps).map(([name, properties]) => (
-        <List key={name} title={name}>
-          {properties.map(propInfo => (
-            <List.Item
-              key={propInfo.name}
-              style={{
-                background: itemBackgroundColor[propInfo.name],
-                display: 'flex',
-                marginBottom: 16
-              }}
-            >
-              <div style={{ width: 180 }}>
-                <Tooltip title={propInfo.description}>{propInfo.name}</Tooltip>
-              </div>
-              <div>
-                <Widget
-                  activeValue={dashboardSetting[propInfo.name]}
-                  availableType={propInfo.type}
-                  defaultValue={propInfo.default}
-                  onChange={value => {
-                    handleChangeWidgetValue({
-                      type: 'change value',
-                      itemKey: propInfo.name,
-                      value: value
-                    })
-                    setProperty(propInfo.name, value)
-                  }}
-                />
-              </div>
-            </List.Item>
-          ))}
-        </List>
-      ))}
+      {Object.entries(selectedComponent.reactProps).map(
+        ([name, properties]) => (
+          <List key={name} title={name}>
+            {properties.map(propInfo => (
+              <List.Item
+                key={propInfo.name}
+                style={{
+                  background:
+                    widgets[propInfo.name] &&
+                    widgets[propInfo.name].backgroundColor,
+                  display: 'flex',
+                  marginBottom: 16
+                }}
+              >
+                <div style={{ width: 180 }}>
+                  <Tooltip title={propInfo.description}>
+                    {propInfo.name}
+                  </Tooltip>
+                </div>
+                <div>
+                  <Widget
+                    activeValue={
+                      widgets[propInfo.name] && widgets[propInfo.name].value
+                    }
+                    availableType={propInfo.type}
+                    defaultValue={propInfo.default}
+                    onChange={value => {
+                      dispatchWidgetSetting({
+                        type: 'itemly set',
+                        itemKey: propInfo.name,
+                        itemValue: value
+                      })
+                    }}
+                  />
+                </div>
+              </List.Item>
+            ))}
+          </List>
+        )
+      )}
     </div>
   )
 }

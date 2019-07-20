@@ -15,7 +15,7 @@ export default {
   reactProps: {
     // name、 type 为必须提供，不然UI会出现怪异的空白、报错
     // description、default 是可选的
-    Button: [
+    main: [
       {
         name: 'copyable',
         description: '是否可拷贝，为对象时可设置复制文本以回调函数',
