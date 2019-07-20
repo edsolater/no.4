@@ -13,6 +13,8 @@ export default {
     return <Button {...props}>{children}</Button>
   },
   reactProps: {
+    // name、 type 为必须提供，不然UI会出现怪异的空白、报错
+    // description、default 是可选的
     Button: [
       {
         name: 'copyable',
@@ -57,8 +59,8 @@ export default {
       {
         name: 'loading',
         description: '设置按钮载入状态',
-        type: "boolean | ['hello' | 'world']",
-        default: 'hello'
+        type: 'boolean | { delay: number }',
+        default: { delay: 3 }
       },
       {
         name: 'shape',

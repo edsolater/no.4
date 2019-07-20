@@ -19,9 +19,20 @@ export const Dashboard = ({ selectedComponent }) => {
 
   // [useState]: Preview的配置
   const [dashboardSetting, set] = React.useState({})
-  console.log('dashboardSetting: ', dashboardSetting)
   const setProperty = (property, value) => {
     set({ ...dashboardSetting, [property]: value })
+  }
+
+  // List.Item background
+  const [itemBackgroundColor, setBackgroundColor] = React.useState({})
+  function handleChangeWidgetValue({ type, itemKey, value }) {
+    switch (type) {
+      case 'change value':
+        setBackgroundColor({ ...itemBackgroundColor, [itemKey]: '#eee' })
+        break
+      default:
+        throw new Error('no type defined')
+    }
   }
 
   // [useEffect]: 最初先加载一次默认样式
@@ -37,7 +48,11 @@ export const Dashboard = ({ selectedComponent }) => {
           {properties.map(propInfo => (
             <List.Item
               key={propInfo.name}
-              style={{ display: 'flex', marginBottom: 16 }}
+              style={{
+                background: itemBackgroundColor[propInfo.name],
+                display: 'flex',
+                marginBottom: 16
+              }}
             >
               <div style={{ width: 180 }}>
                 <Tooltip title={propInfo.description}>{propInfo.name}</Tooltip>
@@ -47,8 +62,14 @@ export const Dashboard = ({ selectedComponent }) => {
                   activeValue={dashboardSetting[propInfo.name]}
                   availableType={propInfo.type}
                   defaultValue={propInfo.default}
-                  defaultValueType={propInfo.defaultType}
-                  onChangeValue={value => setProperty(propInfo.name, value)}
+                  onChangeValue={value => {
+                    handleChangeWidgetValue({
+                      type: 'change value',
+                      itemKey: propInfo.name,
+                      value: value
+                    })
+                    setProperty(propInfo.name, value)
+                  }}
                 />
               </div>
             </List.Item>
@@ -70,6 +91,7 @@ const Widget = ({
 
   onChangeValue
 }) => {
+  // TODO: 可以提取这三个算法的共性，以优化
   function getWidgetTypeByTypeString(originalType) {
     if (/^boolean$|^string$|^number$/.test(originalType)) {
       return originalType
@@ -83,13 +105,27 @@ const Widget = ({
     throw new Error("can't get widgetType by typeString")
   }
   function getWidgetTypeByValue(value) {
-    // 没有 RadioGroup 的 value
+    // 不肯能有 RadioGroup
     if (typeof value === 'string' && availableType.match(value)) return 'enum' // 自定义的模式
     return typeof value
   }
-  const defaultWidgetType = getWidgetTypeByValue(defaultValue)
+  function getInitValueByWidgetType(widgetType) {
+    const regex = [
+      [/^boolean$/, false],
+      [/^string$/, ''],
+      [/^number$/, 0],
+      [/.*/, undefined]
+    ]
+    return regex.find(([pattern]) => pattern.test(widgetType))[1]
+  }
 
-  // RadioGroup控件们的状态
+  // const [widgetInitValue, setWidghtDefaultValue] = React.useState(
+  //   getInitValueByWidgetType(getWidgetTypeByTypeString(availableType))
+  // ) // 设定该控件的默认值
+
+  // ------------RadioGroup控件们的状态------------
+  // 自己配置babel、webpack后把这些特化的逻辑放到对应的组件配置中，
+  // 或者单独把各个控件提取为单独的组件。现在为了开发速度还不需要
   const [activeRadioType, changeSelectedRadioType] = React.useState(
     getWidgetTypeByValue(activeValue || defaultValue)
   ) // 根据默认值类型自动判断默认选择项
@@ -100,14 +136,16 @@ const Widget = ({
     onChangeValue(value)
   }
 
-  //number控件的状态
+  // ------------number控件的状态------------
+  // 自己配置babel、webpack后把这些特化的逻辑放到对应的组件配置中，
+  // 或者单独把各个控件提取为单独的组件。现在为了开发速度还不需要
   const [sliderNumber, setSliderNumber] = React.useState(defaultValue || 0)
   function handleInputNumber(inputNumber) {
     setSliderNumber(inputNumber)
     onChangeValue(inputNumber)
   }
 
-  // 所有控件设置
+  // ------------所有的可用控件------------
   const widgets = {
     boolean() {
       return (
@@ -170,7 +208,6 @@ const Widget = ({
         .trim()
         .split(', ')
         .map(entry => entry.split(': '))
-      console.log('matched: ', defaultValue)
       return (
         <div>
           {'{'}
@@ -207,15 +244,11 @@ const Widget = ({
       return <span>{availableType}</span> // 何必管这么多呢？直接原封不动返回就是
     },
     radioGroup() {
-      const originalTypes = availableType.split(/ \| (?!'|")/) //前置判断报错，是babel的关系？
-      function getInitValueByTypeString(originalType) {
-        const regex = [
-          [/^boolean$/, false],
-          [/^string$/, ''],
-          [/^number$/, 0],
-          [/.*/, undefined]
-        ]
-        return regex.find(([pattern]) => pattern.test(originalType))[1]
+      const originalTypes = availableType.split(/ \| (?!'|")/) //如果有前置判断就报错，是babel的关系？
+      function getWidgetDefaultValue(widgetType) {
+        return widgetType === getWidgetTypeByValue(defaultValue)
+          ? defaultValue
+          : undefined
       }
       return (
         <Radio.Group
@@ -223,8 +256,8 @@ const Widget = ({
           onChange={({ target: { value: widgetType } }) => {
             const radioValue =
               radioGroupValues[widgetType] || //状态中设定的控件值
-              (defaultWidgetType === widgetType && defaultValue) || //Property的默认值中的（该控件的）值
-              getInitValueByTypeString(widgetType) //该控件为设定时的值
+              getWidgetDefaultValue(widgetType) || //Property的默认值中的（该控件的）值
+              getInitValueByWidgetType(widgetType) //该控件为设定时的值
             setValueByRadioType(radioValue, widgetType)
           }}
         >
@@ -238,11 +271,7 @@ const Widget = ({
               >
                 <Widget
                   activeValue={radioGroupValues[widgetType]}
-                  defaultValue={
-                    (console.log('defaultWidgetType: ', defaultWidgetType),
-                    console.log('defaultValue: ', defaultValue),
-                    widgetType === defaultWidgetType ? defaultValue : undefined)
-                  }
+                  defaultValue={getWidgetDefaultValue(widgetType)}
                   availableType={originalType}
                   onChangeValue={value => {
                     setValueByRadioType(value, widgetType)
@@ -258,6 +287,12 @@ const Widget = ({
       return null
     }
   }
-  const widgetType = getWidgetTypeByTypeString(availableType)
+
+  // 第一次渲染的何种控件，中途不可能变成另一种控件，故这样优化。
+  // 可以使 RadioGroup 变换操作控件(o゜▽゜)o☆
+  const widgetType = React.useMemo(
+    () => getWidgetTypeByTypeString(availableType),
+    [availableType]
+  )
   return widgets[widgetType]()
 }
