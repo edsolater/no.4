@@ -41,7 +41,7 @@ export const Dashboard = ({ selectedComponent }) => {
         type: 'wholly set',
         totalSetting: selectedComponent.presets[0]
       })
-  }, [dispatchWidgetSetting, selectedComponent]) //  这两项在传入的 Props 不变的情况下永远不会改变，由此 useEffect 变成了 ComponentDidMount 模式
+  }, [selectedComponent]) //  这两项在传入的 Props 不变的情况下永远不会改变，由此 useEffect 变成了 ComponentDidMount 模式
 
   //组件的UI设置
   return (
@@ -96,8 +96,9 @@ export const Dashboard = ({ selectedComponent }) => {
  */
 const Widget = ({
   activeValue,
-  availableType,
   defaultValue,
+
+  availableType,
 
   onChange
 }) => {
@@ -129,12 +130,27 @@ const Widget = ({
     return regex.find(([pattern]) => pattern.test(widgetType))[1]
   }
 
-  // TODO: 所有控件都不直接管default逻辑
-  function getWidgetValue(widgetType) {}
-
-  // const [widgetInitValue, setWidghtDefaultValue] = React.useState(
-  //   getInitValueByWidgetType(getWidgetTypeByTypeString(availableType))
-  // ) // 设定该控件的默认值
+  function getWidgetValue(widgetType) {
+    switch (widgetType) {
+      case 'boolean':
+        return typeof activeValue === 'boolean' ? activeValue : defaultValue
+      case 'number':
+        return activeValue || defaultValue || 0
+      case 'string':
+        return activeValue || defaultValue
+      case 'enum':
+        return activeValue || defaultValue
+      case 'function':
+        return availableType
+      case 'object':
+        return {
+          activeValue: Object(activeValue),
+          defaultValue: defaultValue || {}
+        }
+      default:
+        throw new Error('no this widget type')
+    }
+  }
 
   // ------------RadioGroup控件们的状态------------
   // 自己配置babel、webpack后把这些特化的逻辑放到对应的组件配置中，
@@ -149,44 +165,34 @@ const Widget = ({
     onChange(value)
   }
 
-  // ------------number控件的状态------------
-  // 自己配置babel、webpack后把这些特化的逻辑放到对应的组件配置中，
-  // 或者单独把各个控件提取为单独的组件。现在为了开发速度还不需要
-  const [sliderNumber, setSliderNumber] = React.useState(defaultValue || 0)
-  function handleInputNumber(inputNumber) {
-    setSliderNumber(inputNumber)
-    onChange(inputNumber)
-  }
-
   // ------------所有的可用控件------------
   const widgets = {
     boolean() {
       return (
         <Switch
-          checked={
-            typeof activeValue === 'boolean' ? activeValue : defaultValue
-          }
-          onChange={checked => {
-            console.log('activeValue: ', activeValue)
-            console.log('checked: ', checked)
-            onChange(checked)
-          }}
+          checked={getWidgetValue('boolean')}
+          onChange={checked => onChange(checked)}
         />
       )
     },
     number() {
       return (
         <div>
-          <InputNumber value={sliderNumber} onChange={handleInputNumber} />
-          <Slider value={sliderNumber} onChange={handleInputNumber} />
+          <InputNumber
+            value={getWidgetValue('number')}
+            onChange={num => onChange(num)}
+          />
+          <Slider
+            value={getWidgetValue('number')}
+            onChange={num => onChange(num)}
+          />
         </div>
       )
     },
     string() {
       return (
         <Input
-          placeholder={defaultValue}
-          value={activeValue}
+          value={getWidgetValue('string')}
           onChange={e => {
             onChange(e.target.value)
           }}
@@ -210,7 +216,7 @@ const Widget = ({
           <Radio.Group
             buttonStyle="solid"
             onChange={e => onChange(e.target.value)}
-            value={activeValue || defaultValue}
+            value={getWidgetValue('enum')}
           >
             {enumStrings.map(str => (
               <Radio.Button key={str} value={str}>
@@ -243,9 +249,9 @@ const Widget = ({
                     }}
                   >{`${key} :   `}</span>
                   <Widget
-                    activeValue={Object(activeValue)[key]}
+                    activeValue={getWidgetValue('object')[key]}
                     availableType={valueType}
-                    defaultValue={defaultValue && defaultValue[key]}
+                    defaultValue={getWidgetValue('object')[key]}
                     isObjectChild
                     onChange={value => {
                       onChange({ ...activeValue, [key]: value })
@@ -260,7 +266,7 @@ const Widget = ({
       )
     },
     function() {
-      return <span>{availableType}</span> // 何必管这么多呢？直接原封不动返回就是
+      return <span>{getWidgetValue('function')}</span> // 何必管这么多呢？直接原封不动返回就是
     },
     radioGroup() {
       const originalTypes = availableType.split(/ \| (?!'|")/) //如果有前置判断就报错，是babel的关系？
@@ -301,9 +307,6 @@ const Widget = ({
           })}
         </Radio.Group>
       )
-    },
-    unknown() {
-      return null
     }
   }
 
@@ -313,5 +316,5 @@ const Widget = ({
     () => getWidgetTypeByTypeString(availableType),
     [availableType]
   )
-  return widgets[widgetType]()
+  return widgets[widgetType] ? widgets[widgetType]() : null
 }
