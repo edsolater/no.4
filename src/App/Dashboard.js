@@ -70,7 +70,7 @@ const Widget = ({
 
   onChangeValue
 }) => {
-  function getWidgetTypeByOriginalType(originalType) {
+  function getWidgetTypeByTypeString(originalType) {
     if (/^boolean$|^string$|^number$/.test(originalType)) {
       return originalType
     } else {
@@ -79,27 +79,21 @@ const Widget = ({
       if (/^\[.*\|.*\]$/.test(originalType)) return 'enum'
       if (/any/.test(originalType)) return 'string'
       if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
-    }
-    return 'unknown'
+    } 
+    throw new Error("can't get widgetType by typeString")
   }
   function getWidgetTypeByValue(value) {
-    // return typeof value
-    if (typeof value === 'boolean') return 'boolean'
-    if (typeof value === 'number') return 'number'
-    if (typeof value === 'string') {
-      if (availableType.match(value)) return 'enum'
-      return 'string'
-    }
-    if (typeof value === 'object') return 'object'
-    return 'unknown'
+    // 没有 RadioGroup 的 value
+    if(typeof value === 'string' && availableType.match(value)) return 'enum' // 自定义的模式
+    return typeof value
   }
   const defaultWidgetType = getWidgetTypeByValue(defaultValue)
 
-  //RadioGroup控件们的状态
+  // RadioGroup控件们的状态
   const [activeRadioType, changeSelectedRadioType] = React.useState(
     getWidgetTypeByValue(activeValue)
   ) // 根据默认值类型自动判断默认选择项
-  const [radioGroupValues, setRadioGroupValues] = React.useState({}) //用于保存 Radio 的状态值
+  const [radioGroupValues, setRadioGroupValues] = React.useState({}) // 用于保存 Radio 的状态值
   function setValueByRadioType(value, widgetType) {
     changeSelectedRadioType(widgetType)
     setRadioGroupValues({ ...radioGroupValues, [widgetType]: value })
@@ -214,7 +208,7 @@ const Widget = ({
     },
     radioGroup() {
       const originalTypes = availableType.split(/ \| (?!'|")/) //前置判断报错，是babel的关系？
-      function getInitValueByOriginalType(originalType) {
+      function getInitValueByTypeString(originalType) {
         const regex = [
           [/^boolean$/, false],
           [/^string$/, ''],
@@ -231,12 +225,12 @@ const Widget = ({
             const radioValue =
               radioGroupValues[widgetType] || //状态中设定的控件值
               (defaultWidgetType === widgetType && defaultValue) || //Property的默认值中的（该控件的）值
-              getInitValueByOriginalType(widgetType) //该控件为设定时的值
+              getInitValueByTypeString(widgetType) //该控件为设定时的值
             setValueByRadioType(radioValue, widgetType)
           }}
         >
           {originalTypes.map((originalType, index) => {
-            const widgetType = getWidgetTypeByOriginalType(originalType)
+            const widgetType = getWidgetTypeByTypeString(originalType)
             return (
               <Radio
                 key={index}
@@ -265,6 +259,6 @@ const Widget = ({
       return null
     }
   }
-  const widgetType = getWidgetTypeByOriginalType(availableType)
+  const widgetType = getWidgetTypeByTypeString(availableType)
   return widgets[widgetType]()
 }
