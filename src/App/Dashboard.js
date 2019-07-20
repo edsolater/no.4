@@ -77,26 +77,24 @@ const Widget = ({
       if (/^\(.*?\) => .*$/.test(originalType)) return 'function'
       if (/^{.*}$/.test(originalType)) return 'object'
       if (/^\[.*\|.*\]$/.test(originalType)) return 'enum'
-      if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
       if (/any/.test(originalType)) return 'string'
+      if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
     }
     return 'unknown'
   }
-  function getWidgetTypeByValue(value, availableType) {
-    // TODO:
-    return typeof value
-    value = typeof value !== 'object' ? String(value) : value.toSource()
-    const regex = [
-      [/^true$|^false$/, { type: 'boolean', init: false }],
-      [/^\d+$/, { type: 'number', init: 0 }],
-      [/^'.*'*$|^".*"*$/, { type: 'string', init: '' }],
-      [/^\({.*}\)$/, { type: 'object', init: {} }]
-    ]
-    const matched = regex.find(([pattern]) => pattern.test(value))
-    const typeObj = matched ? matched[1] : {}
-    return typeObj
+  function getWidgetTypeByValue(value) {
+    // return typeof value
+    if (typeof value === 'boolean') return 'boolean'
+    if (typeof value === 'number') return 'number'
+    if (typeof value === 'string') {
+      if (availableType.match(value)) return 'enum'
+      return 'string'
+    }
+    if (typeof value === 'object') return 'object'
+    return 'unknown'
   }
   const defaultWidgetType = getWidgetTypeByValue(defaultValue)
+
   //RadioGroup控件们的状态
   const [activeRadioType, changeSelectedRadioType] = React.useState(
     getWidgetTypeByValue(activeValue)
@@ -225,6 +223,7 @@ const Widget = ({
         ]
         return regex.find(([pattern]) => pattern.test(originalType))[1]
       }
+      console.log('activeRadioType: ', activeRadioType) // TOFIX: unknown
       return (
         <Radio.Group
           value={activeRadioType} // 可用 useMemo 优化
@@ -247,7 +246,9 @@ const Widget = ({
                 <Widget
                   activeValue={radioGroupValues[widgetType]}
                   defaultValue={
-                    widgetType === defaultWidgetType ? defaultValue : undefined
+                    (console.log('defaultWidgetType: ', defaultWidgetType),
+                    console.log('defaultValue: ', defaultValue),
+                    widgetType === defaultWidgetType ? defaultValue : undefined)
                   }
                   availableType={originalType}
                   onChangeValue={value => {
