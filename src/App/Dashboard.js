@@ -10,16 +10,19 @@ import {
 } from 'antd/es'
 import { List } from './components/List'
 import { color } from './settings/style'
+import { isEqualWith } from 'lodash'
 
 export const Dashboard = ({ selectedComponent }) => {
-  const [widgetBackground, dispatchWidgetBackground] = React.useReducer(
+  const [widgetBackgrounds, dispatchWidgetBackground] = React.useReducer(
     (state, action) => {
       switch (action.type) {
         case 'set': {
           const newState = { ...state }
+          if (newState[action.key] === action.value) return state
           newState[action.key] = action.value
           console.log(
-            `[set a new widgetBackground] ${action.key}: ${action.value}`
+            `[set a new widgetBackground] ${action.key}: `,
+            action.value
           )
           return newState
         }
@@ -39,7 +42,6 @@ export const Dashboard = ({ selectedComponent }) => {
     {}
   )
 
-  // TODO:可以把判断是否等同默认值的逻辑提取出来，数据库就保留数据库的原始操作方法。且不应该使用其他库的方法，引起混乱
   // dashboard的全部 widgets配置
   const [widgetSettings, dispatchWidgetSetting] = React.useReducer(
     (state, action) => {
@@ -47,14 +49,12 @@ export const Dashboard = ({ selectedComponent }) => {
         case 'set': {
           const newState = { ...state }
           newState[action.key] = action.value
-          console.log(
-            `[set a new widgetSetting] ${action.key}: ${action.value}`
-          )
+          console.log(`[set a new widgetSetting] ${action.key}: `, action.value)
           return newState
         }
         case 'cover all': {
           const newState = action.all
-          console.log(`[cover all widgetSettings] use: ${action.all}`)
+          console.log(`[cover all widgetSettings] all: `, action.all)
           return newState
         }
         case 'delete': {
@@ -72,18 +72,11 @@ export const Dashboard = ({ selectedComponent }) => {
   )
 
   function setValue(value, propInfo) {
-    function equalToDefaultValue(newValue, defaultValue) {
-      // TODO: 需要 DeepCompare
-      // 当设定的新值与默认值相同时，等同于没有设定
-      // 当新值是布尔值时，默认值的undefined就是false
-      return (
-        newValue ===
-        (typeof defaultValue === undefined
-          ? Boolean(defaultValue)
-          : defaultValue)
-      )
-    }
-    if (equalToDefaultValue(value, propInfo.default)) {
+    if (
+      isEqualWith(value, propInfo.default, (a, b) => {
+        return b === undefined ? a === Boolean(b) : undefined
+      })
+    ) {
       dispatchWidgetSetting({ type: 'delete', key: propInfo.name })
       dispatchWidgetBackground({ type: 'delete', key: propInfo.name })
     } else {
@@ -115,7 +108,7 @@ export const Dashboard = ({ selectedComponent }) => {
               <List.Item
                 key={propInfo.name}
                 style={{
-                  background: widgetBackground[propInfo.name],
+                  background: widgetBackgrounds[propInfo.name],
                   display: 'flex',
                   marginBottom: 16
                 }}

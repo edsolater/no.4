@@ -1,6 +1,6 @@
 # 任务：(✨—— 新 Feature；🐞—— bug；🎈—— 持久战)
 
-- ✨ 把reducer仓库的操作逻辑，与数值的判断逻辑分开
+- ✨ 把 reducer 仓库的操作逻辑，与数值的判断逻辑分开
 
 - ✨ 组件的预览有专门的预览窗格，且得是 sticky 的
 
@@ -19,6 +19,7 @@
 
 # 成就
 
+- 引入 lodash 的 isEqualWith 解决比较 object literal 的问题
 - ✨ 一键删除冗余配置（即，与默认设置相同的设置）
   在 Widget 组件上设定了两个 Reducer 自带特性。
 
