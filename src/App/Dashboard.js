@@ -72,7 +72,8 @@ export const Dashboard = ({ selectedComponent }) => {
   )
 
   function setValue(value, propInfo) {
-    function theSame(newValue, defaultValue) {
+    function equalToDefaultValue(newValue, defaultValue) {
+// TODO: 需要 DeepCompare
       // 当设定的新值与默认值相同时，等同于没有设定
       // 当新值是布尔值时，默认值的undefined就是false
       return (
@@ -82,7 +83,7 @@ export const Dashboard = ({ selectedComponent }) => {
           : defaultValue)
       )
     }
-    if (theSame(value, propInfo.default)) {
+    if (equalToDefaultValue(value, propInfo.default)) {
       dispatchWidgetSetting({ type: 'delete', key: propInfo.name })
       dispatchWidgetBackground({ type: 'delete', key: propInfo.name })
     } else {
@@ -182,7 +183,7 @@ const Widget = ({
       case 'boolean':
         return typeof activeValue === 'boolean' ? activeValue : defaultValue
       case 'number':
-        return activeValue || defaultValue || 0
+        return typeof activeValue === 'number' ? activeValue : defaultValue || 0
       case 'string':
         return activeValue || defaultValue
       case 'enum':
