@@ -16,37 +16,44 @@ export const Dashboard = ({ selectedComponent }) => {
     (state, action) => {
       switch (action.type) {
         case 'set':
-          break
-
+          return { ...state, [action.propInfo.name]: action.newBackgroundColor }
         default:
-          break
+          throw new Error('unknown action type for widget background')
       }
     },
     {}
   )
+
+  // TODO:可以把判断是否等同默认值的逻辑提取出来，数据库就保留数据库的原始操作方法
   // dashboard的全部 widgets配置
-  const [widgetActiveSettings, dispatchWidgetSetting] = React.useReducer(
+  const [widgetSettings, dispatchWidgetSetting] = React.useReducer(
     (state, action) => {
       switch (action.type) {
-        case 'itemly set':
-          let newValue = action.newValue
-          let newBackgroundColor =
-            color.componentColorInGroup[selectedComponent.class]
-          let defaultValue = action.propInfo.default
-          if (typeof newValue === 'boolean')
-            defaultValue = Boolean(defaultValue)
-          if (newValue === defaultValue || newValue === undefined) {
-            newValue = newBackgroundColor = undefined
-          }
-          console.log('state: ', state)
-          return {
-            ...state,
-            [action.propInfo.name]: {
-              value: newValue,
-              backgroundColor: newBackgroundColor
-            }
+        case 'set':
+          // 当新值是布尔值时，默认值的undefined就是false
+          if (
+            typeof action.newValue === 'boolean' &&
+            action.propInfo.default === undefined
+          )
+            action.propInfo.default = false
+
+          // 当设定的新值与默认值相同时，等同于没有设定
+          if (action.newValue === action.propInfo.default) {
+            action.newValue = undefined // 覆盖上 undefined 的设定，以示 “未设定值”
           }
 
+          // 通知管背景颜色的reducer
+          setWidgetBackground({
+            type: 'set',
+            propInfo: action.propInfo,
+            newBackgroundColor: action.newValue
+              ? color.componentColorInGroup[selectedComponent.class]
+              : undefined
+          })
+          return {
+            ...state,
+            [action.propInfo.name]: action.newValue
+          }
         case 'wholly set':
           return action.totalSetting
         default:
@@ -75,9 +82,7 @@ export const Dashboard = ({ selectedComponent }) => {
               <List.Item
                 key={propInfo.name}
                 style={{
-                  background:
-                    widgetActiveSettings[propInfo.name] &&
-                    widgetActiveSettings[propInfo.name].backgroundColor,
+                  background: widgetBackground[propInfo.name],
                   display: 'flex',
                   marginBottom: 16
                 }}
@@ -89,15 +94,12 @@ export const Dashboard = ({ selectedComponent }) => {
                 </div>
                 <div>
                   <Widget
-                    activeValue={
-                      widgetActiveSettings[propInfo.name] &&
-                      widgetActiveSettings[propInfo.name].value
-                    }
+                    activeValue={widgetSettings[propInfo.name]}
                     availableType={propInfo.type}
                     defaultValue={propInfo.default}
                     onChange={value => {
                       dispatchWidgetSetting({
-                        type: 'itemly set',
+                        type: 'set',
                         newValue: value,
                         propInfo
                       })
@@ -113,10 +115,7 @@ export const Dashboard = ({ selectedComponent }) => {
   )
 }
 
-/**
- *
- * @param {boolean} isObjectChild
- */
+
 const Widget = ({
   activeValue,
   defaultValue,
