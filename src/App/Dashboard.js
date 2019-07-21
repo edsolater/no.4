@@ -9,24 +9,46 @@ import {
   Button
 } from 'antd/es'
 import { List } from './components/List'
+import { color } from './settings/style'
 
 export const Dashboard = ({ selectedComponent }) => {
+  const [widgetBackground, setWidgetBackground] = React.useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'set':
+          break
+
+        default:
+          break
+      }
+    },
+    {}
+  )
   // dashboard的全部 widgets配置
-  const [widgets, dispatchWidgetSetting] = React.useReducer(
-    (state, { type, itemKey, itemValue, totalSetting }) => {
-      switch (type) {
+  const [widgetActiveSettings, dispatchWidgetSetting] = React.useReducer(
+    (state, action) => {
+      switch (action.type) {
         case 'itemly set':
-          const newValue = itemValue
-          const newBackgroundColor = '#ddd'
+          let newValue = action.newValue
+          let newBackgroundColor =
+            color.componentColorInGroup[selectedComponent.class]
+          let defaultValue = action.propInfo.default
+          if (typeof newValue === 'boolean')
+            defaultValue = Boolean(defaultValue)
+          if (newValue === defaultValue || newValue === undefined) {
+            newValue = newBackgroundColor = undefined
+          }
+          console.log('state: ', state)
           return {
             ...state,
-            [itemKey]: {
+            [action.propInfo.name]: {
               value: newValue,
               backgroundColor: newBackgroundColor
             }
           }
+
         case 'wholly set':
-          return totalSetting
+          return action.totalSetting
         default:
           throw new Error('unknown action type for dashboard setting')
       }
@@ -54,8 +76,8 @@ export const Dashboard = ({ selectedComponent }) => {
                 key={propInfo.name}
                 style={{
                   background:
-                    widgets[propInfo.name] &&
-                    widgets[propInfo.name].backgroundColor,
+                    widgetActiveSettings[propInfo.name] &&
+                    widgetActiveSettings[propInfo.name].backgroundColor,
                   display: 'flex',
                   marginBottom: 16
                 }}
@@ -68,15 +90,16 @@ export const Dashboard = ({ selectedComponent }) => {
                 <div>
                   <Widget
                     activeValue={
-                      widgets[propInfo.name] && widgets[propInfo.name].value
+                      widgetActiveSettings[propInfo.name] &&
+                      widgetActiveSettings[propInfo.name].value
                     }
                     availableType={propInfo.type}
                     defaultValue={propInfo.default}
                     onChange={value => {
                       dispatchWidgetSetting({
                         type: 'itemly set',
-                        itemKey: propInfo.name,
-                        itemValue: value
+                        newValue: value,
+                        propInfo
                       })
                     }}
                   />
@@ -211,7 +234,7 @@ const Widget = ({
             style={{ marginRight: 20 }}
             onClick={() => onChange(undefined)}
           >
-            reset
+            (reset)
           </Button>
           <Radio.Group
             buttonStyle="solid"
@@ -249,9 +272,9 @@ const Widget = ({
                     }}
                   >{`${key} :   `}</span>
                   <Widget
-                    activeValue={getWidgetValue('object')[key]}
+                    activeValue={getWidgetValue('object').activeValue[key]}
                     availableType={valueType}
-                    defaultValue={getWidgetValue('object')[key]}
+                    defaultValue={getWidgetValue('object').defaultValue[key]}
                     isObjectChild
                     onChange={value => {
                       onChange({ ...activeValue, [key]: value })
