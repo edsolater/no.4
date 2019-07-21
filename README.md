@@ -17,6 +17,9 @@
 
 # 成就
 
+- 每个基本控件旁都增设 reset Button
+  因为有 RadioGroup， 意外地困难
+
 - 引入 lodash 的 isEqualWith 解决比较 object literal 的问题
 
 - ✨ 把 reducer 仓库的操作逻辑，与数值的判断逻辑分开

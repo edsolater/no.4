@@ -1,13 +1,32 @@
 import React from 'react'
 import { Switch, Input, Slider, InputNumber, Radio, Button } from 'antd/es'
 
+// 不是组件刚加载时才这么做
+function useEffectAfterUpdate(fn) {
+  const mounted = React.useRef()
+  React.useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true
+    } else {
+      fn()
+    }
+  })
+}
+
+/**
+ * @param {*} activeValue
+ * @param {*} defaultValue
+ * @param {String} availableType
+ * @param {Function} [onChange]
+ * @param {Function} [take] 返回组件的state
+ * @returns
+ */
 export const Widget = ({
   activeValue,
   defaultValue,
-
   availableType,
 
-  onChange
+  onChange = () => {}
 }) => {
   // TODO: 可以提取这三个算法的共性，以优化
   function getWidgetTypeByTypeString(originalType) {
@@ -36,7 +55,6 @@ export const Widget = ({
     ]
     return regex.find(([pattern]) => pattern.test(widgetType))[1]
   }
-
   function getWidgetValue(widgetType) {
     switch (widgetType) {
       case 'boolean':
@@ -71,6 +89,13 @@ export const Widget = ({
     setRadioGroupValues({ ...radioGroupValues, [widgetType]: value })
     onChange(value)
   }
+
+  useEffectAfterUpdate(() => {
+    if (activeValue === undefined) {
+      setRadioGroupValues({})
+      changeSelectedRadioType(getWidgetTypeByValue(defaultValue))
+    } //重置 RadioGroup 保留的状态
+  })
 
   // ------------所有的可用控件------------
   const widgets = {
@@ -113,25 +138,17 @@ export const Widget = ({
         .split('|')
         .map(str => str.trim().replace(/'|"/g, ''))
       return (
-        <>
-          <Button
-            style={{ marginRight: 20 }}
-            onClick={() => onChange(undefined)}
-          >
-            (reset)
-          </Button>
-          <Radio.Group
-            buttonStyle="solid"
-            onChange={e => onChange(e.target.value)}
-            value={getWidgetValue('enum')}
-          >
-            {enumStrings.map(str => (
-              <Radio.Button key={str} value={str}>
-                {str}
-              </Radio.Button>
-            ))}
-          </Radio.Group>
-        </>
+        <Radio.Group
+          buttonStyle="solid"
+          onChange={e => onChange(e.target.value)}
+          value={getWidgetValue('enum')}
+        >
+          {enumStrings.map(str => (
+            <Radio.Button key={str} value={str}>
+              {str}
+            </Radio.Button>
+          ))}
+        </Radio.Group>
       )
     },
     object() {
@@ -202,7 +219,13 @@ export const Widget = ({
                 style={{ display: 'block', marginBottom: 8 }}
               >
                 <Widget
-                  activeValue={radioGroupValues[widgetType]}
+                  activeValue={
+                    (console.log(
+                      'radioGroupValues[widgetType]: ',
+                      radioGroupValues[widgetType]
+                    ),
+                    radioGroupValues[widgetType])
+                  }
                   defaultValue={getWidgetDefaultValue(widgetType)}
                   availableType={originalType}
                   onChange={value => {

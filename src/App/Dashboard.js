@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tooltip } from 'antd/es'
+import { Tooltip, Button } from 'antd/es'
 import { List } from './components/List'
 import { color } from './settings/style'
 import { isEqualWith } from 'lodash'
@@ -68,7 +68,8 @@ export const Dashboard = ({ selectedComponent }) => {
     if (
       isEqualWith(value, propInfo.default, (a, b) => {
         return b === undefined ? a === Boolean(b) : undefined
-      })
+      }) ||
+      value === undefined
     ) {
       dispatchWidgetSetting({ type: 'delete', key: propInfo.name })
       dispatchWidgetBackground({ type: 'delete', key: propInfo.name })
@@ -92,38 +93,38 @@ export const Dashboard = ({ selectedComponent }) => {
   }, [selectedComponent]) //  这两项在传入的 Props 不变的情况下永远不会改变，由此 useEffect 变成了 ComponentDidMount 模式
 
   //组件的UI设置
+  const tables = Object.entries(selectedComponent.reactProps)
   return (
     <div style={{ padding: 10 }}>
-      {Object.entries(selectedComponent.reactProps).map(
-        ([name, properties]) => (
-          <List key={name} title={name}>
-            {properties.map(propInfo => (
-              <List.Item
-                key={propInfo.name}
-                style={{
-                  background: widgetBackgrounds[propInfo.name],
-                  display: 'flex',
-                  marginBottom: 16
-                }}
+      {tables.map(([name, properties]) => (
+        <List key={name} title={tables.length > 1 && name}>
+          {properties.map(propInfo => (
+            <List.Item
+              key={propInfo.name}
+              style={{
+                background: widgetBackgrounds[propInfo.name],
+                display: 'flex',
+                marginBottom: 16
+              }}
+            >
+              <div
+                style={{ width: 180 }}
+                onClick={() => setValue(undefined, propInfo)}
               >
-                <div style={{ width: 180 }}>
-                  <Tooltip title={propInfo.description}>
-                    {propInfo.name}
-                  </Tooltip>
-                </div>
-                <div>
-                  <Widget
-                    activeValue={widgetSettings[propInfo.name]}
-                    availableType={propInfo.type}
-                    defaultValue={propInfo.default}
-                    onChange={value => setValue(value, propInfo)}
-                  />
-                </div>
-              </List.Item>
-            ))}
-          </List>
-        )
-      )}
+                <Tooltip title={propInfo.description}>{propInfo.name}</Tooltip>
+              </div>
+              <div>
+                <Widget
+                  activeValue={widgetSettings[propInfo.name]}
+                  availableType={propInfo.type}
+                  defaultValue={propInfo.default}
+                  onChange={value => setValue(value, propInfo)}
+                />
+              </div>
+            </List.Item>
+          ))}
+        </List>
+      ))}
     </div>
   )
 }
