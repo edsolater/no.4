@@ -12,63 +12,95 @@ import { List } from './components/List'
 import { color } from './settings/style'
 
 export const Dashboard = ({ selectedComponent }) => {
-  const [widgetBackground, setWidgetBackground] = React.useReducer(
+  const [widgetBackground, dispatchWidgetBackground] = React.useReducer(
     (state, action) => {
       switch (action.type) {
-        case 'set':
-          return { ...state, [action.propInfo.name]: action.newBackgroundColor }
-        default:
+        case 'set': {
+          const newState = { ...state }
+          newState[action.key] = action.value
+          console.log(
+            `[set a new widgetBackground] ${action.key}: ${action.value}`
+          )
+          return newState
+        }
+        case 'delete': {
+          const newState = { ...state }
+          delete newState[action.key]
+          console.log(
+            `[delete a widgetBackground] ${action.key}: ${action.value}`
+          )
+          return newState
+        }
+        default: {
           throw new Error('unknown action type for widget background')
+        }
       }
     },
     {}
   )
 
-  // TODO:可以把判断是否等同默认值的逻辑提取出来，数据库就保留数据库的原始操作方法
+  // TODO:可以把判断是否等同默认值的逻辑提取出来，数据库就保留数据库的原始操作方法。且不应该使用其他库的方法，引起混乱
   // dashboard的全部 widgets配置
   const [widgetSettings, dispatchWidgetSetting] = React.useReducer(
     (state, action) => {
       switch (action.type) {
-        case 'set':
-          // 当新值是布尔值时，默认值的undefined就是false
-          if (
-            typeof action.newValue === 'boolean' &&
-            action.propInfo.default === undefined
+        case 'set': {
+          const newState = { ...state }
+          newState[action.key] = action.value
+          console.log(
+            `[set a new widgetSetting] ${action.key}: ${action.value}`
           )
-            action.propInfo.default = false
-
-          // 当设定的新值与默认值相同时，等同于没有设定
-          if (action.newValue === action.propInfo.default) {
-            action.newValue = undefined // 覆盖上 undefined 的设定，以示 “未设定值”
-          }
-
-          // 通知管背景颜色的reducer
-          setWidgetBackground({
-            type: 'set',
-            propInfo: action.propInfo,
-            newBackgroundColor: action.newValue
-              ? color.componentColorInGroup[selectedComponent.class]
-              : undefined
-          })
-          return {
-            ...state,
-            [action.propInfo.name]: action.newValue
-          }
-        case 'wholly set':
-          return action.totalSetting
-        default:
+          return newState
+        }
+        case 'cover all': {
+          const newState = action.all
+          console.log(`[cover all widgetSettings] use: ${action.all}`)
+          return newState
+        }
+        case 'delete': {
+          const newState = { ...state }
+          delete newState[action.key]
+          console.log(`[delete an exist widgetSetting] ${action.key}`)
+          return newState
+        }
+        default: {
           throw new Error('unknown action type for dashboard setting')
+        }
       }
     },
     {}
   )
+
+  function setValue(value, propInfo) {
+    function theSame(newValue, defaultValue) {
+      // 当设定的新值与默认值相同时，等同于没有设定
+      // 当新值是布尔值时，默认值的undefined就是false
+      return (
+        newValue ===
+        (typeof defaultValue === undefined
+          ? Boolean(defaultValue)
+          : defaultValue)
+      )
+    }
+    if (theSame(value, propInfo.default)) {
+      dispatchWidgetSetting({ type: 'delete', key: propInfo.name })
+      dispatchWidgetBackground({ type: 'delete', key: propInfo.name })
+    } else {
+      dispatchWidgetSetting({ type: 'set', key: propInfo.name, value: value })
+      dispatchWidgetBackground({
+        type: 'set',
+        key: propInfo.name,
+        value: color.componentColorInGroup[selectedComponent.class]
+      })
+    }
+  }
 
   // 如果有的话，最初先加载一次默认样式
   React.useEffect(() => {
     if (selectedComponent.presets)
       dispatchWidgetSetting({
-        type: 'wholly set',
-        totalSetting: selectedComponent.presets[0]
+        type: 'cover all',
+        all: selectedComponent.presets[0]
       })
   }, [selectedComponent]) //  这两项在传入的 Props 不变的情况下永远不会改变，由此 useEffect 变成了 ComponentDidMount 模式
 
@@ -97,13 +129,7 @@ export const Dashboard = ({ selectedComponent }) => {
                     activeValue={widgetSettings[propInfo.name]}
                     availableType={propInfo.type}
                     defaultValue={propInfo.default}
-                    onChange={value => {
-                      dispatchWidgetSetting({
-                        type: 'set',
-                        newValue: value,
-                        propInfo
-                      })
-                    }}
+                    onChange={value => setValue(value, propInfo)}
                   />
                 </div>
               </List.Item>
@@ -114,7 +140,6 @@ export const Dashboard = ({ selectedComponent }) => {
     </div>
   )
 }
-
 
 const Widget = ({
   activeValue,
