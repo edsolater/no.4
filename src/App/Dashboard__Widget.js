@@ -1,18 +1,6 @@
 import React from 'react'
 import { Switch, Input, Slider, InputNumber, Radio, Button } from 'antd/es'
 
-// 不是组件刚加载时才这么做
-function useEffectAfterUpdate(fn) {
-  const mounted = React.useRef()
-  React.useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true
-    } else {
-      fn()
-    }
-  })
-}
-
 /**
  * @param {*} activeValue
  * @param {*} defaultValue
@@ -39,43 +27,18 @@ export const Widget = ({
       if (/any/.test(originalType)) return 'string'
       if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
     }
-    throw new Error(`can't get widgetType by typeString, set ${originalType}`)
+    throw new Error(`can't get widgetType by typeString, set: ${originalType}`)
   }
   function getWidgetTypeByValue(value) {
-    // 不肯能有 RadioGroup
+    // 不可能有 RadioGroup
     if (typeof value === 'string' && availableType.match(value)) return 'enum' // 自定义的模式
     return typeof value
   }
-  function getInitValueByWidgetType(widgetType) {
-    console.log('availableType: ', availableType)
-    const regex = [
-      [/^boolean$/, false],
-      [/^string$/, ''],
-      [/^number$/, 0],
-      [/.*/, undefined]
-    ]
-    return regex.find(([pattern]) => pattern.test(widgetType))[1]
-  }
-  function getWidgetValue(widgetType) {
-    switch (widgetType) {
-      case 'boolean':
-        return typeof activeValue === 'boolean' ? activeValue : defaultValue
-      case 'number':
-        return typeof activeValue === 'number' ? activeValue : defaultValue || 0
-      case 'string':
-        return activeValue || defaultValue
-      case 'enum':
-        return activeValue || defaultValue
-      case 'function':
-        return availableType
-      case 'object':
-        return {
-          activeValue: Object(activeValue),
-          defaultValue: defaultValue || {}
-        }
-      default:
-        throw new Error('no this widget type')
-    }
+  function getWidgeValue(widgetType) {
+    return (
+      (getWidgetTypeByValue(activeValue) === widgetType && activeValue) ||
+      (getWidgetTypeByValue(defaultValue) === widgetType && defaultValue)
+    )
   }
 
   // ------------RadioGroup控件们的状态------------
@@ -103,7 +66,7 @@ export const Widget = ({
     boolean() {
       return (
         <Switch
-          checked={getWidgetValue('boolean')}
+          checked={getWidgeValue('boolean') || false}
           onChange={checked => onChange(checked)}
         />
       )
@@ -112,11 +75,11 @@ export const Widget = ({
       return (
         <div>
           <InputNumber
-            value={getWidgetValue('number')}
+            value={getWidgeValue('number') || 0}
             onChange={num => onChange(num)}
           />
           <Slider
-            value={getWidgetValue('number')}
+            value={getWidgeValue('number') || 0}
             onChange={num => onChange(num)}
           />
         </div>
@@ -125,7 +88,7 @@ export const Widget = ({
     string() {
       return (
         <Input
-          value={getWidgetValue('string')}
+          value={getWidgeValue('string') || ''}
           onChange={e => {
             onChange(e.target.value)
           }}
@@ -142,7 +105,7 @@ export const Widget = ({
         <Radio.Group
           buttonStyle="solid"
           onChange={e => onChange(e.target.value)}
-          value={getWidgetValue('enum')}
+          value={getWidgeValue('enum')}
         >
           {enumStrings.map(str => (
             <Radio.Button key={str} value={str}>
@@ -174,9 +137,9 @@ export const Widget = ({
                     }}
                   >{`${key} :   `}</span>
                   <Widget
-                    activeValue={getWidgetValue('object').activeValue[key]}
+                    activeValue={(getWidgeValue('object') || {})[key]}
                     availableType={valueType}
-                    defaultValue={getWidgetValue('object').defaultValue[key]}
+                    // defaultValue={getSettedWidgeValue('object').defaultValue[key]}
                     isObjectChild
                     onChange={value => {
                       onChange({ ...activeValue, [key]: value })
@@ -191,7 +154,7 @@ export const Widget = ({
       )
     },
     function() {
-      return <span>{getWidgetValue('function')}</span> // 何必管这么多呢？直接原封不动返回就是
+      return <span>{availableType}</span> // 何必管这么多呢？直接原封不动返回就是
     },
     radioGroup() {
       const originalTypes = availableType.split(/ \| (?!'|")/) //如果有前置判断就报错，是babel的关系？
@@ -204,12 +167,10 @@ export const Widget = ({
         <Radio.Group
           value={activeRadioType} // 可用 useMemo 优化
           onChange={({ target: { value: widgetType } }) => {
-            console.log('widgetType: ', widgetType)
-            const radioValue =
-              radioGroupValues[widgetType] || //状态中设定的控件值
-              getWidgetDefaultValue(widgetType) || //Property的默认值中的（该控件的）值
-              getInitValueByWidgetType(widgetType) //该控件为设定时的值
-            setValue({ key: widgetType, value: radioValue })
+            setValue({
+              key: widgetType,
+              value: radioGroupValues[widgetType] // may be undefined
+            })
             changeSelectedRadioType(widgetType)
           }}
         >

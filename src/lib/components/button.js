@@ -50,7 +50,8 @@ export default {
       {
         name: 'loading',
         description: '设置按钮载入状态',
-        type: 'boolean | { delay: number }'
+        type: 'boolean | { delay: number }',
+        default: { delay: 10 }
       },
       {
         name: 'shape',
