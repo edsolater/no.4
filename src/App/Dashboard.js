@@ -1,6 +1,6 @@
 import React from 'react'
 import 'styled-components/macro'
-import { Tooltip } from 'antd/es'
+import { Layout, Tooltip } from 'antd/es'
 import { List, Box } from './components'
 import { color } from './settings/style'
 import { isEqualWith } from 'lodash'
@@ -97,8 +97,19 @@ export const Dashboard = ({ selectedComponent }) => {
   const tables = Object.entries(selectedComponent.reactProps)
   const Preview = selectedComponent.Preview // 本来就是自带默认值的，没必要再设定默认值了
   return (
-    <div style={{ padding: 10 }}>
-      <Preview {...activeSettings} />
+    <Layout.Content style={{position:'relative'}}>
+      <Box
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: 120,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Preview {...activeSettings} />
+      </Box>
       <Box style={{ marginTop: 200 }}>
         {tables.map(([name, properties]) => (
           <List
@@ -170,6 +181,6 @@ export const Dashboard = ({ selectedComponent }) => {
           </List>
         ))}
       </Box>
-    </div>
+    </Layout.Content>
   )
 }

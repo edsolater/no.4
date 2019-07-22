@@ -5,7 +5,7 @@ import { Layout } from 'antd/es'
 import TopIndicator from './TopIndicator'
 import SideMenu from './SideMenu'
 import { Dashboard } from './Dashboard'
-const { Sider, Content } = Layout
+const { Sider } = Layout
 
 const App = () => {
   const [selectedComponentName, selectComponentName] = React.useState('button')
@@ -20,9 +20,7 @@ const App = () => {
             selectComponentName={selectComponentName}
           />
         </Sider>
-        <Content>
-          <Dashboard selectedComponent={selectedComponent} />
-        </Content>
+        <Dashboard selectedComponent={selectedComponent} />
       </Layout>
     </Layout>
   )
