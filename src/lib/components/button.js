@@ -17,33 +17,24 @@ export default {
     // description、default 是可选的
     main: [
       {
-        name: 'copyable',
-        description: '是否可拷贝，为对象时可设置复制文本以回调函数',
-        type: '{ text: string, onCopy: (e) => void }',
-        default: { text: 'hello' }
-      },
-      {
         name: 'children',
         description: '按钮中间显示的文字，可能不是文字也行',
-        type: 'any'
+        type: 'any' // TODO:我觉得应该能把type去除
       },
       {
         name: 'disabled',
         description: '按钮失效状态',
-        type: 'boolean',
-        default: false
+        type: 'boolean'
       },
       {
         name: 'ghost',
         description: '幽灵属性，使按钮背景透明，版本 2.7 中增加',
-        type: 'boolean',
-        default: true
+        type: 'boolean'
       },
       {
         name: 'href',
         description: '点击跳转的地址，指定此属性 button 的行为和 a 链接一致',
-        type: 'string',
-        default: 'world'
+        type: 'string'
       },
       {
         name: 'htmlType',
@@ -59,14 +50,12 @@ export default {
       {
         name: 'loading',
         description: '设置按钮载入状态',
-        type: 'boolean | { delay: number }',
-        default: { delay: 3 }
+        type: 'boolean | { delay: number }'
       },
       {
         name: 'shape',
         description: '设置按钮形状，可选值为 circle、 round 或者不设',
-        type: "['circle' | 'round']",
-        default: 'round'
+        type: "['circle' | 'round']"
       },
       {
         name: 'size',
@@ -92,8 +81,7 @@ export default {
       {
         name: 'block',
         description: '将按钮宽度调整为其父宽度的选项',
-        type: 'boolean',
-        default: false
+        type: 'boolean'
       }
     ]
   },

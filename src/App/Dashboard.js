@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tooltip, Button } from 'antd/es'
+import { Tooltip } from 'antd/es'
 import { List } from './components/List'
 import { color } from './settings/style'
 import { isEqualWith } from 'lodash'
@@ -36,7 +36,7 @@ export const Dashboard = ({ selectedComponent }) => {
   )
 
   // dashboard的全部 widgets配置
-  const [widgetSettings, dispatchWidgetSetting] = React.useReducer(
+  const [activeSettings, dispatchActiveSetting] = React.useReducer(
     (state, action) => {
       switch (action.type) {
         case 'set': {
@@ -71,10 +71,10 @@ export const Dashboard = ({ selectedComponent }) => {
       }) ||
       value === undefined
     ) {
-      dispatchWidgetSetting({ type: 'delete', key: propInfo.name })
+      dispatchActiveSetting({ type: 'delete', key: propInfo.name })
       dispatchWidgetBackground({ type: 'delete', key: propInfo.name })
     } else {
-      dispatchWidgetSetting({ type: 'set', key: propInfo.name, value: value })
+      dispatchActiveSetting({ type: 'set', key: propInfo.name, value: value })
       dispatchWidgetBackground({
         type: 'set',
         key: propInfo.name,
@@ -86,7 +86,7 @@ export const Dashboard = ({ selectedComponent }) => {
   // 如果有的话，最初先加载一次默认样式
   React.useEffect(() => {
     if (selectedComponent.presets)
-      dispatchWidgetSetting({
+      dispatchActiveSetting({
         type: 'cover all',
         all: selectedComponent.presets[0]
       })
@@ -94,35 +94,41 @@ export const Dashboard = ({ selectedComponent }) => {
 
   //组件的UI设置
   const tables = Object.entries(selectedComponent.reactProps)
+  const Preview = selectedComponent.Preview // 本来就是自带默认值的，没必要再设定默认值了
   return (
     <div style={{ padding: 10 }}>
+      <Preview {...activeSettings} />
       {tables.map(([name, properties]) => (
         <List key={name} title={tables.length > 1 && name}>
-          {properties.map(propInfo => (
-            <List.Item
-              key={propInfo.name}
-              style={{
-                background: widgetBackgrounds[propInfo.name],
-                display: 'flex',
-                marginBottom: 16
-              }}
-            >
-              <div
-                style={{ width: 180 }}
-                onClick={() => setValue(undefined, propInfo)}
+          {properties.map(propInfo => {
+            return (
+              <List.Item
+                key={propInfo.name}
+                style={{
+                  background: widgetBackgrounds[propInfo.name],
+                  display: 'flex',
+                  marginBottom: 16
+                }}
               >
-                <Tooltip title={propInfo.description}>{propInfo.name}</Tooltip>
-              </div>
-              <div>
-                <Widget
-                  activeValue={widgetSettings[propInfo.name]}
-                  availableType={propInfo.type}
-                  defaultValue={propInfo.default}
-                  onChange={value => setValue(value, propInfo)}
-                />
-              </div>
-            </List.Item>
-          ))}
+                <div
+                  style={{ width: 180 }}
+                  onClick={() => setValue(null, propInfo)} // 传入 null 代表清空命令
+                >
+                  <Tooltip title={propInfo.description}>
+                    {propInfo.name}
+                  </Tooltip>
+                </div>
+                <div>
+                  <Widget
+                    activeValue={activeSettings[propInfo.name]}
+                    availableType={propInfo.type}
+                    defaultValue={propInfo.default}
+                    onChange={value => setValue(value, propInfo)}
+                  />
+                </div>
+              </List.Item>
+            )
+          })}
         </List>
       ))}
     </div>

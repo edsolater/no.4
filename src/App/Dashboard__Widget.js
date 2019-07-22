@@ -39,7 +39,7 @@ export const Widget = ({
       if (/any/.test(originalType)) return 'string'
       if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
     }
-    throw new Error("can't get widgetType by typeString")
+    throw new Error(`can't get widgetType by typeString, set ${originalType}`)
   }
   function getWidgetTypeByValue(value) {
     // 不肯能有 RadioGroup
@@ -47,6 +47,7 @@ export const Widget = ({
     return typeof value
   }
   function getInitValueByWidgetType(widgetType) {
+    console.log('availableType: ', availableType)
     const regex = [
       [/^boolean$/, false],
       [/^string$/, ''],
@@ -84,14 +85,14 @@ export const Widget = ({
     getWidgetTypeByValue(activeValue || defaultValue)
   ) // 根据默认值类型自动判断默认选择项
   const [radioGroupValues, setRadioGroupValues] = React.useState({}) // 用于保存 Radio 的状态值
-  function setValueByRadioType(value, widgetType) {
-    changeSelectedRadioType(widgetType)
-    setRadioGroupValues({ ...radioGroupValues, [widgetType]: value })
+  function setValue({ key, value }) {
+    setRadioGroupValues({ ...radioGroupValues, [key]: value })
     onChange(value)
   }
 
-  useEffectAfterUpdate(() => {
-    if (activeValue === undefined) {
+  React.useEffect(() => {
+    if (activeValue === null) {
+      onChange(undefined)
       setRadioGroupValues({})
       changeSelectedRadioType(getWidgetTypeByValue(defaultValue))
     } //重置 RadioGroup 保留的状态
@@ -203,11 +204,13 @@ export const Widget = ({
         <Radio.Group
           value={activeRadioType} // 可用 useMemo 优化
           onChange={({ target: { value: widgetType } }) => {
+            console.log('widgetType: ', widgetType)
             const radioValue =
               radioGroupValues[widgetType] || //状态中设定的控件值
               getWidgetDefaultValue(widgetType) || //Property的默认值中的（该控件的）值
               getInitValueByWidgetType(widgetType) //该控件为设定时的值
-            setValueByRadioType(radioValue, widgetType)
+            setValue({ key: widgetType, value: radioValue })
+            changeSelectedRadioType(widgetType)
           }}
         >
           {originalTypes.map((originalType, index) => {
@@ -219,17 +222,12 @@ export const Widget = ({
                 style={{ display: 'block', marginBottom: 8 }}
               >
                 <Widget
-                  activeValue={
-                    (console.log(
-                      'radioGroupValues[widgetType]: ',
-                      radioGroupValues[widgetType]
-                    ),
-                    radioGroupValues[widgetType])
-                  }
+                  activeValue={radioGroupValues[widgetType]}
                   defaultValue={getWidgetDefaultValue(widgetType)}
                   availableType={originalType}
-                  onChange={value => {
-                    setValueByRadioType(value, widgetType)
+                  onChange={radioValue => {
+                    changeSelectedRadioType(widgetType)
+                    setValue({ key: widgetType, value: radioValue })
                   }}
                 />
               </Radio>
