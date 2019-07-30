@@ -1,12 +1,12 @@
 import React from 'react'
-import { Switch, Input, Slider, InputNumber, Radio, Button } from 'antd/es'
+import { Switch, Input, Slider, InputNumber, Radio } from 'antd/es'
 
 /**
- * @param {*} activeValue
- * @param {*} defaultValue
- * @param {String} availableType
- * @param {Function} [onChange]
- * @param {Function} [take] 返回组件的state
+ * @param {object} props
+ * @param {any} props.activeValue
+ * @param {any} props.defaultValue
+ * @param {string} props.availableType
+ * @param {Function} [props.onChange]
  * @returns
  */
 export const Widget = ({
@@ -59,7 +59,7 @@ export const Widget = ({
       setRadioGroupValues({})
       changeSelectedRadioType(getWidgetTypeByValue(defaultValue))
     } //重置 RadioGroup 保留的状态
-  })
+  },[activeValue, defaultValue])
 
   // ------------所有的可用控件------------
   const widgets = {

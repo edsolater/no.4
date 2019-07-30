@@ -1,7 +1,6 @@
 import React from 'react'
 import { Layout, Icon } from 'antd/es'
-import {color} from './settings/style'
-
+import { color } from './settings/style'
 
 const TopIndicator = ({ selectedComponent }) => {
   return (
@@ -27,9 +26,7 @@ const TopIndicator = ({ selectedComponent }) => {
           }}
         >
           <Icon component={selectedComponent.icon} />
-          <span style={{ marginLeft: 16, color: 'white' }}>
-            {selectedComponent.name || selectedComponent.name_en}
-          </span>
+          <span style={{ marginLeft: 16, color: 'white' }}>{selectedComponent.name || selectedComponent.name_en}</span>
         </div>
       </div>
     </Layout.Header>

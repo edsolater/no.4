@@ -1,6 +1,6 @@
 import React from 'react'
-import { Icon, Menu, Tag, Tooltip } from 'antd/es'
-import { ReactComponent as Component } from './assets/icons/folder-react-components.svg'
+import { Layout, Icon, Menu, Tag, Tooltip } from 'antd/es'
+import { ReactComponent as Component } from './icons/folder-react-components.svg'
 import { color } from './settings/style'
 const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
@@ -76,12 +76,11 @@ export default function SideMenu({ allComponents, selectComponentName }) {
                 color: color.componentColorInGroup[component.class] || 'gray'
               }}
             />
-            <Tooltip placement="right" title={component.name_cn}>
+            <Tooltip placement='right' title={component.name_cn}>
               <span>{toPascalCase(component.name)}</span>
             </Tooltip>
             <span style={{ marginLeft: 12 }}>
-              {component.tags &&
-                component.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
+              {component.tags && component.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
             </span>
           </Menu.Item>
         )
@@ -111,15 +110,17 @@ export default function SideMenu({ allComponents, selectComponentName }) {
 
   // menu组件
   return (
-    <Menu
-      mode="inline"
-      style={{ height: '100%', overflowX: 'hidden', overflowY: 'scroll' }}
-      defaultOpenKeys={['Component']}
-      defaultSelectedKeys={['Button']}
-      onSelect={({ key }) => selectComponentName(toCamelCase(key))}
-    >
-      {createSubMenus(data)}
-    </Menu>
+    <Layout.Sider width={300} theme='light'>
+      <Menu
+        mode='inline'
+        style={{ height: '100%', overflowX: 'hidden', overflowY: 'scroll' }}
+        defaultOpenKeys={['Component']}
+        defaultSelectedKeys={['Button']}
+        onSelect={({ key }) => selectComponentName(toCamelCase(key))}
+      >
+        {createSubMenus(data)}
+      </Menu>
+    </Layout.Sider>
   )
 }
 

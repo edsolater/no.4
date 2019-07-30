@@ -1,40 +1,47 @@
 import React from 'react'
 import 'styled-components/macro'
 
-//导出组件
-export const List = ({ children = [], title, ...props }) => {
-  //规范化/扁平化 children
-  if (!Array.isArray(children)) children = [children] //如果只有单一一层子组件，就包上一层数组
-  children = children.flat() //拆分数字形式的子组件组
+export function List({ children = [], title, ...props }) {
+  // console.log('children: ', children)
+  if (!Array.isArray(children)) children = [children]
+  children = children.flat()
 
   // 以 Array形式，提取 List.Item
-  const listItems = children.filter(
-    child => child.type && child.type.displayName === 'Item'
-  )
+  const listItems = children.filter(child => {
+    if (!child.type) return false
+    return (
+      (typeof child.type === 'function' && child.type.name === 'Item') ||
+      (typeof child.type.target === 'function' &&
+        child.type.target.name === 'Item')
+    )
+  })
 
   // 以 Object 的形式，寻找 List.Title
-  const listTitle = children.find(
-    child => child.type && child.type.displayName === 'Title'
-  )
+  const listTitle = children.find(child => {
+    if (!child.type) return false
+    return (
+      (typeof child.type === 'function' && child.type.name === 'Title') ||
+      (typeof child.type.target === 'function' &&
+        child.type.target.name === 'Title')
+    )
+  })
 
   return (
     <ul {...props}>
       {listTitle || title}
       {listItems}
-      {children}
     </ul>
   )
 }
 
 //附属组件（可能只有配置而不返回 UI）
-List.Item = props => {
-  console.log('props: ', props)
-  return <li {...props} />;
+List.Item = function Item(props) {
+  // console.log('hello')
+  // console.log('props: ', props)
+  return <li {...props} />
 }
-List.Item.displayName = 'Item'
 
 //附属组件
 List.Title = props => {
   return <div {...props}>{props.children}</div>
 }
-List.Title.displayName = 'Title'

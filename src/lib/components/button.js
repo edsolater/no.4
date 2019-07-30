@@ -89,6 +89,10 @@ export default {
     {
       children: 'BUTTON',
       type: 'primary'
+    },
+    {
+      children: '2222222',
+      type: 'dashed'
     }
   ]
 }
