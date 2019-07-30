@@ -1,47 +1,37 @@
 import React from 'react'
 import 'styled-components/macro'
+import { groupBy } from 'lodash'
 
+/**
+ * pure
+ * @param {Array|Object} reactNodes
+ * @param {string[]} groupNames
+ * @returns {Object}
+ *
+ */
+function getTagName(reactNode) {
+  const tag = reactNode.type
+  if (typeof tag === 'undefined') return null
+  if (typeof tag === 'function') return tag.name
+  if (typeof tag === 'object') {
+    const innerTag = tag.target
+    if (typeof innerTag === 'function') return innerTag.name
+    return null
+  }
+}
 export function List({ children = [], title, ...props }) {
-  // console.log('children: ', children)
-  if (!Array.isArray(children)) children = [children]
-  children = children.flat()
-
-  // 以 Array形式，提取 List.Item
-  const listItems = children.filter(child => {
-    if (!child.type) return false
-    return (
-      (typeof child.type === 'function' && child.type.name === 'Item') ||
-      (typeof child.type.target === 'function' &&
-        child.type.target.name === 'Item')
-    )
-  })
-
-  // 以 Object 的形式，寻找 List.Title
-  const listTitle = children.find(child => {
-    if (!child.type) return false
-    return (
-      (typeof child.type === 'function' && child.type.name === 'Title') ||
-      (typeof child.type.target === 'function' &&
-        child.type.target.name === 'Title')
-    )
-  })
-
+  const specialChildren = groupBy([children].flat(2), node => getTagName(node))
   return (
     <ul {...props}>
-      {listTitle || title}
-      {listItems}
+      {specialChildren.Title || title}
+      {specialChildren.Item}
     </ul>
   )
 }
 
-//附属组件（可能只有配置而不返回 UI）
 List.Item = function Item(props) {
-  // console.log('hello')
-  // console.log('props: ', props)
   return <li {...props} />
 }
-
-//附属组件
-List.Title = props => {
-  return <div {...props}>{props.children}</div>
+List.Title = function Title(props) {
+  return <div {...props} />
 }

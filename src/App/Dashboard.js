@@ -78,68 +78,63 @@ export const Dashboard = ({
           title={tables.length > 1 && name}
           style={{ padding: 0 }}
         >
-          {properties.map(propInfo => {
-            return (
-              <List.Item
-                key={propInfo.name}
-                css={`
-                  display: flex;
-                  align-items: center;
-                  margin-bottom: 1px;
-                  position: relative;
-                  transition: all 200ms cubic-bezier(0.08, 0.82, 0.17, 1);
+          {properties.map(propInfo => (
+            <List.Item
+              key={propInfo.name}
+              css={`
+                display: flex;
+                align-items: center;
+                margin-bottom: 1px;
+                position: relative;
+                transition: all 200ms cubic-bezier(0.08, 0.82, 0.17, 1);
 
-                  :hover {
-                    background: #00000012;
-                  }
-                  ::before {
-                    content: '';
-                    pointer-events: none;
-                    background: ${widgetBackgrounds[propInfo.name]};
-                    opacity: 0.1;
-                    position: absolute;
-                    height: 100%;
-                    width: 100%;
-                  }
-                  ::after {
-                    content: '';
-                    pointer-events: none;
-                    background: ${widgetBackgrounds[propInfo.name]};
-                    position: absolute;
-                    height: 100%;
-                    width: 10px;
-                  }
-                `}
+                :hover {
+                  background: #00000012;
+                }
+                ::before {
+                  content: '';
+                  pointer-events: none;
+                  background: ${widgetBackgrounds[propInfo.name]};
+                  opacity: 0.1;
+                  position: absolute;
+                  height: 100%;
+                  width: 100%;
+                }
+                ::after {
+                  content: '';
+                  pointer-events: none;
+                  background: ${widgetBackgrounds[propInfo.name]};
+                  position: absolute;
+                  height: 100%;
+                  width: 10px;
+                }
+              `}
+            >
+              <div
+                style={{ width: 180, alignSelf: 'start', marginLeft: 20 }}
+                onClick={() => setValue(null, propInfo)} // 传入 null 代表清空命令
               >
-                <div
-                  style={{ width: 180, alignSelf: 'start', marginLeft: 20 }}
-                  onClick={() => setValue(null, propInfo)} // 传入 null 代表清空命令
-                >
-                  <Tooltip title={propInfo.description}>
-                    {propInfo.name}
-                  </Tooltip>
-                </div>
-                <div
-                  style={{
-                    width: 32,
-                    color: widgetBackgrounds[propInfo.name]
-                  }}
-                  onClick={() => setValue(null, propInfo)} // 传入 null 代表清空命令
-                >
-                  🕶
-                </div>
-                <div>
-                  <Widget
-                    activeValue={activeSettings[propInfo.name]}
-                    availableType={propInfo.type}
-                    defaultValue={propInfo.default}
-                    onChange={value => setValue(value, propInfo)}
-                  />
-                </div>
-              </List.Item>
-            )
-          })}
-          hello
+                <Tooltip title={propInfo.description}>{propInfo.name}</Tooltip>
+              </div>
+              <div
+                style={{
+                  width: 32,
+                  color: widgetBackgrounds[propInfo.name]
+                }}
+                onClick={() => setValue(null, propInfo)} // 传入 null 代表清空命令
+              >
+                🕶
+              </div>
+              <div>
+                <Widget
+                  activeValue={activeSettings[propInfo.name]}
+                  availableType={propInfo.type}
+                  defaultValue={propInfo.default}
+                  onChange={value => setValue(value, propInfo)}
+                />
+              </div>
+            </List.Item>
+          ))}
         </List>
       ))}
     </Box>
