@@ -9,37 +9,10 @@ import { Widget } from './Dashboard__Widget'
 export const Dashboard = ({
   selectedComponent,
   dispatchActiveSetting,
-  activeSettings
+  activeSettings,
+  widgetBackgrounds,
+  dispatchWidgetBackground
 }) => {
-  const [widgetBackgrounds, dispatchWidgetBackground] = React.useReducer(
-    (state, action) => {
-      switch (action.type) {
-        case 'set': {
-          const newState = { ...state }
-          if (newState[action.key] === action.value) return state
-          newState[action.key] = action.value
-          console.log(
-            `[set a new widgetBackground] ${action.key}: `,
-            action.value
-          )
-          return newState
-        }
-        case 'delete': {
-          const newState = { ...state }
-          delete newState[action.key]
-          console.log(
-            `[delete a widgetBackground] ${action.key}: ${action.value}`
-          )
-          return newState
-        }
-        default: {
-          throw new Error('unknown action type for widget background')
-        }
-      }
-    },
-    {}
-  )
-
   function setValue(value, propInfo) {
     if (
       isEqualWith(value, propInfo.default, (a, b) => {

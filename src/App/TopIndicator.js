@@ -2,12 +2,13 @@ import React from 'react'
 import { Layout, Icon } from 'antd/es'
 import { color } from './settings/style'
 
-const TopIndicator = ({ selectedComponent }) => {
+export function TopIndicator({ selectedComponent }) {
   return (
     <Layout.Header
       style={{
         height: 24,
-        background: color.componentColorInGroup[selectedComponent.class] || 'lightgray'
+        background:
+          color.componentColorInGroup[selectedComponent.class] || 'lightgray'
       }}
     >
       <div
@@ -26,11 +27,11 @@ const TopIndicator = ({ selectedComponent }) => {
           }}
         >
           <Icon component={selectedComponent.icon} />
-          <span style={{ marginLeft: 16, color: 'white' }}>{selectedComponent.name || selectedComponent.name_en}</span>
+          <span style={{ marginLeft: 16, color: 'white' }}>
+            {selectedComponent.name || selectedComponent.name_en}
+          </span>
         </div>
       </div>
     </Layout.Header>
   )
 }
-
-export default TopIndicator

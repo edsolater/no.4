@@ -6,17 +6,17 @@ import React from 'react'
  * @param {'two'|'three'} props.type
  * @param {React.CSSProperties} props.style
  */
-export const Grid = ({ type, style: customizedStyle, ...props }) => {
-  const gridStyle = {}
+export const Grid = ({ type, style, ...props }) => {
+  const grid = { display: 'grid' }
   if (type === 'two') {
-    gridStyle.gridTemplateAreas = `
+    grid.gridTemplateAreas = `
       "a a a"
       "b b b"
     `
   }
   return (
     <div
-      style={{ display: 'grid', ...gridStyle, ...customizedStyle }}
+      style={{  ...grid, ...style }}
       {...props}
     />
   )
