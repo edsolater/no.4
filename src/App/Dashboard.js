@@ -1,6 +1,6 @@
 import React from 'react'
 import 'styled-components/macro'
-import { Layout, Tooltip } from 'antd/es'
+import { Tooltip } from 'antd/es'
 import { List, Box } from './components'
 import { color } from './settings/style'
 import { isEqualWith } from 'lodash'
@@ -63,8 +63,8 @@ export const Dashboard = ({
   React.useEffect(() => {
     if (selectedComponent.presets)
       dispatchActiveSetting({
-        type: 'cover all',
-        all: selectedComponent.presets[0]
+        type: 'cover',
+        config: selectedComponent.presets[0]
       })
   }, [selectedComponent])
 

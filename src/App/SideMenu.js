@@ -28,7 +28,7 @@ const toPascalCase = str => {
   ) // 去除分割符中可能有的所有空格
 }
 
-export default function SideMenu({ allComponents, selectComponentName }) {
+export function SideMenu({ allComponents, selectComponentName }) {
   // 智能分类组件名
   const classifyComponent = () => {
     const groupOrder = {
@@ -80,7 +80,8 @@ export default function SideMenu({ allComponents, selectComponentName }) {
               <span>{toPascalCase(component.name)}</span>
             </Tooltip>
             <span style={{ marginLeft: 12 }}>
-              {component.tags && component.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
+              {component.tags &&
+                component.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
             </span>
           </Menu.Item>
         )

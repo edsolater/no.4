@@ -2,7 +2,11 @@ import React from 'react'
 import { Box, Grid, List } from './components'
 // import { Switch, Input, Slider, InputNumber, Radio } from 'antd/es'
 
-export const Preview = ({ selectedComponent, activeSettings }) => (
+export const Preview = ({
+  selectedComponent,
+  activeSettings,
+  dispatchActiveSetting
+}) => (
   <Box
     style={{
       width: '100%',
@@ -15,10 +19,16 @@ export const Preview = ({ selectedComponent, activeSettings }) => (
     <Grid>
       <Box>
         <List>
-          {selectedComponent.presets.map(setting => {
-            console.log('setting: ', setting)
-            return (<List.Item key={setting.toSource()}>{setting.toSource()}</List.Item>);
-          })}
+          {selectedComponent.presets.map(setting => (
+            <List.Item
+              key={setting.toSource()}
+              onClick={() =>
+                dispatchActiveSetting({ type: 'cover', config: setting })
+              }
+            >
+              {setting.toSource()}
+            </List.Item>
+          ))}
         </List>
       </Box>
       <selectedComponent.Preview {...activeSettings} />
