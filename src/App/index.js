@@ -7,6 +7,7 @@ import { SideMenu } from './SideMenu'
 import { Preview } from './Preview'
 import { Dashboard } from './Dashboard'
 import { Example } from './Example'
+import { RelatedItem } from './RelatedItem'
 
 export const App = () => {
   const [selectedComponentName, selectComponentName] = React.useState('button')
@@ -88,6 +89,10 @@ export const App = () => {
             dispatchWidgetBackground={dispatchWidgetBackground}
           />
           {/* 如果是展示function用法 <Example selectedComponent={selectedComponent} /> */}
+          <RelatedItem
+            allComponents={Object.values(myLibrary.components)}
+            selectedComponent={selectedComponent}
+          />
         </Layout.Content>
       </Layout>
     </Layout>
