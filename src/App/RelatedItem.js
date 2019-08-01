@@ -1,9 +1,11 @@
 import React from 'react'
+import { Icon } from 'antd/es'
 import { Box } from './components'
+import { color } from './settings/style'
 
 /**
  * 展示与之相关的组件的超链接
- * @param {*} param0 
+ * @param {*} param0
  */
 export function RelatedItem({ allComponents, selectedComponent }) {
   const relatedComponents = allComponents.filter(
@@ -11,9 +13,22 @@ export function RelatedItem({ allComponents, selectedComponent }) {
   )
   return (
     <Box>
-      {relatedComponents.map(component => (
-        <div>{component.name}</div>
-      ))}
+      {relatedComponents.map(component => {
+        return (
+          <div
+            className="item"
+            style={{ background: component === selectedComponent && 'gray' }}
+          >
+            <div>{component.name}</div>
+            <Icon
+              component={component.icon}
+              style={{
+                color: color.componentColorInGroup[component.class] || 'gray'
+              }}
+            />
+          </div>
+        )
+      })}
     </Box>
   )
 }

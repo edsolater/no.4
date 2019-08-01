@@ -1,6 +1,7 @@
 import React from 'react'
 import * as myLibrary from '../lib'
 import { Layout } from 'antd/es'
+import { Grid } from './components'
 // 子组件
 import { TopIndicator } from './TopIndicator'
 import { SideMenu } from './SideMenu'
@@ -75,24 +76,26 @@ export const App = () => {
           selectComponentName={selectComponentName}
         />
         <Layout.Content style={{ position: 'relative' }}>
-          <Preview
-            selectedComponent={selectedComponent}
-            activeSettings={activeSettings}
-            dispatchActiveSetting={dispatchActiveSetting}
-            dispatchWidgetBackground={dispatchWidgetBackground}
-          />
-          <Dashboard
-            selectedComponent={selectedComponent}
-            activeSettings={activeSettings}
-            dispatchActiveSetting={dispatchActiveSetting}
-            widgetBackgrounds={widgetBackgrounds}
-            dispatchWidgetBackground={dispatchWidgetBackground}
-          />
-          {/* 如果是展示function用法 <Example selectedComponent={selectedComponent} /> */}
-          <RelatedItem
-            allComponents={Object.values(myLibrary.components)}
-            selectedComponent={selectedComponent}
-          />
+          <Grid>
+            <Preview
+              selectedComponent={selectedComponent}
+              activeSettings={activeSettings}
+              dispatchActiveSetting={dispatchActiveSetting}
+              dispatchWidgetBackground={dispatchWidgetBackground}
+            />
+            <Dashboard
+              selectedComponent={selectedComponent}
+              activeSettings={activeSettings}
+              dispatchActiveSetting={dispatchActiveSetting}
+              widgetBackgrounds={widgetBackgrounds}
+              dispatchWidgetBackground={dispatchWidgetBackground}
+            />
+            {/* 如果是展示function用法 <Example selectedComponent={selectedComponent} /> */}
+            <RelatedItem
+              allComponents={Object.values(myLibrary.components)}
+              selectedComponent={selectedComponent}
+            />
+          </Grid>
         </Layout.Content>
       </Layout>
     </Layout>

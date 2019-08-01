@@ -8,12 +8,10 @@ import React from 'react'
  */
 export const Grid = ({ type, style, ...props }) => {
   const grid = { display: 'grid' }
-  if (type === 'two') {
-    grid.gridTemplateAreas = `
+  grid.gridTemplateAreas = `
       "a a a"
       "b b b"
     `
-  }
   return (
     <div
       style={{  ...grid, ...style }}

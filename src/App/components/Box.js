@@ -6,4 +6,6 @@ import React from 'react'
  * @param {object} props 
  * @param {React.CSSProperties} props.style
  */
-export const Box = props => <div {...props} />
+export function Box(props) {
+  return <div {...props} />
+}
