@@ -1,10 +1,8 @@
 /**
  * 提取组件标签所代表的函数的 name
  * pure
- * @param {Array|Object} reactNodes
- * @param {string[]} groupNames
- * @returns {Object}
- *
+ * @param {JSX.Element} reactNode
+ * @returns {string}
  */
 export function getTagName(reactNode) {
   const tag = reactNode.type
@@ -14,5 +12,5 @@ export function getTagName(reactNode) {
     const innerTag = tag.target
     if (typeof innerTag === 'function') return innerTag.name
   }
-  return 'unknown'
+  return 'undefined'
 }

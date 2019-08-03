@@ -3,10 +3,7 @@ import { Icon } from 'antd/es'
 import { Box } from './components'
 import { color } from './settings/style'
 
-/**
- * 展示与之相关的组件的超链接
- * @param {*} param0
- */
+
 export function RelatedItem({ allComponents, selectedComponent }) {
   const relatedComponents = allComponents.filter(
     component => component.class === selectedComponent.class

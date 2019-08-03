@@ -1,15 +1,14 @@
 import React from 'react'
 import 'styled-components/macro'
-import { groupBy } from 'lodash'
-import { getTagName } from './getTagName'
+import { groupByTag } from './extractors'
 
 export function List({ children = [], title, ...props }) {
-  children = groupBy([children].flat(2), node => getTagName(node))
+  children = groupByTag(children)
   return (
     <ul {...props}>
       {children.Title || title}
       {children.Item}
-      {children.unknown}
+      {children.undefined}
     </ul>
   )
 }

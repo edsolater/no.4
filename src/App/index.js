@@ -83,13 +83,15 @@ export const App = () => {
               dispatchActiveSetting={dispatchActiveSetting}
               dispatchWidgetBackground={dispatchWidgetBackground}
             />
-            <Dashboard
-              selectedComponent={selectedComponent}
-              activeSettings={activeSettings}
-              dispatchActiveSetting={dispatchActiveSetting}
-              widgetBackgrounds={widgetBackgrounds}
-              dispatchWidgetBackground={dispatchWidgetBackground}
-            />
+            <div style={{ gridArea: '2' }}>
+              <Dashboard
+                selectedComponent={selectedComponent}
+                activeSettings={activeSettings}
+                dispatchActiveSetting={dispatchActiveSetting}
+                widgetBackgrounds={widgetBackgrounds}
+                dispatchWidgetBackground={dispatchWidgetBackground}
+              />
+            </div>
             {/* 如果是展示function用法 <Example selectedComponent={selectedComponent} /> */}
             <RelatedItem
               allComponents={Object.values(myLibrary.components)}
