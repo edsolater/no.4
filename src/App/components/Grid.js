@@ -7,6 +7,6 @@ import Box from './Box'
  * @param {object} props
  * @param {React.CSSProperties} props.style
  */
-export default function Grid(props) {
-  return <Box {...props}/>
+export default function Grid({ grid, ...restProps }) {
+  return <Box grid={grid || true} {...restProps} />
 }

@@ -3,7 +3,6 @@ import { Icon } from 'antd/es'
 import { Box } from './components'
 import { color } from './settings/style'
 
-
 export function RelatedItem({ allComponents, selectedComponent }) {
   const relatedComponents = allComponents.filter(
     component => component.class === selectedComponent.class
@@ -13,7 +12,8 @@ export function RelatedItem({ allComponents, selectedComponent }) {
       {relatedComponents.map(component => {
         return (
           <div
-            className="item"
+            key={component.name}
+            className='item'
             style={{ background: component === selectedComponent && 'gray' }}
           >
             <div>{component.name}</div>
