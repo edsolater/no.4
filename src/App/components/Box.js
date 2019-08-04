@@ -5,8 +5,8 @@ import { merge, assign } from 'lodash'
  *
  * @param {object} props
  * @param {*} props._DOMTag 使用的DOM标签名
- * @param {*} props.grid 开启grid特性，创造grid模板的配置参数
- * @param {*} props.gridSlot 开启grid特性，创造grid模板的配置参数
+ * @param {boolean} props.inline 是否有 display: inline- 的特性
+ * @param {*} props.grid 开启grid特性
  * @param {React.CSSProperties} props.style
  */
 export default function Box({
@@ -20,26 +20,31 @@ export default function Box({
   React.useEffect(() => {
     if (grid) effect_grid(ref.current) // 这只是一个写法示例，如有真实案例，则删去此示例
   })
+
   const featureProps = merge(
     restProps,
-    grid && feature_grid(grid, inline),
-    flex && feature_flex(flex, inline),
+    grid && feature_grid(grid),
+    flex && feature_flex(flex)
   )
+  if (inline) {
+    const display = featureProps.style.display
+    featureProps.style.display = `inline-${display || 'block'}`
+  }
+
   return React.createElement(_DOMTag, assign(featureProps, { ref }))
 }
 
 /**
  *
- * @param {{layoutType: string}} flex flex容器的配置
+ * @param {{layoutType: string}} userSetting flex容器的配置
  */
-function feature_flex(flex, inline) {
-  const setting = { style: {} }
-  const flexSetting = {}
+function feature_flex(userSetting) {
+  const flexStyle = {}
   const [category, placeNum] =
-    (Object(flex).layoutType || 'land_4').split('_') || []
+    (Object(userSetting).layoutType || 'land_4').split('_') || []
   if (category === 'land') {
     if (placeNum === '4') {
-      merge(flexSetting, {
+      merge(flexStyle, {
         flexTemplateColumns: '1fr 1fr',
         flexTemplateRows: '1fr 1fr',
         overflow: 'hidden',
@@ -47,26 +52,24 @@ function feature_flex(flex, inline) {
       })
     }
   }
-  merge(
-    setting.style,
-    { display: `${inline ? 'inline-' : ''}flex` },
-    flexSetting,
-    flex.style
+  return merge(
+    {},
+    { style: { display: 'flex' } },
+    { style: flexStyle },
+    { style: userSetting.style }
   )
-  return setting
 }
 /**
  *
- * @param {{layoutType: string}} grid grid容器的配置
+ * @param {{layoutType: string}} userSetting grid容器的配置
  */
-function feature_grid(grid, inline) {
-  const setting = { style: {} }
-  const gridSetting = {}
+function feature_grid(userSetting) {
+  const gridStyle = {}
   const [category, placeNum] =
-    (Object(grid).layoutType || 'land_4').split('_') || []
+    (Object(userSetting).layoutType || 'land_4').split('_') || []
   if (category === 'land') {
     if (placeNum === '4') {
-      merge(gridSetting, {
+      merge(gridStyle, {
         gridTemplateColumns: '1fr 1fr',
         gridTemplateRows: '1fr 1fr',
         overflow: 'hidden',
@@ -74,15 +77,13 @@ function feature_grid(grid, inline) {
       })
     }
   }
-  merge(
-    setting.style,
-    { display: `${inline ? 'inline-' : ''}grid` },
-    gridSetting,
-    grid.style
+  return merge(
+    {},
+    { style: { display: 'grid' } },
+    { style: gridStyle },
+    { style: userSetting.style }
   )
-  return setting
 }
-
 
 // 这只是一个写法示例，如有真实案例，则删去此示例
 async function effect_grid(el) {
