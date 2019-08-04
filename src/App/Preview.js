@@ -5,26 +5,25 @@ export function Preview({
   selectedComponent,
   activeSettings,
   dispatchActiveSetting,
-  dispatchWidgetBackground
+  dispatchWidgetBackground,
+  ...restProps
 }) {
   return (
-    <Flex>
-      <Box>
-        <List>
-          {selectedComponent.presets.map(setting => (
-            <List.Item
-              key={setting.toSource()}
-              onClick={() => {
-                dispatchActiveSetting({ type: 'cover', config: setting })
-                dispatchWidgetBackground({ type: 'clear' })
-              }}
-            >
-              {setting.toSource()}
-            </List.Item>
-          ))}
-        </List>
-      </Box>
+    <Box {...restProps}>
+      <List>
+        {selectedComponent.presets.map(setting => (
+          <List.Item
+            key={setting.toSource()}
+            onClick={() => {
+              dispatchActiveSetting({ type: 'cover', config: setting })
+              dispatchWidgetBackground({ type: 'clear' })
+            }}
+          >
+            {setting.toSource()}
+          </List.Item>
+        ))}
+      </List>
       <selectedComponent.Preview {...activeSettings} />
-    </Flex>
+    </Box>
   )
 }

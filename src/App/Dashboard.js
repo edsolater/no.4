@@ -11,7 +11,8 @@ export const Dashboard = ({
   dispatchActiveSetting,
   activeSettings,
   widgetBackgrounds,
-  dispatchWidgetBackground
+  dispatchWidgetBackground,
+  ...restProps
 }) => {
   function setValue(value, propInfo) {
     if (
@@ -44,7 +45,7 @@ export const Dashboard = ({
   //组件的UI设置
   const tables = Object.entries(selectedComponent.reactProps)
   return (
-    <Box>
+    <Box {...restProps}>
       {tables.map(([name, properties]) => (
         <List
           key={name}

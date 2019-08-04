@@ -2,6 +2,6 @@
  * @param {*} x 
  * @returns {Array}
  */
-export function toFlatArray(x) {
+export default function flatChildren(x) {
   return [x].flat(2)
 }

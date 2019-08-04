@@ -76,22 +76,21 @@ export const App = () => {
           selectComponentName={selectComponentName}
         />
         <Layout.Content style={{ position: 'relative' }}>
-          <Grid>
+          <Grid grid={{ layoutType: 'land_4' }}>
+            <Dashboard
+              gridSlot={[, 2]}
+              selectedComponent={selectedComponent}
+              activeSettings={activeSettings}
+              dispatchActiveSetting={dispatchActiveSetting}
+              widgetBackgrounds={widgetBackgrounds}
+              dispatchWidgetBackground={dispatchWidgetBackground}
+            />
             <Preview
               selectedComponent={selectedComponent}
               activeSettings={activeSettings}
               dispatchActiveSetting={dispatchActiveSetting}
               dispatchWidgetBackground={dispatchWidgetBackground}
             />
-            <div style={{ gridArea: '2' }}>
-              <Dashboard
-                selectedComponent={selectedComponent}
-                activeSettings={activeSettings}
-                dispatchActiveSetting={dispatchActiveSetting}
-                widgetBackgrounds={widgetBackgrounds}
-                dispatchWidgetBackground={dispatchWidgetBackground}
-              />
-            </div>
             {/* 如果是展示function用法 <Example selectedComponent={selectedComponent} /> */}
             <RelatedItem
               allComponents={Object.values(myLibrary.components)}

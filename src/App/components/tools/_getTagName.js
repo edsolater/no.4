@@ -4,7 +4,7 @@
  * @param {JSX.Element} reactNode
  * @returns {string}
  */
-export function getTagName(reactNode) {
+export default function getTagName(reactNode) {
   const tag = reactNode.type
   if (typeof tag === 'undefined') return 'text'
   if (typeof tag === 'function') return tag.name
