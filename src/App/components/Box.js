@@ -9,14 +9,22 @@ import { merge, assign } from 'lodash'
  * @param {*} props.gridSlot 开启grid特性，创造grid模板的配置参数
  * @param {React.CSSProperties} props.style
  */
-export default function Box({ _DOMTag = 'div', grid, gridSlot, ...restProps }) {
+export default function Box({
+  _DOMTag = 'div',
+  inline = false,
+  grid,
+  flex,
+  gridSlot,
+  ...restProps
+}) {
   const ref = React.useRef()
   React.useEffect(() => {
     if (grid) effect_grid(ref.current) // 这只是一个写法示例，如有真实案例，则删去此示例
   })
   const featureProps = merge(
     restProps,
-    grid && feature_grid(grid),
+    grid && feature_grid(grid, inline),
+    flex && feature_flex(flex, inline),
     gridSlot && feature_gridSlot(gridSlot)
   )
   return React.createElement(_DOMTag, assign(featureProps, { ref }))
@@ -24,9 +32,36 @@ export default function Box({ _DOMTag = 'div', grid, gridSlot, ...restProps }) {
 
 /**
  *
+ * @param {{layoutType: string}} flex flex容器的配置
+ */
+function feature_flex(flex, inline) {
+  const setting = { style: {} }
+  const flexSetting = {}
+  const [category, placeNum] =
+    (Object(flex).layoutType || 'land_4').split('_') || []
+  if (category === 'land') {
+    if (placeNum === '4') {
+      merge(flexSetting, {
+        flexTemplateColumns: '1fr 1fr',
+        flexTemplateRows: '1fr 1fr',
+        overflow: 'hidden',
+        height: '100%'
+      })
+    }
+  }
+  merge(
+    setting.style,
+    { display: `${inline ? 'inline-' : ''}flex` },
+    flexSetting,
+    flex.style
+  )
+  return setting
+}
+/**
+ *
  * @param {{layoutType: string}} grid grid容器的配置
  */
-function feature_grid(grid) {
+function feature_grid(grid, inline) {
   const setting = { style: {} }
   const gridSetting = {}
   const [category, placeNum] =
@@ -41,7 +76,12 @@ function feature_grid(grid) {
       })
     }
   }
-  merge(setting.style, { display: 'grid' }, gridSetting, feature_grid.style)
+  merge(
+    setting.style,
+    { display: `${inline ? 'inline-' : ''}grid` },
+    gridSetting,
+    grid.style
+  )
   return setting
 }
 

@@ -1,19 +1,9 @@
 import React from 'react'
+import Box from './Box'
 
 /**
- *
- * @param {object} props
- * @param {'two'|'three'} props.type
- * @param {React.CSSProperties} props.style
+ * 语义盒子的目的：能够更快、更直观地从代码中读出
  */
-export function Flex({ type, style, ...props }) {
-  /**
-   * @type {React.CSSProperties}
-   */
-  const flex = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-  return <div style={{ ...flex, ...style }} {...props} />
+export default function Flex({ flex, ...restProps }) {
+  return <Box flex={flex || true} {...restProps} />
 }
