@@ -4,9 +4,10 @@ import { merge, assign } from 'lodash'
 /**
  *
  * @param {object} props
- * @param {*} props._DOMTag 使用的DOM标签名
+ * @param {string} props._DOMTag 使用的DOM标签名
  * @param {boolean} props.inline 是否有 display: inline- 的特性
  * @param {*} props.grid 开启grid特性
+ * @param {*} props.flex 开启flex特性
  * @param {React.CSSProperties} props.style
  */
 export default function Box({
