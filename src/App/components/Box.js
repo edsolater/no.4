@@ -14,7 +14,6 @@ export default function Box({
   inline = false,
   grid,
   flex,
-  gridSlot,
   ...restProps
 }) {
   const ref = React.useRef()
@@ -25,7 +24,6 @@ export default function Box({
     restProps,
     grid && feature_grid(grid, inline),
     flex && feature_flex(flex, inline),
-    gridSlot && feature_gridSlot(gridSlot)
   )
   return React.createElement(_DOMTag, assign(featureProps, { ref }))
 }
@@ -85,27 +83,6 @@ function feature_grid(grid, inline) {
   return setting
 }
 
-/**
- *
- * @param {number|[number,number]} gridSlot 应用在grid容器中的盒子的配置
- */
-function feature_gridSlot(gridSlot) {
-  const setting = { style: {} }
-  const gridSetting = {}
-  if (Array.isArray(gridSlot) && gridSlot.length === 2) {
-    // TODO:我觉得lodash有更简单的解决方式，但是没找到
-    merge(gridSetting, {
-      gridArea: `${gridSlot[0] || 1}/${gridSlot[1] || 1}`
-    })
-  } else if (typeof gridSlot === 'number') {
-    // 跟前面的if条件很不对称，可读性不强，要改写
-    merge(gridSetting, {
-      gridArea: `${gridSlot}`
-    })
-  }
-  merge(setting.style, gridSetting, feature_grid.style)
-  return setting
-}
 
 // 这只是一个写法示例，如有真实案例，则删去此示例
 async function effect_grid(el) {
