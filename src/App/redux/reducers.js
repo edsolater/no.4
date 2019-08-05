@@ -3,19 +3,24 @@ import { combineReducers } from 'redux'
 function componentSetting(state = {}, action = {}) {
   switch (action.type) {
     case 'componentSetting_set': {
-      const { key, value, config } = action
-      if (key) return { ...state, [key]: value }
-      if (config) return { ...state, config }
+      const { key, value } = action
+      if (value === state[key]) {
+        const newState = { ...state }
+        delete newState[key]
+        return newState
+      } else {
+        return { ...state, [key]: value }
+      }
     }
     case 'componentSetting_cover': {
-      console.log('action: ', action)
       const { config } = action
       return config
     }
     case 'componentSetting_delete': {
-      const { key, value, config } = action
-      if (key) return { ...state, [key]: value }
-      if (config) return { ...state, config }
+      const { key } = action
+      const newState = { ...state }
+      delete newState[key]
+      return newState
     }
     default: {
       console.warn(

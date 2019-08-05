@@ -2,13 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Box, List } from './components'
 import { componentSetting_cover } from './redux/actionCreators'
-import { selectComponentSetting } from './redux/selectors'
+import { getComponentSetting } from './redux/selectors'
 
 function Preview({
+  selectedComponent,
   componentSetting, // redux
   componentSetting_cover, // redux
-  selectedComponent,
-  dispatchWidgetBackground,
   ...restProps
 }) {
   return (
@@ -19,7 +18,6 @@ function Preview({
             key={setting.toSource()}
             onClick={() => {
               componentSetting_cover(setting)
-              dispatchWidgetBackground({ type: 'clear' })
             }}
           >
             {setting.toSource()}
@@ -31,7 +29,7 @@ function Preview({
   )
 }
 
-const mapState = store => ({ componentSetting: selectComponentSetting(store) })
+const mapState = store => ({ componentSetting: getComponentSetting(store) })
 const mapDispatch = { componentSetting_cover }
 export default connect(
   mapState,

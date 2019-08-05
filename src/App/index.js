@@ -22,6 +22,8 @@ export function App() {
       switch (action.type) {
         case 'set': {
           const { key, value } = action
+          console.log('key: ', key)
+          console.log('value: ', value)
           if (state[key] !== value) return { ...state, [key]: value }
           return { ...state }
         }

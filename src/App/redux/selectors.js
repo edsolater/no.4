@@ -1,7 +1,10 @@
 export const selectAllComponents = (state = {}) => state.allComponent
 
-export const selectCriticalData = (store = {}) => ({
+export const getCriticalData = (store = {}) => ({
   componentSetting: store.componentSetting || {}
 })
-
-export const selectComponentSetting = (store = {}) => store.componentSetting || {}
+/**
+ *
+ * @param {object} store 只能从根目录的state，也就是store获取
+ */
+export const getComponentSetting = (store = {}) => store.componentSetting || {}

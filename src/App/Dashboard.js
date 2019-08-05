@@ -11,7 +11,7 @@ import {
   componentSetting_delete,
   componentSetting_cover
 } from './redux/actionCreators'
-import { selectComponentSetting } from './redux/selectors'
+import { getComponentSetting } from './redux/selectors'
 
 function Dashboard({
   selectedComponent,
@@ -19,8 +19,6 @@ function Dashboard({
   componentSetting_set, //redux
   componentSetting_delete, // redux
   componentSetting_cover, //redux
-  widgetBackgrounds,
-  dispatchWidgetBackground,
   ...restProps
 }) {
   function setValue(value, propInfo) {
@@ -31,14 +29,8 @@ function Dashboard({
       value === undefined
     ) {
       componentSetting_delete(propInfo.name)
-      dispatchWidgetBackground({ type: 'delete', key: propInfo.name })
     } else {
       componentSetting_set(propInfo.name, value)
-      dispatchWidgetBackground({
-        type: 'set',
-        key: propInfo.name,
-        value: color.componentColorInGroup[selectedComponent.class]
-      })
     }
   }
   React.useEffect(() => {
@@ -72,7 +64,8 @@ function Dashboard({
                 ::before {
                   content: '';
                   pointer-events: none;
-                  background: ${widgetBackgrounds[propInfo.name]};
+                  background: ${componentSetting[propInfo.name] &&
+                    'dodgerblue'};
                   opacity: 0.1;
                   position: absolute;
                   height: 100%;
@@ -81,7 +74,8 @@ function Dashboard({
                 ::after {
                   content: '';
                   pointer-events: none;
-                  background: ${widgetBackgrounds[propInfo.name]};
+                  background: ${componentSetting[propInfo.name] &&
+                    'dodgerblue'};
                   position: absolute;
                   height: 100%;
                   width: 10px;
@@ -97,7 +91,7 @@ function Dashboard({
               <div
                 style={{
                   width: 32,
-                  color: widgetBackgrounds[propInfo.name]
+                  color: componentSetting[propInfo.name] && 'dodgerblue'
                 }}
                 onClick={() => setValue(null, propInfo)} // 传入 null 代表清空命令
               >
@@ -119,7 +113,7 @@ function Dashboard({
   )
 }
 
-const mapState = store => ({ componentSetting: selectComponentSetting(store) })
+const mapState = store => ({ componentSetting: getComponentSetting(store) })
 const mapDispatch = {
   componentSetting_set,
   componentSetting_delete,
