@@ -113,13 +113,11 @@ function Dashboard({
   )
 }
 
-const mapState = store => ({ componentSetting: getComponentSetting(store) })
-const mapDispatch = {
-  componentSetting_set,
-  componentSetting_delete,
-  componentSetting_cover
-}
 export default connect(
-  mapState,
-  mapDispatch
+  store => ({ componentSetting: getComponentSetting(store) }),
+  {
+    componentSetting_set,
+    componentSetting_delete,
+    componentSetting_cover
+  }
 )(Dashboard)

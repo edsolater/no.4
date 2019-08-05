@@ -1,7 +1,13 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { Layout, Icon, Menu, Tag, Tooltip } from 'antd/es'
 import { ReactComponent as Component } from './icons/folder-react-components.svg'
 import { color } from './settings/style'
+import { getAllComponents } from './redux/selectors'
+import {
+  allComponents_cover,
+  currentSelection_change
+} from './redux/actionCreators'
 const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
@@ -27,15 +33,19 @@ const toPascalCase = str => {
       .replace(/\s+/g, '')
   ) // 去除分割符中可能有的所有空格
 }
-
-export function SideMenu({ allComponents, selectComponentName }) {
+function SideMenu({
+  allComponents_cover, // redux
+  currentSelection_change, // redux
+  allComponents, // redux
+  selectComponentName
+}) {
   // 智能分类组件名
   const classifyComponent = () => {
     const groupOrder = {
       通用: [],
       布局: [],
       导航: [],
-      '控件（以下未竣工）': [],
+      '控件（以下暂不考虑）': [],
       数据展示: [],
       反馈: [],
       其他: []
@@ -45,10 +55,10 @@ export function SideMenu({ allComponents, selectComponentName }) {
         { pattern: /general|通用/, output: '通用' },
         { pattern: /layout|布局/, output: '布局' },
         { pattern: /navigation|导航/, output: '导航' },
-        { pattern: /data entry|数据录入|控件/, output: '控件（以下未竣工）' },
+        { pattern: /data entry|数据录入|控件/, output: '控件（以下暂不考虑）' },
         { pattern: /data display|数据展示/, output: '数据展示' },
         { pattern: /feedback|反馈/, output: '反馈' },
-        { pattern: /./, output: '其他' }
+        { pattern: /.*/, output: '其他' }
       ]
       return patterns.find(({ pattern }) => pattern.test(name)).output
     }
@@ -126,3 +136,8 @@ export function SideMenu({ allComponents, selectComponentName }) {
 }
 
 // TODO: 组件加上中文名称
+
+export default connect(
+  store => ({ allComponents: getAllComponents(store) }),
+  { allComponents_cover, currentSelection_change }
+)(SideMenu)

@@ -1,78 +1,44 @@
 import React from 'react'
+import { connect } from 'react-redux'
+
 import { Layout } from 'antd/es'
-import { Provider } from 'react-redux'
 import * as myLibrary from '../lib'
 import { Grid } from './components'
-import store from './redux/store'
+// import store from './redux/store'
 
 import { TopIndicator } from './TopIndicator'
-import { SideMenu } from './SideMenu'
-import  Preview  from './Preview'
-import  Dashboard  from './Dashboard'
-import { Example } from './Example'
-import { RelatedItem } from './RelatedItem'
+import SideMenu from './SideMenu'
+import Preview from './Preview'
+import Dashboard from './Dashboard'
+import RelatedItem from './RelatedItem'
+import { allComponents_cover } from './redux/actionCreators' // redux
 
-
-export function App() {
+function App({
+  allComponents_cover // redux
+}) {
   const [selectedComponentName, selectComponentName] = React.useState('button')
   const selectedComponent = myLibrary.components[selectedComponentName]
-
-  const [widgetBackgrounds, dispatchWidgetBackground] = React.useReducer(
-    (state, action) => {
-      switch (action.type) {
-        case 'set': {
-          const { key, value } = action
-          console.log('key: ', key)
-          console.log('value: ', value)
-          if (state[key] !== value) return { ...state, [key]: value }
-          return { ...state }
-        }
-        case 'delete': {
-          const { key, value } = action
-          if (key) return { ...state, [key]: value }
-        }
-        case 'clear': {
-          return {}
-        }
-        default: {
-          throw new Error(
-            `unknown action type(${action.type}) for widget background`
-          )
-        }
-      }
-    },
-    {}
-  )
-
+  React.useEffect(() => {
+    allComponents_cover(Object.values(myLibrary.components))
+  })
   return (
-    <Provider store={store}>
-      <Layout style={{ width: '100vw', height: '100vh' }}>
-        <TopIndicator selectedComponent={selectedComponent} />
-        <Layout>
-          <SideMenu
-            allComponents={Object.values(myLibrary.components)}
-            selectComponentName={selectComponentName}
-          />
-          <Layout.Content style={{ position: 'relative' }}>
-            <Grid grid={{ layoutType: 'land_4' }}>
-              <Dashboard
-                selectedComponent={selectedComponent}
-                widgetBackgrounds={widgetBackgrounds}
-                dispatchWidgetBackground={dispatchWidgetBackground}
-              />
-              <Preview
-                selectedComponent={selectedComponent}
-                dispatchWidgetBackground={dispatchWidgetBackground}
-              />
-              {/* 如果是展示function用法 <Example selectedComponent={selectedComponent} /> */}
-              <RelatedItem
-                allComponents={Object.values(myLibrary.components)}
-                selectedComponent={selectedComponent}
-              />
-            </Grid>
-          </Layout.Content>
-        </Layout>
+    <Layout style={{ width: '100vw', height: '100vh' }}>
+      <TopIndicator selectedComponent={selectedComponent} />
+      <Layout>
+        <SideMenu selectComponentName={selectComponentName} />
+        <Layout.Content style={{ position: 'relative' }}>
+          <Grid grid={{ layoutType: 'land_4' }}>
+            <Dashboard selectedComponent={selectedComponent} />
+            <Preview selectedComponent={selectedComponent} />
+            <RelatedItem selectedComponent={selectedComponent} />
+          </Grid>
+        </Layout.Content>
       </Layout>
-    </Provider>
+    </Layout>
   )
 }
+
+export default connect(
+  null,
+  { allComponents_cover }
+)(App)

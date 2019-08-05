@@ -23,12 +23,25 @@ function componentSetting(state = {}, action = {}) {
       return newState
     }
     default: {
-      console.warn(
-        `unknown action type(${action.type}) for dashboard componentSetting`
-      )
       return state
     }
   }
 }
 
-export default combineReducers({ componentSetting })
+function allComponents(state = [], action = {}) {
+  switch (action.type) {
+    // case 'allComponents_set': {
+    //   const { key, value } = action
+    //   return { ...state, [key]: value }
+    // }
+    case 'allComponents_cover': {
+      const { config } = action
+      return config
+    }
+    default: {
+      return state
+    }
+  }
+}
+
+export default combineReducers({ componentSetting, allComponents })
