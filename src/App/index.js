@@ -1,47 +1,22 @@
 import React from 'react'
-import * as myLibrary from '../lib'
 import { Layout } from 'antd/es'
+import { Provider } from 'react-redux'
+import * as myLibrary from '../lib'
 import { Grid } from './components'
-// 子组件
+import store from './redux/store'
+
 import { TopIndicator } from './TopIndicator'
 import { SideMenu } from './SideMenu'
 import { Preview } from './Preview'
-import { Dashboard } from './Dashboard'
+import  Dashboard  from './Dashboard'
 import { Example } from './Example'
 import { RelatedItem } from './RelatedItem'
 
-export const App = () => {
+
+export function App() {
   const [selectedComponentName, selectComponentName] = React.useState('button')
   const selectedComponent = myLibrary.components[selectedComponentName]
 
-  // 当体量够大时要用 Redux 抽象逻辑
-  // dashboard的全部 widgets配置
-  const [activeSettings, dispatchActiveSetting] = React.useReducer(
-    function settingReducer(state, action) {
-      switch (action.type) {
-        case 'set': {
-          const { key, value, config } = action
-          if (key) return { ...state, [key]: value }
-          if (config) return { ...state, config }
-        }
-        case 'cover': {
-          const { config } = action
-          return config
-        }
-        case 'delete': {
-          const { key, value, config } = action
-          if (key) return { ...state, [key]: value }
-          if (config) return { ...state, config }
-        }
-        default: {
-          throw new Error(
-            `unknown action type(${action.type}) for dashboard setting`
-          )
-        }
-      }
-    },
-    {}
-  )
   const [widgetBackgrounds, dispatchWidgetBackground] = React.useReducer(
     (state, action) => {
       switch (action.type) {
@@ -68,36 +43,34 @@ export const App = () => {
   )
 
   return (
-    <Layout style={{ width: '100vw', height: '100vh' }}>
-      <TopIndicator selectedComponent={selectedComponent} />
-      <Layout>
-        <SideMenu
-          allComponents={Object.values(myLibrary.components)}
-          selectComponentName={selectComponentName}
-        />
-        <Layout.Content style={{ position: 'relative' }}>
-          <Grid grid={{ layoutType: 'land_4' }}>
-            <Dashboard
-              selectedComponent={selectedComponent}
-              activeSettings={activeSettings}
-              dispatchActiveSetting={dispatchActiveSetting}
-              widgetBackgrounds={widgetBackgrounds}
-              dispatchWidgetBackground={dispatchWidgetBackground}
-            />
-            <Preview
-              selectedComponent={selectedComponent}
-              activeSettings={activeSettings}
-              dispatchActiveSetting={dispatchActiveSetting}
-              dispatchWidgetBackground={dispatchWidgetBackground}
-            />
-            {/* 如果是展示function用法 <Example selectedComponent={selectedComponent} /> */}
-            <RelatedItem
-              allComponents={Object.values(myLibrary.components)}
-              selectedComponent={selectedComponent}
-            />
-          </Grid>
-        </Layout.Content>
+    <Provider store={store}>
+      <Layout style={{ width: '100vw', height: '100vh' }}>
+        <TopIndicator selectedComponent={selectedComponent} />
+        <Layout>
+          <SideMenu
+            allComponents={Object.values(myLibrary.components)}
+            selectComponentName={selectComponentName}
+          />
+          <Layout.Content style={{ position: 'relative' }}>
+            <Grid grid={{ layoutType: 'land_4' }}>
+              <Dashboard
+                selectedComponent={selectedComponent}
+                widgetBackgrounds={widgetBackgrounds}
+                dispatchWidgetBackground={dispatchWidgetBackground}
+              />
+              <Preview
+                selectedComponent={selectedComponent}
+                dispatchWidgetBackground={dispatchWidgetBackground}
+              />
+              {/* 如果是展示function用法 <Example selectedComponent={selectedComponent} /> */}
+              <RelatedItem
+                allComponents={Object.values(myLibrary.components)}
+                selectedComponent={selectedComponent}
+              />
+            </Grid>
+          </Layout.Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </Provider>
   )
 }

@@ -1,10 +1,13 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { Box, List, Flex } from './components'
+import { updateSetting } from './redux/actionCreators'
+import { selectSetting } from './redux/selectors'
 
 export function Preview({
   selectedComponent,
-  activeSettings,
-  dispatchActiveSetting,
+  activeSettings, // redux
+  dispatchActiveSetting, // redux
   dispatchWidgetBackground,
   ...restProps
 }) {
@@ -27,3 +30,10 @@ export function Preview({
     </Box>
   )
 }
+
+const mapState = store => ({ activeSettings: selectSetting(store) })
+const mapDispatch = { dispatchActiveSetting: updateSetting }
+export default connect(
+  mapState,
+  mapDispatch
+)(Preview)

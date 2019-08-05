@@ -1,19 +1,22 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import 'styled-components/macro'
 import { Tooltip } from 'antd/es'
 import { List, Box } from './components'
 import { color } from './settings/style'
 import { isEqualWith } from 'lodash'
 import { Widget } from './Dashboard__Widget'
+import { updateSetting } from './redux/actionCreators'
+import { selectSetting } from './redux/selectors'
 
-export const Dashboard = ({
+function Dashboard({
   selectedComponent,
-  dispatchActiveSetting,
-  activeSettings,
+  activeSettings, // redux
+  dispatchActiveSetting, // redux
   widgetBackgrounds,
   dispatchWidgetBackground,
   ...restProps
-}) => {
+}) {
   function setValue(value, propInfo) {
     if (
       isEqualWith(value, propInfo.default, (a, b) => {
@@ -21,10 +24,13 @@ export const Dashboard = ({
       }) ||
       value === undefined
     ) {
-      dispatchActiveSetting({ type: 'delete', key: propInfo.name })
+      dispatchActiveSetting('delete', { key: propInfo.name })
       dispatchWidgetBackground({ type: 'delete', key: propInfo.name })
     } else {
-      dispatchActiveSetting({ type: 'set', key: propInfo.name, value: value })
+      dispatchActiveSetting('set', {
+        key: propInfo.name,
+        value: value
+      })
       dispatchWidgetBackground({
         type: 'set',
         key: propInfo.name,
@@ -32,14 +38,11 @@ export const Dashboard = ({
       })
     }
   }
-
+  console.log('activeSettings: ', activeSettings)
   // 如果有的话，最初先加载一次默认样式
   React.useEffect(() => {
     if (selectedComponent.presets)
-      dispatchActiveSetting({
-        type: 'cover',
-        config: selectedComponent.presets[0]
-      })
+      dispatchActiveSetting('cover', { config: selectedComponent.presets[0] })
   }, [selectedComponent])
 
   //组件的UI设置
@@ -114,3 +117,12 @@ export const Dashboard = ({
     </Box>
   )
 }
+
+const mapState = store => (
+  console.log(selectSetting(store)), { activeSettings: selectSetting(store) }
+)
+const mapDispatch = { dispatchActiveSetting: updateSetting }
+export default connect(
+  mapState,
+  mapDispatch
+)(Dashboard)

@@ -35,3 +35,21 @@ export function TopIndicator({ selectedComponent }) {
     </Layout.Header>
   )
 }
+
+// const mapState = state => {
+//   const { name, items } = getActiveShelfBoard(state.shelfBoards)
+//   return {
+//     name,
+//     items,
+//     activeUserBoard: getActiveUserBoard(state.userBoards)
+//   }
+// }
+
+// const mapDispatch = {
+//   addShelfBoardItem
+// }
+
+// export default connect(
+//   mapState,
+//   mapDispatch
+// )(TopIndicator)
