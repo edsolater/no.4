@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Box, List, Flex } from './components'
-import { updateSetting } from './redux/actionCreators'
-import { selectSetting } from './redux/selectors'
+import { Box, List } from './components'
+import { componentSetting_cover } from './redux/actionCreators'
+import { selectComponentSetting } from './redux/selectors'
 
-export function Preview({
+function Preview({
+  componentSetting, // redux
+  componentSetting_cover, // redux
   selectedComponent,
-  activeSettings, // redux
-  dispatchActiveSetting, // redux
   dispatchWidgetBackground,
   ...restProps
 }) {
@@ -18,7 +18,7 @@ export function Preview({
           <List.Item
             key={setting.toSource()}
             onClick={() => {
-              dispatchActiveSetting({ type: 'cover', config: setting })
+              componentSetting_cover(setting)
               dispatchWidgetBackground({ type: 'clear' })
             }}
           >
@@ -26,13 +26,13 @@ export function Preview({
           </List.Item>
         ))}
       </List>
-      <selectedComponent.Preview {...activeSettings} />
+      <selectedComponent.Preview {...componentSetting} />
     </Box>
   )
 }
 
-const mapState = store => ({ activeSettings: selectSetting(store) })
-const mapDispatch = { dispatchActiveSetting: updateSetting }
+const mapState = store => ({ componentSetting: selectComponentSetting(store) })
+const mapDispatch = { componentSetting_cover }
 export default connect(
   mapState,
   mapDispatch

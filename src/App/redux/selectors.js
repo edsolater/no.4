@@ -1,3 +1,7 @@
 export const selectAllComponents = (state = {}) => state.allComponent
 
-export const selectSetting = (store = {}) => store.setting || {}
+export const selectCriticalData = (store = {}) => ({
+  componentSetting: store.componentSetting || {}
+})
+
+export const selectComponentSetting = (store = {}) => store.componentSetting || {}

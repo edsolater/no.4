@@ -6,13 +6,19 @@ import { List, Box } from './components'
 import { color } from './settings/style'
 import { isEqualWith } from 'lodash'
 import { Widget } from './Dashboard__Widget'
-import { updateSetting } from './redux/actionCreators'
-import { selectSetting } from './redux/selectors'
+import {
+  componentSetting_set,
+  componentSetting_delete,
+  componentSetting_cover
+} from './redux/actionCreators'
+import { selectComponentSetting } from './redux/selectors'
 
 function Dashboard({
   selectedComponent,
-  activeSettings, // redux
-  dispatchActiveSetting, // redux
+  componentSetting, // redux
+  componentSetting_set, //redux
+  componentSetting_delete, // redux
+  componentSetting_cover, //redux
   widgetBackgrounds,
   dispatchWidgetBackground,
   ...restProps
@@ -24,13 +30,10 @@ function Dashboard({
       }) ||
       value === undefined
     ) {
-      dispatchActiveSetting('delete', { key: propInfo.name })
+      componentSetting_delete(propInfo.name)
       dispatchWidgetBackground({ type: 'delete', key: propInfo.name })
     } else {
-      dispatchActiveSetting('set', {
-        key: propInfo.name,
-        value: value
-      })
+      componentSetting_set(propInfo.name, value)
       dispatchWidgetBackground({
         type: 'set',
         key: propInfo.name,
@@ -38,11 +41,9 @@ function Dashboard({
       })
     }
   }
-  console.log('activeSettings: ', activeSettings)
-  // 如果有的话，最初先加载一次默认样式
   React.useEffect(() => {
     if (selectedComponent.presets)
-      dispatchActiveSetting('cover', { config: selectedComponent.presets[0] })
+      componentSetting_cover(selectedComponent.presets[0])
   }, [selectedComponent])
 
   //组件的UI设置
@@ -104,7 +105,7 @@ function Dashboard({
               </div>
               <div>
                 <Widget
-                  activeValue={activeSettings[propInfo.name]}
+                  activeValue={componentSetting[propInfo.name]}
                   availableType={propInfo.type}
                   defaultValue={propInfo.default}
                   onChange={value => setValue(value, propInfo)}
@@ -118,10 +119,12 @@ function Dashboard({
   )
 }
 
-const mapState = store => (
-  console.log(selectSetting(store)), { activeSettings: selectSetting(store) }
-)
-const mapDispatch = { dispatchActiveSetting: updateSetting }
+const mapState = store => ({ componentSetting: selectComponentSetting(store) })
+const mapDispatch = {
+  componentSetting_set,
+  componentSetting_delete,
+  componentSetting_cover
+}
 export default connect(
   mapState,
   mapDispatch

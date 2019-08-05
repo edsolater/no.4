@@ -1,29 +1,29 @@
 import { combineReducers } from 'redux'
 
-function setting(state = {}, action = {}) {
+function componentSetting(state = {}, action = {}) {
   switch (action.type) {
-    case 'setting_set': {
+    case 'componentSetting_set': {
       const { key, value, config } = action
       if (key) return { ...state, [key]: value }
       if (config) return { ...state, config }
     }
-    case 'setting_cover': {
+    case 'componentSetting_cover': {
+      console.log('action: ', action)
       const { config } = action
       return config
     }
-    case 'setting_delete': {
+    case 'componentSetting_delete': {
       const { key, value, config } = action
       if (key) return { ...state, [key]: value }
       if (config) return { ...state, config }
     }
     default: {
-      // throw new Error(
-      //   `unknown action type(${action.type}) for dashboard setting`
-      // )
-      console.log(action)
-      return null
+      console.warn(
+        `unknown action type(${action.type}) for dashboard componentSetting`
+      )
+      return state
     }
   }
 }
 
-export default combineReducers({ setting })
+export default combineReducers({ componentSetting })

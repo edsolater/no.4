@@ -7,7 +7,7 @@ import store from './redux/store'
 
 import { TopIndicator } from './TopIndicator'
 import { SideMenu } from './SideMenu'
-import { Preview } from './Preview'
+import  Preview  from './Preview'
 import  Dashboard  from './Dashboard'
 import { Example } from './Example'
 import { RelatedItem } from './RelatedItem'

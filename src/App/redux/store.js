@@ -2,7 +2,7 @@ import { createStore } from 'redux'
 import reducers from './reducers'
 
 const initialState = {
-  setting: {}
+  componentSetting: {}
 }
 
 export default createStore(reducers, initialState)
