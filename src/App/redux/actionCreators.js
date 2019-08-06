@@ -1,22 +1,23 @@
-export const componentSetting_set = (key, value) => ({
-  type: 'componentSetting_set',
+export const currentProps_set = (key, value) => ({
+  type: 'currentProps_set',
   key,
   value
 })
-export const componentSetting_delete = key => ({
-  type: 'componentSetting_delete',
+export const currentProps_delete = key => ({
+  type: 'currentProps_delete',
   key
 })
-export const componentSetting_cover = setting => ({
-  type: 'componentSetting_cover',
-  config: setting
+export const currentProps_cover = all => ({
+  type: 'currentProps_cover',
+  all
 })
-export const allComponents_cover = allComponents => ({
-  type: 'allComponents_cover',
-  config: allComponents
+export const componentCollection_cover = all => ({
+  type: 'componentCollection_cover',
+  all
 })
-
-export const currentSelection_change = config => ({
-  type: 'currentSelection_change',
-  config
-})
+export const componentCollection_setCurrentByName = name => {
+  return {
+    type: 'componentCollection_setCurrentByName',
+    name
+  }
+}

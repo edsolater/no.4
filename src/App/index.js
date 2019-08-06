@@ -6,31 +6,34 @@ import * as myLibrary from '../lib'
 import { Grid } from './components'
 // import store from './redux/store'
 
-import { TopIndicator } from './TopIndicator'
+import TopIndicator from './TopIndicator'
 import SideMenu from './SideMenu'
 import Preview from './Preview'
 import Dashboard from './Dashboard'
 import RelatedItem from './RelatedItem'
-import { allComponents_cover } from './redux/actionCreators' // redux
+import {
+  componentCollection_cover,
+  componentCollection_setCurrentByName
+} from './redux/actionCreators' // redux
 
 function App({
-  allComponents_cover // redux
+  componentCollection_cover, // redux
+  componentCollection_setCurrentByName // redux
 }) {
-  const [selectedComponentName, selectComponentName] = React.useState('button')
-  const selectedComponent = myLibrary.components[selectedComponentName]
-  React.useEffect(() => {
-    allComponents_cover(Object.values(myLibrary.components))
+  React.useLayoutEffect(() => {
+    componentCollection_cover({...myLibrary.components})
+    componentCollection_setCurrentByName('button')
   })
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
-      <TopIndicator selectedComponent={selectedComponent} />
+      <TopIndicator />
       <Layout>
-        <SideMenu selectComponentName={selectComponentName} />
+        <SideMenu />
         <Layout.Content style={{ position: 'relative' }}>
           <Grid grid={{ layoutType: 'land_4' }}>
-            <Dashboard selectedComponent={selectedComponent} />
-            <Preview selectedComponent={selectedComponent} />
-            <RelatedItem selectedComponent={selectedComponent} />
+            <Dashboard />
+            {/* <Preview /> */}
+            <RelatedItem />
           </Grid>
         </Layout.Content>
       </Layout>
@@ -40,5 +43,5 @@ function App({
 
 export default connect(
   null,
-  { allComponents_cover }
+  { componentCollection_cover, componentCollection_setCurrentByName }
 )(App)

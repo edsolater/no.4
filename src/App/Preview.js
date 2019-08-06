@@ -1,36 +1,39 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Box, List } from './components'
-import { componentSetting_cover } from './redux/actionCreators'
-import { getComponentSetting } from './redux/selectors'
+import { currentProps_cover } from './redux/actionCreators'
+import { getComponentSetting, getCurrentSelection } from './redux/selectors'
 
 function Preview({
-  selectedComponent,
-  componentSetting, // redux
-  componentSetting_cover, // redux
+  selectedComponent, // redux
+  currentProps, // redux
+  currentProps_cover, // redux
   ...restProps
 }) {
   return (
     <Box {...restProps}>
       <List>
-        {selectedComponent.presets.map(setting => (
+        {(selectedComponent.presets||[]).map(setting => (
           <List.Item
             key={setting.toSource()}
             onClick={() => {
-              componentSetting_cover(setting)
+              currentProps_cover(setting)
             }}
           >
             {setting.toSource()}
           </List.Item>
         ))}
       </List>
-      <selectedComponent.Preview {...componentSetting} />
+      <selectedComponent.Preview {...currentProps} />
     </Box>
   )
 }
 
-const mapState = store => ({ componentSetting: getComponentSetting(store) })
-const mapDispatch = { componentSetting_cover }
+const mapState = store => ({
+  currentProps: getComponentSetting(store),
+  selectedComponent: getCurrentSelection(store)
+})
+const mapDispatch = { currentProps_cover }
 export default connect(
   mapState,
   mapDispatch

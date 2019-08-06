@@ -1,10 +1,12 @@
 import { createStore } from 'redux'
 import reducers from './reducers'
-import * as myLibrary from '../../lib'
 
 const initialState = {
-  componentSetting: {},
-  allComponents: []
+  currentProps: {},
+  componentCollection: {
+    currentName: '',
+    all: {}
+  }
 }
 
 export default createStore(reducers, initialState)

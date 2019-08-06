@@ -7,20 +7,21 @@ import { color } from './settings/style'
 import { isEqualWith } from 'lodash'
 import { Widget } from './Dashboard__Widget'
 import {
-  componentSetting_set,
-  componentSetting_delete,
-  componentSetting_cover
+  currentProps_set,
+  currentProps_delete,
+  currentProps_cover
 } from './redux/actionCreators'
-import { getComponentSetting } from './redux/selectors'
+import { getComponentSetting, getCurrentSelection } from './redux/selectors'
 
 function Dashboard({
-  selectedComponent,
-  componentSetting, // redux
-  componentSetting_set, //redux
-  componentSetting_delete, // redux
-  componentSetting_cover, //redux
+  selectedComponent, //redux
+  currentProps, // redux
+  currentProps_set, //redux
+  currentProps_delete, // redux
+  currentProps_cover, //redux
   ...restProps
 }) {
+  console.log('selectedComponent: ', selectedComponent)
   function setValue(value, propInfo) {
     if (
       isEqualWith(value, propInfo.default, (a, b) => {
@@ -28,18 +29,18 @@ function Dashboard({
       }) ||
       value === undefined
     ) {
-      componentSetting_delete(propInfo.name)
+      currentProps_delete(propInfo.name)
     } else {
-      componentSetting_set(propInfo.name, value)
+      currentProps_set(propInfo.name, value)
     }
   }
   React.useEffect(() => {
     if (selectedComponent.presets)
-      componentSetting_cover(selectedComponent.presets[0])
+      currentProps_cover(selectedComponent.presets[0])
   }, [selectedComponent])
 
   //组件的UI设置
-  const tables = Object.entries(selectedComponent.reactProps)
+  const tables = Object.entries(selectedComponent.reactProps||{})
   return (
     <Box {...restProps}>
       {tables.map(([name, properties]) => (
@@ -64,8 +65,7 @@ function Dashboard({
                 ::before {
                   content: '';
                   pointer-events: none;
-                  background: ${componentSetting[propInfo.name] &&
-                    'dodgerblue'};
+                  background: ${currentProps[propInfo.name] && 'dodgerblue'};
                   opacity: 0.1;
                   position: absolute;
                   height: 100%;
@@ -74,8 +74,7 @@ function Dashboard({
                 ::after {
                   content: '';
                   pointer-events: none;
-                  background: ${componentSetting[propInfo.name] &&
-                    'dodgerblue'};
+                  background: ${currentProps[propInfo.name] && 'dodgerblue'};
                   position: absolute;
                   height: 100%;
                   width: 10px;
@@ -91,7 +90,7 @@ function Dashboard({
               <div
                 style={{
                   width: 32,
-                  color: componentSetting[propInfo.name] && 'dodgerblue'
+                  color: currentProps[propInfo.name] && 'dodgerblue'
                 }}
                 onClick={() => setValue(null, propInfo)} // 传入 null 代表清空命令
               >
@@ -99,7 +98,7 @@ function Dashboard({
               </div>
               <div>
                 <Widget
-                  activeValue={componentSetting[propInfo.name]}
+                  activeValue={currentProps[propInfo.name]}
                   availableType={propInfo.type}
                   defaultValue={propInfo.default}
                   onChange={value => setValue(value, propInfo)}
@@ -114,10 +113,13 @@ function Dashboard({
 }
 
 export default connect(
-  store => ({ componentSetting: getComponentSetting(store) }),
+  store => ({
+    currentProps: getComponentSetting(store),
+    selectedComponent: getCurrentSelection(store)
+  }),
   {
-    componentSetting_set,
-    componentSetting_delete,
-    componentSetting_cover
+    currentProps_set,
+    currentProps_delete,
+    currentProps_cover
   }
 )(Dashboard)

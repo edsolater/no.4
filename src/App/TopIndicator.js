@@ -1,8 +1,12 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { Layout, Icon } from 'antd/es'
 import { color } from './settings/style'
+import { getCurrentSelection } from './redux/selectors'
 
-export function TopIndicator({ selectedComponent }) {
+function TopIndicator({
+  selectedComponent // redux
+}) {
   return (
     <Layout.Header
       style={{
@@ -36,20 +40,7 @@ export function TopIndicator({ selectedComponent }) {
   )
 }
 
-// const mapState = state => {
-//   const { name, items } = getActiveShelfBoard(state.shelfBoards)
-//   return {
-//     name,
-//     items,
-//     activeUserBoard: getActiveUserBoard(state.userBoards)
-//   }
-// }
-
-// const mapDispatch = {
-//   addShelfBoardItem
-// }
-
-// export default connect(
-//   mapState,
-//   mapDispatch
-// )(TopIndicator)
+export default connect(
+  store => ({ selectedComponent: getCurrentSelection(store) }),
+  null
+)(TopIndicator)

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
 
-function componentSetting(state = {}, action = {}) {
+function currentProps(state = {}, action = {}) {
   switch (action.type) {
-    case 'componentSetting_set': {
+    case 'currentProps_set': {
       const { key, value } = action
       if (value === state[key]) {
         const newState = { ...state }
@@ -12,11 +12,11 @@ function componentSetting(state = {}, action = {}) {
         return { ...state, [key]: value }
       }
     }
-    case 'componentSetting_cover': {
-      const { config } = action
-      return config
+    case 'currentProps_cover': {
+      const { all } = action
+      return all
     }
-    case 'componentSetting_delete': {
+    case 'currentProps_delete': {
       const { key } = action
       const newState = { ...state }
       delete newState[key]
@@ -28,15 +28,15 @@ function componentSetting(state = {}, action = {}) {
   }
 }
 
-function allComponents(state = [], action = {}) {
+function componentCollection(state = [], action = {}) {
   switch (action.type) {
-    // case 'allComponents_set': {
-    //   const { key, value } = action
-    //   return { ...state, [key]: value }
-    // }
-    case 'allComponents_cover': {
-      const { config } = action
-      return config
+    case 'componentCollection_cover': {
+      const { all } = action
+      return { ...state, all }
+    }
+    case 'componentCollection_setCurrentByName': {
+      const { name } = action
+      return { ...state, currentName: name }
     }
     default: {
       return state
@@ -44,4 +44,7 @@ function allComponents(state = [], action = {}) {
   }
 }
 
-export default combineReducers({ componentSetting, allComponents })
+export default combineReducers({
+  currentProps,
+  componentCollection
+})

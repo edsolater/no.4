@@ -4,22 +4,9 @@ import { Layout, Icon, Menu, Tag, Tooltip } from 'antd/es'
 import { ReactComponent as Component } from './icons/folder-react-components.svg'
 import { color } from './settings/style'
 import { getAllComponents } from './redux/selectors'
-import {
-  allComponents_cover,
-  currentSelection_change
-} from './redux/actionCreators'
+import { componentCollection_setCurrentByName } from './redux/actionCreators'
 const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
-
-//转换一切字符串分割形式为 camelCase
-const toCamelCase = str => {
-  return str
-    .replace(
-      /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
-      (word, offset) => (offset === 0 ? word.toLowerCase() : word.toUpperCase()) //处于首位的字母转换成小写形式，其他被选中的均准换成大写
-    )
-    .replace(/\s+/g, '') // 去除分割符中可能有的所有空格
-}
 
 //转换一切字符串分割形式为 PascalCase
 const toPascalCase = str => {
@@ -34,10 +21,8 @@ const toPascalCase = str => {
   ) // 去除分割符中可能有的所有空格
 }
 function SideMenu({
-  allComponents_cover, // redux
-  currentSelection_change, // redux
-  allComponents, // redux
-  selectComponentName
+  componentCollection_setCurrentByName, // redux
+  componentCollection // redux
 }) {
   // 智能分类组件名
   const classifyComponent = () => {
@@ -62,7 +47,7 @@ function SideMenu({
       ]
       return patterns.find(({ pattern }) => pattern.test(name)).output
     }
-    allComponents.forEach(eachComponent => {
+    componentCollection.forEach(eachComponent => {
       groupOrder[mapClassName(eachComponent.class)].push(eachComponent)
     })
     return groupOrder
@@ -127,7 +112,9 @@ function SideMenu({
         style={{ height: '100%', overflowX: 'hidden', overflowY: 'scroll' }}
         defaultOpenKeys={['Component']}
         defaultSelectedKeys={['Button']}
-        onSelect={({ key }) => selectComponentName(toCamelCase(key))}
+        onSelect={({ key: componentName }) => {
+          componentCollection_setCurrentByName(componentName)
+        }}
       >
         {createSubMenus(data)}
       </Menu>
@@ -138,6 +125,8 @@ function SideMenu({
 // TODO: 组件加上中文名称
 
 export default connect(
-  store => ({ allComponents: getAllComponents(store) }),
-  { allComponents_cover, currentSelection_change }
+  store => ({
+    componentCollection: getAllComponents(store)
+  }),
+  { componentCollection_setCurrentByName }
 )(SideMenu)

@@ -24,8 +24,8 @@ export const Widget = ({
       if (/^\(.*?\) => .*$/.test(originalType)) return 'function'
       if (/^{.*}$/.test(originalType)) return 'object'
       if (/^\[.*\|.*\]$/.test(originalType)) return 'enum'
-      if (/any/.test(originalType)) return 'string'
       if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
+      if (/.*/.test(originalType)) return 'string'
     }
     throw new Error(`can't get widgetType by typeString, set: ${originalType}`)
   }

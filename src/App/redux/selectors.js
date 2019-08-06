@@ -1,14 +1,14 @@
-/**
- *
- * @param {object} store 只能从根目录的state，也就是store获取
- */
-export const getComponentSetting = (store = {}) => store.componentSetting || {}
-/**
- *
- * @param {object} state 只能从根目录的state，也就是store获取
- */
-export const getAllComponents = (state = {}) => state.allComponents || {}
+export const getComponentSetting = (store = {}) => store.currentProps || {}
+
+export const getAllComponents = (store = {}) =>
+  Object.values(store.componentCollection.all) || []
+
+export const getCurrentSelection = (store = {}) =>
+  store.componentCollection.all[store.componentCollection.currentName] || {}
+
+export const getCurrentSelectionName = (store = {}) =>
+  store.componentCollection.currentName || ''
 
 // export const getCriticalData = (store = {}) => ({
-//   componentSetting: store.componentSetting || {}
+//   currentProps: store.currentProps || {}
 // })
