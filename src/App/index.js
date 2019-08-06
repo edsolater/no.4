@@ -32,7 +32,7 @@ function App({
         <Layout.Content style={{ position: 'relative' }}>
           <Grid grid={{ layoutType: 'land_4' }}>
             <Dashboard />
-            {/* <Preview /> */}
+            <Preview />
             <RelatedItem />
           </Grid>
         </Layout.Content>

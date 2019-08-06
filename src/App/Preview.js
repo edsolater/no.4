@@ -13,7 +13,7 @@ function Preview({
   return (
     <Box {...restProps}>
       <List>
-        {(selectedComponent.presets||[]).map(setting => (
+        {(selectedComponent.presets || []).map(setting => (
           <List.Item
             key={setting.toSource()}
             onClick={() => {
@@ -24,7 +24,9 @@ function Preview({
           </List.Item>
         ))}
       </List>
-      <selectedComponent.Preview {...currentProps} />
+      {selectedComponent.Preview && (
+        <selectedComponent.Preview {...currentProps} />
+      )}
     </Box>
   )
 }
