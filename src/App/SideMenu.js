@@ -22,8 +22,9 @@ const toPascalCase = str => {
 }
 function SideMenu({
   componentCollection_setCurrentByName, // redux
-  componentCollection // redux
+  componentCollection=[] // redux
 }) {
+  console.log(componentCollection)
   // 智能分类组件名
   const classifyComponent = () => {
     const groupOrder = {
@@ -47,7 +48,7 @@ function SideMenu({
       ]
       return patterns.find(({ pattern }) => pattern.test(name)).output
     }
-    componentCollection.forEach(eachComponent => {
+    componentCollection.forEach((eachComponent={}) => {
       groupOrder[mapClassName(eachComponent.class)].push(eachComponent)
     })
     return groupOrder

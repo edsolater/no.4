@@ -3,12 +3,13 @@ import { Button } from 'antd/es'
 
 const componentName = 'button'
 
+// 有效属性及其用法见相应model componentInfo
 export default {
   class: '通用',
   name: componentName,
   name_cn: '按钮',
   tags: ['antd'],
-  icon: require('./icons')[componentName],
+  icon: require('./icons')[componentName], //TODO:需要把名字
   Preview({ children, ...props }) {
     return <Button {...props}>{children}</Button>
   },

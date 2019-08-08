@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import ComponentModel from './models/ComponentModel'
 
 function currentProps(state = {}, action = {}) {
   switch (action.type) {
@@ -32,10 +33,18 @@ function componentCollection(state = [], action = {}) {
   switch (action.type) {
     case 'componentCollection_cover': {
       const { all } = action
-      return { ...state, all }
+      return {
+        ...state,
+        all: Object.fromEntries(
+          Object.entries(all).map(([name, componentInfo]) => [
+            name,
+            new ComponentModel(componentInfo)
+          ])
+        )
+      }
     }
     case 'componentCollection_setCurrentByName': {
-      const { name } = action
+      const { name = null } = action
       return { ...state, currentName: name }
     }
     default: {

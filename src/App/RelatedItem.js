@@ -38,9 +38,12 @@ function RelatedItem({
 }
 
 export default connect(
-  store => ({
-    componentCollection: getAllComponents(store),
-    selectedComponent: getCurrentSelection(store)
-  }),
+  store => {
+    console.log('store: ', store)
+    return {
+      componentCollection: getAllComponents(store),
+      selectedComponent: getCurrentSelection(store)
+    }
+  },
   { componentCollection_setCurrent: componentCollection_setCurrentByName }
 )(RelatedItem)
