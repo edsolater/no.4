@@ -13,16 +13,16 @@ import Dashboard from './Dashboard'
 import RelatedItem from './RelatedItem'
 import {
   componentCollection_cover,
-  componentCollection_setCurrentByName
+  componentCollection_setCurrent
 } from './redux/actionCreators' // redux
 
 function App({
   componentCollection_cover, // redux
-  componentCollection_setCurrentByName // redux
+  componentCollection_setCurrent // redux
 }) {
   React.useLayoutEffect(() => {
     componentCollection_cover(myLibrary.components)
-    componentCollection_setCurrentByName('button')
+    componentCollection_setCurrent('button')
   })
   return (
     <Layout style={{ width: '100vw', height: '100vh' }}>
@@ -43,5 +43,5 @@ function App({
 
 export default connect(
   null,
-  { componentCollection_cover, componentCollection_setCurrentByName }
+  { componentCollection_cover, componentCollection_setCurrent }
 )(App)

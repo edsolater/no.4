@@ -4,7 +4,7 @@ import { Icon } from 'antd/es'
 import { Box } from './components'
 import { color } from './settings/style'
 import { getRelatedComponents, getCurrentSelection } from './redux/selectors'
-import { componentCollection_setCurrentByName } from './redux/actionCreators'
+import { componentCollection_setCurrent } from './redux/actionCreators'
 
 function RelatedItem({
   relatedComponents, // redux
@@ -19,6 +19,7 @@ function RelatedItem({
             key={component.name}
             className='item'
             style={{ background: component === selectedComponent && 'gray' }}
+            onClick={()=>componentCollection_setCurrent(component)}
           >
             <div>{component.name}</div>
             <Icon
@@ -39,5 +40,5 @@ export default connect(
     relatedComponents: getRelatedComponents(store),
     selectedComponent: getCurrentSelection(store)
   }),
-  { componentCollection_setCurrent: componentCollection_setCurrentByName }
+  {componentCollection_setCurrent }
 )(RelatedItem)

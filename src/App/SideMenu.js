@@ -4,7 +4,7 @@ import { Layout, Icon, Menu, Tag, Tooltip } from 'antd/es'
 import { ReactComponent as Component } from './icons/folder-react-components.svg'
 import { color } from './settings/style'
 import { getAllComponents } from './redux/selectors'
-import { componentCollection_setCurrentByName } from './redux/actionCreators'
+import { componentCollection_setCurrent } from './redux/actionCreators'
 const categoryIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
@@ -21,7 +21,7 @@ const toPascalCase = str => {
   ) // 去除分割符中可能有的所有空格
 }
 function SideMenu({
-  componentCollection_setCurrentByName, // redux
+  componentCollection_setCurrent, // redux
   componentCollection=[] // redux
 }) {
   console.log(componentCollection)
@@ -114,7 +114,7 @@ function SideMenu({
         defaultOpenKeys={['Component']}
         defaultSelectedKeys={['Button']}
         onSelect={({ key: componentName }) => {
-          componentCollection_setCurrentByName(componentName)
+          componentCollection_setCurrent(componentName)
         }}
       >
         {createSubMenus(data)}
@@ -129,5 +129,5 @@ export default connect(
   store => ({
     componentCollection: getAllComponents(store)
   }),
-  { componentCollection_setCurrentByName }
+  { componentCollection_setCurrent }
 )(SideMenu)

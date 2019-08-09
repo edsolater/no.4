@@ -46,9 +46,13 @@ function componentCollection(state = [], action = {}) {
         )
       }
     }
-    case 'componentCollection_setCurrentByName': {
-      const { name = null } = action
+    case 'componentCollection_setCurrent_string': {
+      const { name } = action
       return { ...state, currentName: name }
+    }
+    case 'componentCollection_setCurrent_object': {
+      const { componentInfo } = action
+      return { ...state, currentName: componentInfo.name }
     }
     default: {
       return state
