@@ -1,7 +1,7 @@
 export default class ComponentModel {
   /**
    *
-   * @param {object} data
+   * @param {object} [data]
    * @param {string} [data.class] 规定了组件的所属类别
    * @param {string} [data.category] 规定了组件的所属类别, class 的别称
    * @param {string} [data.name] 组件的名称
@@ -24,7 +24,7 @@ export default class ComponentModel {
     Preview = () => null,
     reactProps = { main: [] },
     presets = [{}]
-  }) {
+  }={}) {
     this.class = category
     this.category = category
     this.name = name_en.toLowerCase()

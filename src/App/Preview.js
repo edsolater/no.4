@@ -13,7 +13,7 @@ function Preview({
   return (
     <Box {...restProps}>
       <List>
-        {(selectedComponent.presets || []).map(setting => (
+        {selectedComponent.presets.map(setting => (
           <List.Item
             key={setting.toSource()}
             onClick={() => {
@@ -24,19 +24,15 @@ function Preview({
           </List.Item>
         ))}
       </List>
-      {selectedComponent.Preview && (
-        <selectedComponent.Preview {...currentProps} />
-      )}
+      <selectedComponent.Preview {...currentProps} />
     </Box>
   )
 }
 
-const mapState = store => ({
-  currentProps: getComponentSetting(store),
-  selectedComponent: getCurrentSelection(store)
-})
-const mapDispatch = { currentProps_cover }
 export default connect(
-  mapState,
-  mapDispatch
+  store => ({
+    currentProps: getComponentSetting(store),
+    selectedComponent: getCurrentSelection(store)
+  }),
+  { currentProps_cover }
 )(Preview)
