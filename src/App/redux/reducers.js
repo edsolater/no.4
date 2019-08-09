@@ -1,36 +1,30 @@
 import { combineReducers } from 'redux'
 import ComponentModel from './models/ComponentModel'
 
-function currentProps(state = {}, action = {}) {
+function componentCollection(state = {}, action = {}) {
   switch (action.type) {
-    case 'currentProps_set': {
+    case 'settedProps_set': {
       const { key, value } = action
       if (value === state[key]) {
-        const newState = { ...state }
-        delete newState[key]
-        return newState
+        const newSettedProps = { ...state.settedProps }
+        delete newSettedProps[key]
+        return {...state, settedProps:newSettedProps}
       } else {
-        return { ...state, [key]: value }
+        const newSettedProps = { ...state.settedProps }
+        newSettedProps[key] = value
+        return {...state, settedProps:newSettedProps}
       }
     }
-    case 'currentProps_cover': {
+    case 'settedProps_cover': {
       const { all } = action
-      return all
+      return {...state, settedProps:all}
     }
-    case 'currentProps_delete': {
+    case 'settedProps_delete': {
       const { key } = action
-      const newState = { ...state }
-      delete newState[key]
-      return newState
+      const newSettedProps = { ...state.settedProps }
+      delete newSettedProps[key]
+      return {...state, settedProps:newSettedProps}
     }
-    default: {
-      return state
-    }
-  }
-}
-
-function componentCollection(state = [], action = {}) {
-  switch (action.type) {
     case 'componentCollection_cover': {
       const { all } = action
       return {
@@ -38,13 +32,13 @@ function componentCollection(state = [], action = {}) {
         all: all.map(componentInfo => new ComponentModel(componentInfo))
       }
     }
-    case 'componentCollection_setCurrent_string': {
+    case 'componentCollection_setCurrent': {
       const { name } = action
-      return { ...state, currentName: name }
-    }
-    case 'componentCollection_setCurrent_object': {
-      const { componentInfo } = action
-      return { ...state, currentName: componentInfo.name }
+      const prevName = state.currentName || 'button'
+      const prevComponent  = state.all.find(component=>component.name === prevName)
+      prevComponent.settedProps = state.settedProps
+      const currComponent = state.all.find(component=>component.name === name)
+      return { ...state, settedProps: currComponent.settedProps, currentName: name }
     }
     default: {
       return state
@@ -53,6 +47,5 @@ function componentCollection(state = [], action = {}) {
 }
 
 export default combineReducers({
-  currentProps,
   componentCollection
 })

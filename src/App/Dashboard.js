@@ -3,23 +3,24 @@ import { connect } from 'react-redux'
 import 'styled-components/macro'
 import { Tooltip } from 'antd/es'
 import { List, Box } from './components'
-import { isEqualWith } from 'lodash'
+import { isEqualWith, isEmpty } from 'lodash'
 import { Widget } from './Dashboard__Widget'
 import {
-  currentProps_set,
-  currentProps_delete,
-  currentProps_cover
+  settedProps_set,
+  settedProps_delete,
+  settedProps_cover
 } from './redux/actionCreators'
-import { getCurrentProps, getCurrentSelection } from './redux/selectors'
+import { getSettedProps, getCurrentSelection } from './redux/selectors'
 
 function Dashboard({
   selectedComponent, //redux
-  currentProps, // redux
-  currentProps_set, //redux
-  currentProps_delete, // redux
-  currentProps_cover, //redux
+  settedProps, // redux
+  settedProps_set, //redux
+  settedProps_delete, // redux
+  settedProps_cover, //redux
   ...restProps
 }) {
+  console.log('settedProps: ', settedProps)
   function setValue(value, propInfo) {
     if (
       isEqualWith(value, propInfo.default, (a, b) => {
@@ -27,15 +28,16 @@ function Dashboard({
       }) ||
       value === undefined
     ) {
-      currentProps_delete(propInfo.name)
+      settedProps_delete(propInfo.name)
     } else {
-      currentProps_set(propInfo.name, value)
+      settedProps_set(propInfo.name, value)
     }
   }
   React.useEffect(() => {
-    if (selectedComponent.presets)
-      currentProps_cover(selectedComponent.presets[0])
-  }, [selectedComponent, currentProps_cover])
+    if (isEmpty(settedProps)) {
+      settedProps_cover(selectedComponent.presets[0])
+    }
+  }, [selectedComponent, settedProps_cover])
 
   //组件的UI设置
   const tables = Object.entries(selectedComponent.reactProps || {})
@@ -63,7 +65,7 @@ function Dashboard({
                 ::before {
                   content: '';
                   pointer-events: none;
-                  background: ${currentProps[propInfo.name] && 'dodgerblue'};
+                  background: ${settedProps[propInfo.name] && 'dodgerblue'};
                   opacity: 0.1;
                   position: absolute;
                   height: 100%;
@@ -72,7 +74,7 @@ function Dashboard({
                 ::after {
                   content: '';
                   pointer-events: none;
-                  background: ${currentProps[propInfo.name] && 'dodgerblue'};
+                  background: ${settedProps[propInfo.name] && 'dodgerblue'};
                   position: absolute;
                   height: 100%;
                   width: 10px;
@@ -88,7 +90,7 @@ function Dashboard({
               <div
                 style={{
                   width: 32,
-                  color: currentProps[propInfo.name] && 'dodgerblue'
+                  color: settedProps[propInfo.name] && 'dodgerblue'
                 }}
                 onClick={() => setValue(null, propInfo)} // 传入 null 代表清空命令
               >
@@ -96,7 +98,7 @@ function Dashboard({
               </div>
               <div>
                 <Widget
-                  activeValue={currentProps[propInfo.name]}
+                  activeValue={settedProps[propInfo.name]}
                   availableType={propInfo.type}
                   defaultValue={propInfo.default}
                   onChange={value => setValue(value, propInfo)}
@@ -112,12 +114,12 @@ function Dashboard({
 
 export default connect(
   store => ({
-    currentProps: getCurrentProps(store),
+    settedProps: getSettedProps(store),
     selectedComponent: getCurrentSelection(store)
   }),
   {
-    currentProps_set,
-    currentProps_delete,
-    currentProps_cover
+    settedProps_set,
+    settedProps_delete,
+    settedProps_cover
   }
 )(Dashboard)

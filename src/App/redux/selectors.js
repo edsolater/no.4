@@ -1,7 +1,10 @@
 import ComponentModel from './models/ComponentModel'
 
 /** @returns {object} */
-export const getCurrentProps = (store = {}) => store.currentProps || {}
+export const getSettedProps = (store = {}) =>
+  getComponentCollection(store).settedProps ||
+  getCurrentSelection(store).settedProps ||
+  {}
 
 /** @returns {object} */
 const getComponentCollection = (store = {}) => store.componentCollection || {}

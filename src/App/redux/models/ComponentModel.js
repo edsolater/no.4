@@ -40,5 +40,7 @@ export default class ComponentModel {
     this.Preview = Preview
     this.reactProps = reactProps
     this.presets = presets
+
+    this.settedProps = undefined // 初始化挂载的设定参数
   }
 }
