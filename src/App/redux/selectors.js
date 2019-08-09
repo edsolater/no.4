@@ -1,18 +1,32 @@
 import ComponentModel from './models/ComponentModel'
 
-
+/** @returns {object} */
 export const getComponentSetting = (store = {}) => store.currentProps || {}
 
+/** @returns {object} */
+const getComponentCollection = (store = {}) => store.componentCollection || {}
+
+/** @returns {Array} */
 export const getAllComponents = (store = {}) =>
-  Object.values(store.componentCollection.all) || []
+  getComponentCollection(store).all || []
 
-export const getCurrentSelection = (store = {}) =>
-  store.componentCollection.all[store.componentCollection.currentName] ||
-  new ComponentModel()
+/** @returns {ComponentModel} */
+export const getCurrentSelection = (store = {}) => {
+  const currentSelectionName =
+    getComponentCollection(store).currentName || 'button'
+  return (
+    getAllComponents(store).find(
+      componentInfo => componentInfo.name === currentSelectionName
+    ) || new ComponentModel()
+  )
+}
 
-export const getCurrentSelectionName = (store = {}) =>
-  store.componentCollection.currentName || ''
-
-// export const getCriticalData = (store = {}) => ({
-//   currentProps: store.currentProps || {}
-// })
+/** @returns {Array} */
+export const getRelatedComponents = (store = {}) => {
+  const currentCategory = getCurrentSelection(store).category
+  return (
+    getAllComponents(store).filter(
+      ({ category }) => category === currentCategory
+    ) || []
+  )
+}

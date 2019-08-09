@@ -3,17 +3,14 @@ import { connect } from 'react-redux'
 import { Icon } from 'antd/es'
 import { Box } from './components'
 import { color } from './settings/style'
-import { getAllComponents, getCurrentSelection } from './redux/selectors'
+import { getRelatedComponents, getCurrentSelection } from './redux/selectors'
 import { componentCollection_setCurrentByName } from './redux/actionCreators'
 
 function RelatedItem({
-  componentCollection, // redux
+  relatedComponents, // redux
   componentCollection_setCurrent, // redux
   selectedComponent // redux
 }) {
-  const relatedComponents = componentCollection.filter(
-    component => component.class === selectedComponent.class
-  )
   return (
     <Box>
       {relatedComponents.map(component => {
@@ -25,7 +22,7 @@ function RelatedItem({
           >
             <div>{component.name}</div>
             <Icon
-              component={component.icon}
+              component={component.Icon}
               style={{
                 color: color.componentColorInGroup[component.class] || 'gray'
               }}
@@ -38,12 +35,9 @@ function RelatedItem({
 }
 
 export default connect(
-  store => {
-    console.log('store: ', store)
-    return {
-      componentCollection: getAllComponents(store),
-      selectedComponent: getCurrentSelection(store)
-    }
-  },
+  store => ({
+    relatedComponents: getRelatedComponents(store),
+    selectedComponent: getCurrentSelection(store)
+  }),
   { componentCollection_setCurrent: componentCollection_setCurrentByName }
 )(RelatedItem)
