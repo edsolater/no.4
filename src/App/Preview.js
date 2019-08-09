@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Box, List } from './components'
 import { currentProps_cover } from './redux/actionCreators'
-import { getComponentSetting, getCurrentSelection } from './redux/selectors'
+import { getCurrentProps, getCurrentSelection } from './redux/selectors'
 
 function Preview({
   selectedComponent, // redux
@@ -31,7 +31,7 @@ function Preview({
 
 export default connect(
   store => ({
-    currentProps: getComponentSetting(store),
+    currentProps: getCurrentProps(store),
     selectedComponent: getCurrentSelection(store)
   }),
   { currentProps_cover }

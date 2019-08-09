@@ -10,7 +10,7 @@ import {
   currentProps_delete,
   currentProps_cover
 } from './redux/actionCreators'
-import { getComponentSetting, getCurrentSelection } from './redux/selectors'
+import { getCurrentProps, getCurrentSelection } from './redux/selectors'
 
 function Dashboard({
   selectedComponent, //redux
@@ -112,7 +112,7 @@ function Dashboard({
 
 export default connect(
   store => ({
-    currentProps: getComponentSetting(store),
+    currentProps: getCurrentProps(store),
     selectedComponent: getCurrentSelection(store)
   }),
   {
