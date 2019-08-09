@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Box, List } from './components'
-import { settedProps_cover } from './redux/actionCreators'
+import { componentCollection_settedProps_cover } from './redux/actionCreators'
 import { getSettedProps, getCurrentSelection } from './redux/selectors'
 
 function Preview({
   selectedComponent, // redux
   settedProps, // redux
-  settedProps_cover, // redux
+  componentCollection_settedProps_cover, // redux
   ...restProps
 }) {
   return (
@@ -17,7 +17,7 @@ function Preview({
           <List.Item
             key={setting.toSource()}
             onClick={() => {
-              settedProps_cover(setting)
+              componentCollection_settedProps_cover(setting)
             }}
           >
             {setting.toSource()}
@@ -34,5 +34,5 @@ export default connect(
     settedProps: getSettedProps(store),
     selectedComponent: getCurrentSelection(store)
   }),
-  { settedProps_cover }
+  { componentCollection_settedProps_cover }
 )(Preview)

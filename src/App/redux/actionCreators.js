@@ -1,34 +1,34 @@
 import ComponentModel from './models/ComponentModel'
-export const settedProps_set = (key, value) => ({
-  type: 'settedProps_set',
+export const componentCollection_settedProps_set = (key, value) => ({
+  type: 'componentCollection_settedProps_set',
   key,
   value
 })
-export const settedProps_delete = key => ({
-  type: 'settedProps_delete',
+export const componentCollection_settedProps_delete = key => ({
+  type: 'componentCollection_settedProps_delete',
   key
 })
-export const settedProps_cover = all => ({
-  type: 'settedProps_cover',
+export const componentCollection_settedProps_cover = all => ({
+  type: 'componentCollection_settedProps_cover',
   all
 })
-export const componentCollection_cover = all => ({
-  type: 'componentCollection_cover',
+export const componentCollection_all_cover = all => ({
+  type: 'componentCollection_all_cover',
   all
 })
 /**
  *
  * @param {string|ComponentModel} payload
  */
-export const componentCollection_setCurrent = payload => {
+export const componentCollection_currentName_set = payload => {
   if (typeof payload === 'string') {
     return {
-      type: 'componentCollection_setCurrent',
+      type: 'componentCollection_currentName_set',
       name: payload
     }
   } else if (typeof payload === 'object' && payload instanceof ComponentModel) {
     return {
-      type: 'componentCollection_setCurrent',
+      type: 'componentCollection_currentName_set',
       name: payload.name
     }
   } else {

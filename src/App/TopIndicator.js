@@ -32,7 +32,7 @@ function TopIndicator({
         >
           <Icon component={selectedComponent.icon} />
           <span style={{ marginLeft: 16, color: 'white' }}>
-            {selectedComponent.name || selectedComponent.name_en}
+            {selectedComponent.name}
           </span>
         </div>
       </div>

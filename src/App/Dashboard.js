@@ -3,44 +3,32 @@ import { connect } from 'react-redux'
 import 'styled-components/macro'
 import { Tooltip } from 'antd/es'
 import { List, Box } from './components'
-import { isEqualWith, isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import { Widget } from './Dashboard__Widget'
 import {
-  settedProps_set,
-  settedProps_delete,
-  settedProps_cover
+  componentCollection_settedProps_set,
+  componentCollection_settedProps_cover
 } from './redux/actionCreators'
 import { getSettedProps, getCurrentSelection } from './redux/selectors'
 
 function Dashboard({
   selectedComponent, //redux
   settedProps, // redux
-  settedProps_set, //redux
-  settedProps_delete, // redux
-  settedProps_cover, //redux
+  componentCollection_settedProps_set, //redux
+  componentCollection_settedProps_cover, //redux
   ...restProps
 }) {
-  console.log('settedProps: ', settedProps)
   function setValue(value, propInfo) {
-    if (
-      isEqualWith(value, propInfo.default, (a, b) => {
-        return b === undefined ? a === Boolean(b) : undefined
-      }) ||
-      value === undefined
-    ) {
-      settedProps_delete(propInfo.name)
-    } else {
-      settedProps_set(propInfo.name, value)
-    }
+    componentCollection_settedProps_set(propInfo.name, value, propInfo.default)
   }
   React.useEffect(() => {
     if (isEmpty(settedProps)) {
-      settedProps_cover(selectedComponent.presets[0])
+      componentCollection_settedProps_cover(selectedComponent.presets[0])
     }
-  }, [selectedComponent, settedProps_cover])
+  }, [selectedComponent, componentCollection_settedProps_cover])
 
   //组件的UI设置
-  const tables = Object.entries(selectedComponent.reactProps || {})
+  const tables = Object.entries(selectedComponent.reactProps)
   return (
     <Box {...restProps}>
       {tables.map(([name, properties]) => (
@@ -118,8 +106,7 @@ export default connect(
     selectedComponent: getCurrentSelection(store)
   }),
   {
-    settedProps_set,
-    settedProps_delete,
-    settedProps_cover
+    componentCollection_settedProps_set,
+    componentCollection_settedProps_cover
   }
 )(Dashboard)
