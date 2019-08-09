@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import 'styled-components/macro'
 import { Tooltip } from 'antd/es'
 import { List, Box } from './components'
-import { color } from './settings/style'
 import { isEqualWith } from 'lodash'
 import { Widget } from './Dashboard__Widget'
 import {
@@ -21,7 +20,6 @@ function Dashboard({
   currentProps_cover, //redux
   ...restProps
 }) {
-  console.log('selectedComponent: ', selectedComponent)
   function setValue(value, propInfo) {
     if (
       isEqualWith(value, propInfo.default, (a, b) => {
@@ -37,10 +35,10 @@ function Dashboard({
   React.useEffect(() => {
     if (selectedComponent.presets)
       currentProps_cover(selectedComponent.presets[0])
-  }, [selectedComponent])
+  }, [selectedComponent, currentProps_cover])
 
   //组件的UI设置
-  const tables = Object.entries(selectedComponent.reactProps||{})
+  const tables = Object.entries(selectedComponent.reactProps || {})
   return (
     <Box {...restProps}>
       {tables.map(([name, properties]) => (

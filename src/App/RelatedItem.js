@@ -23,7 +23,7 @@ function RelatedItem({
           >
             <div>{component.name}</div>
             <Icon
-              component={component.Icon}
+              component={component.icon}
               style={{
                 color: color.componentColorInGroup[component.class] || 'gray'
               }}

@@ -22,7 +22,6 @@ export const componentCollection_cover = all => ({
  */
 export const componentCollection_setCurrent = payload => {
   if (typeof payload === 'string') {
-    console.log('hello')
     return {
       type: 'componentCollection_setCurrent_string',
       name: payload

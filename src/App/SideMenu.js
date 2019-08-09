@@ -22,9 +22,8 @@ const toPascalCase = str => {
 }
 function SideMenu({
   componentCollection_setCurrent, // redux
-  componentCollection=[] // redux
+  componentCollection // redux
 }) {
-  console.log(componentCollection)
   // 智能分类组件名
   const classifyComponent = () => {
     const groupOrder = {
@@ -48,7 +47,7 @@ function SideMenu({
       ]
       return patterns.find(({ pattern }) => pattern.test(name)).output
     }
-    componentCollection.forEach((eachComponent={}) => {
+    componentCollection.forEach((eachComponent = {}) => {
       groupOrder[mapClassName(eachComponent.class)].push(eachComponent)
     })
     return groupOrder
@@ -76,8 +75,9 @@ function SideMenu({
               <span>{toPascalCase(component.name)}</span>
             </Tooltip>
             <span style={{ marginLeft: 12 }}>
-              {component.tags &&
-                component.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
+              {component.tags.map(tag => (
+                <Tag key={component.name + tag}>{tag}</Tag>
+              ))}
             </span>
           </Menu.Item>
         )

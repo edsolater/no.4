@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default class ComponentModel {
   /**
    *
@@ -10,7 +8,7 @@ export default class ComponentModel {
    * @param {string} [data.name_en] 组件的英文名
    * @param {string} [data.name_cn] 组件的中文名
    * @param {string[]|string} [data.tags] 组件的标签
-   * @param {JSX.Element} [data.Icon] 附带Icon组件的未激活状态，以便调用时传入props
+   * @param {JSX.Element} [data.icon] 附带Icon组件的未激活状态，以便调用时传入props
    * @param {React.ReactComponentElement} [data.Preview] 附带Preview组件的未激活状态，以便调用时传入props
    * @param {object} [data.reactProps] //TODO:
    * @param {Array} [data.presets]
@@ -22,10 +20,9 @@ export default class ComponentModel {
     name_en = name,
     name_cn = '未设定',
     tags,
-    icon,
-    Icon = icon || <></>,
-    preview,
-    Preview = preview || (() => null),
+    icon = () => null,
+    Icon = icon,
+    Preview = () => null,
     reactProps = { main: [] },
     presets = [{}]
   } = {}) {
@@ -38,6 +35,7 @@ export default class ComponentModel {
     this.name_en = name_en.toLowerCase()
     this.name_cn = name_cn
     this.tags = [tags].flat()
+    this.icon = icon
     this.Icon = Icon
     this.Preview = Preview
     this.reactProps = reactProps

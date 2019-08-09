@@ -59,7 +59,7 @@ export const Widget = ({
       setRadioGroupValues({})
       changeSelectedRadioType(getWidgetTypeByValue(defaultValue))
     } //重置 RadioGroup 保留的状态
-  },[activeValue, defaultValue])
+  }, [activeValue, defaultValue])
 
   // ------------所有的可用控件------------
   const widgets = {
@@ -103,7 +103,7 @@ export const Widget = ({
         .map(str => str.trim().replace(/'|"/g, ''))
       return (
         <Radio.Group
-          buttonStyle="solid"
+          buttonStyle='solid'
           onChange={e => onChange(e.target.value)}
           value={getWidgeValue('enum')}
         >
