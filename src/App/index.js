@@ -21,7 +21,7 @@ function App({
   componentCollection_setCurrent // redux
 }) {
   React.useLayoutEffect(() => {
-    componentCollection_cover(myLibrary.components)
+    componentCollection_cover(Object.values(myLibrary.components))
     componentCollection_setCurrent('button')
   })
   return (

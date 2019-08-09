@@ -35,15 +35,7 @@ function componentCollection(state = [], action = {}) {
       const { all } = action
       return {
         ...state,
-        // all: Object.fromEntries(
-        //   Object.entries(all).map(([name, componentInfo]) => [
-        //     name,
-        //     new ComponentModel(componentInfo)
-        //   ])
-        // )
-        all: Object.values(all).map(
-          componentInfo => new ComponentModel(componentInfo)
-        )
+        all: all.map(componentInfo => new ComponentModel(componentInfo))
       }
     }
     case 'componentCollection_setCurrent_string': {
