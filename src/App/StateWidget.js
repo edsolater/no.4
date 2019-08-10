@@ -144,7 +144,7 @@ export function StateWidgetSeletor({
       )
     },
     function() {
-      return <span>{originalType}</span> // 何必管这么多呢？直接原封不动返回就是
+      return <StateWidget_function value={originalType} />
     },
     radioGroup() {
       const originalTypes = originalType.split(/ \| (?!'|")/) //如果有前置判断就报错，是babel的关系？
@@ -241,4 +241,7 @@ function StateWidget_enum({ value, onChange = () => {}, enumStrings }) {
       ))}
     </Radio.Group>
   )
+}
+function StateWidget_function({ value }) {
+  return <span>{value}</span>
 }
