@@ -105,6 +105,9 @@ export function StateWidgetSeletor({
         />
       )
     },
+    function() {
+      return <StateWidget_function value={originalType} />
+    },
     object() {
       const [, matched] = originalType.trim().match(/^{(.*)}$/)
       const entries = matched
@@ -143,9 +146,7 @@ export function StateWidgetSeletor({
         </div>
       )
     },
-    function() {
-      return <StateWidget_function value={originalType} />
-    },
+
     radioGroup() {
       const originalTypes = originalType.split(/ \| (?!'|")/) //如果有前置判断就报错，是babel的关系？
       function getWidgetDefaultValue(widgetType) {
