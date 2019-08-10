@@ -25,7 +25,7 @@ export default {
       {
         name: 'disabled',
         description: '按钮失效状态',
-        type: 'boolean'
+        type: 'boolean',
       },
       {
         name: 'ghost',
@@ -89,7 +89,8 @@ export default {
   presets: [
     {
       children: 'BUTTON',
-      type: 'primary'
+      type: 'primary',
+      disabled:true
     },
     {
       children: '2222222',

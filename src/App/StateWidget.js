@@ -1,34 +1,8 @@
 import React from 'react'
 import { Switch, Input, Slider, InputNumber, Radio } from 'antd/es'
 
-function parse(activeValue, defaultValue, originalType) {
-  function parseOriginalType(originalType) {
-    if (/^boolean$|^string$|^number$/.test(originalType)) {
-      return originalType
-    } else {
-      if (/^\[.*\|.*\]$/.test(originalType)) return 'enum'
-      if (/^\(.*?\) => .*$/.test(originalType)) return 'function'
-      if (/^{.*}$/.test(originalType)) return 'object'
-      if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
-      if (/.*/.test(originalType)) return 'string'
-    }
-    console.warn(`can't get widgetType by typeString, set: ${originalType}`)
-    return 'unknown'
-  }
-  function getWidgetTypeByValue(value) {
-    // 不可能有 RadioGroup
-    if (typeof value === 'string' && originalType.match(value)) return 'enum' // 自定义的模式
-    return typeof value
-  }
-  function getWidgeValue(widgetType) {
-    return (
-      (getWidgetTypeByValue(activeValue) === widgetType && activeValue) ||
-      (getWidgetTypeByValue(defaultValue) === widgetType && defaultValue)
-    )
-  }
-  return {}
-}
 /**
+ * 设计太过复杂以至于无法重构
  * @param {object} props
  * @param {any} props.activeValue
  * @param {any} props.defaultValue
@@ -39,7 +13,7 @@ function parse(activeValue, defaultValue, originalType) {
 export function StateWidgetSeletor({
   activeValue,
   defaultValue,
-  originalType, 
+  originalType,
 
   onChange = () => {}
 }) {
@@ -67,6 +41,7 @@ export function StateWidgetSeletor({
       (getWidgetTypeByValue(defaultValue) === widgetType && defaultValue)
     )
   }
+  // const [is]
 
   // ------------RadioGroup控件们的状态------------
   // 自己配置babel、webpack后把这些特化的逻辑放到对应的组件配置中，
@@ -89,36 +64,29 @@ export function StateWidgetSeletor({
   }, [activeValue, defaultValue])
 
   // ------------所有的可用控件------------
-  // TODO:每种控件提取为一个单独的组件。做到只有当传入的value与控件的Value不同时，渲染。
   const widgets = {
     boolean() {
       return (
-        <Switch
-          defaultChecked={getWidgeValue('boolean') || false}
+        <StateWidget_boolean
+          value={getWidgeValue('boolean') || false}
           onChange={checked => onChange(checked)}
         />
       )
     },
     number() {
       return (
-        <div>
-          <InputNumber
-            defaultValue={getWidgeValue('number') || 0}
-            onChange={num => onChange(num)}
-          />
-          <Slider
-            defaultValue={getWidgeValue('number') || 0}
-            onChange={num => onChange(num)}
-          />
-        </div>
+        <StateWidget_number
+          value={getWidgeValue('number') || 0}
+          onChange={num => onChange(num)}
+        />
       )
     },
     string() {
       return (
-        <Input
-          defaultValue={getWidgeValue('string') || ''}
-          onChange={e => {
-            onChange(e.target.value)
+        <StateWidget_string
+          value={getWidgeValue('string') || ''}
+          onChange={string => {
+            onChange(string)
           }}
         />
       )
@@ -234,4 +202,34 @@ export function StateWidgetSeletor({
     [originalType]
   )
   return widgets[widgetType] ? widgets[widgetType]() : null
+}
+
+function StateWidget_string({ value, onChange = () => {} }) {
+  return (
+    <Input
+      value={value}
+      onChange={e => {
+        onChange(e.target.value)
+      }}
+    />
+  )
+}
+
+function StateWidget_boolean({ value, onChange = () => {} }) {
+  return (
+    <Switch
+      checked={value}
+      onChange={checked => {
+        onChange(checked)
+      }}
+    />
+  )
+}
+function StateWidget_number({ value, onChange = () => {} }) {
+  return (
+    <div>
+      <InputNumber value={value} onChange={num => onChange(num)} />
+      <Slider defaultValue={value} onAfterChange={num => onChange(num)} />
+    </div>
+  )
 }
