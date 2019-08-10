@@ -1,3 +1,4 @@
+import StateWidgetModel from './ComponentModel__StateWidgetModel'
 export default class ComponentModel {
   /**
    *
@@ -38,7 +39,12 @@ export default class ComponentModel {
     this.icon = icon
     this.Icon = Icon
     this.Preview = Preview
-    this.reactProps = reactProps
+    this.reactProps = Object.fromEntries(
+      Object.entries(reactProps).map(([tableName, props]) => [
+        tableName,
+        props.map(prop => new StateWidgetModel(prop))
+      ])
+    )
     this.presets = presets
 
     this.settedProps = undefined // 初始化挂载的设定参数

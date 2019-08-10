@@ -9,13 +9,13 @@ import { Switch, Input, Slider, InputNumber, Radio } from 'antd/es'
  * @param {Function} [props.onChange]
  * @returns
  */
-export const Widget = ({
+export function StateWidgetSeletor({
   activeValue,
   defaultValue,
-  availableType,
+  availableType, // TODO:应该使用widgetType代替，不然组件的耦合性太强。判断逻辑应该单独提取到为一个判断逻辑。StateWidget组件作为一个终端，递归的逻辑单独提取出来
 
   onChange = () => {}
-}) => {
+}) {
   // TODO: 可以提取这三个算法的共性，以优化
   function getWidgetTypeByTypeString(originalType) {
     if (/^boolean$|^string$|^number$/.test(originalType)) {
@@ -62,11 +62,12 @@ export const Widget = ({
   }, [activeValue, defaultValue])
 
   // ------------所有的可用控件------------
+  // TODO:每种控件提取为一个单独的组件。做到只有当传入的value与控件的Value不同时，渲染。
   const widgets = {
     boolean() {
       return (
         <Switch
-          checked={getWidgeValue('boolean') || false}
+          defaultChecked={getWidgeValue('boolean') || false}
           onChange={checked => onChange(checked)}
         />
       )
@@ -75,20 +76,21 @@ export const Widget = ({
       return (
         <div>
           <InputNumber
-            value={getWidgeValue('number') || 0}
+            defaultValue={getWidgeValue('number') || 0}
             onChange={num => onChange(num)}
           />
           <Slider
-            value={getWidgeValue('number') || 0}
+            defaultValue={getWidgeValue('number') || 0}
             onChange={num => onChange(num)}
           />
         </div>
       )
     },
     string() {
+      console.log(getWidgeValue('string'))
       return (
         <Input
-          value={getWidgeValue('string') || ''}
+          defaultValue={getWidgeValue('string') || ''}
           onChange={e => {
             onChange(e.target.value)
           }}
@@ -136,7 +138,7 @@ export const Widget = ({
                       whiteSpace: 'nowrap'
                     }}
                   >{`${key} :   `}</span>
-                  <Widget
+                  <StateWidgetSeletor
                     activeValue={(getWidgeValue('object') || {})[key]}
                     availableType={valueType}
                     // defaultValue={getSettedWidgeValue('object').defaultValue[key]}
@@ -182,7 +184,7 @@ export const Widget = ({
                 value={widgetType}
                 style={{ display: 'block', marginBottom: 8 }}
               >
-                <Widget
+                <StateWidgetSeletor
                   activeValue={radioGroupValues[widgetType]}
                   defaultValue={getWidgetDefaultValue(widgetType)}
                   availableType={originalType}

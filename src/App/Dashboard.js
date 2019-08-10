@@ -4,7 +4,7 @@ import 'styled-components/macro'
 import { Tooltip } from 'antd/es'
 import { List, Box } from './components'
 import { isEmpty } from 'lodash'
-import { Widget } from './Dashboard__Widget'
+import { StateWidgetSeletor } from './StateWidget'
 import {
   componentCollection_settedProps_set,
   componentCollection_settedProps_cover
@@ -85,9 +85,9 @@ function Dashboard({
                 🕶
               </div>
               <div>
-                <Widget
+                <StateWidgetSeletor
                   activeValue={settedProps[propInfo.name]}
-                  availableType={propInfo.type}
+                  originalType={propInfo.originalType}
                   defaultValue={propInfo.default}
                   onChange={value => setValue(value, propInfo)}
                 />

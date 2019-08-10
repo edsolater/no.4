@@ -1,4 +1,4 @@
-export default class StateWidgetModel {
+export default class Model {
   constructor({ data, _originalFormat, _rule }) {
     this._data = data
     this._originalFormat = _originalFormat
