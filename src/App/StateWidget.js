@@ -98,17 +98,11 @@ export function StateWidgetSeletor({
         .split('|')
         .map(str => str.trim().replace(/'|"/g, ''))
       return (
-        <Radio.Group
-          buttonStyle='solid'
-          onChange={e => onChange(e.target.value)}
+        <StateWidget_enum
           value={getWidgeValue('enum')}
-        >
-          {enumStrings.map(str => (
-            <Radio.Button key={str} value={str}>
-              {str}
-            </Radio.Button>
-          ))}
-        </Radio.Group>
+          onChange={selectedValue => onChange(selectedValue)}
+          enumStrings={enumStrings}
+        />
       )
     },
     object() {
@@ -231,5 +225,20 @@ function StateWidget_number({ value, onChange = () => {} }) {
       <InputNumber value={value} onChange={num => onChange(num)} />
       <Slider defaultValue={value} onAfterChange={num => onChange(num)} />
     </div>
+  )
+}
+function StateWidget_enum({ value, onChange = () => {}, enumStrings }) {
+  return (
+    <Radio.Group
+      buttonStyle='solid'
+      value={value}
+      onChange={e => onChange(e.target.value)}
+    >
+      {enumStrings.map(str => (
+        <Radio.Button key={str} value={str}>
+          {str}
+        </Radio.Button>
+      ))}
+    </Radio.Group>
   )
 }
