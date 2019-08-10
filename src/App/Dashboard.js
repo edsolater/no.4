@@ -87,7 +87,7 @@ function Dashboard({
               <div>
                 <StateWidgetSeletor
                   activeValue={settedProps[propInfo.name]}
-                  originalType={propInfo.originalType}
+                  originalType={propInfo.type}
                   defaultValue={propInfo.default}
                   onChange={value => setValue(value, propInfo)}
                 />

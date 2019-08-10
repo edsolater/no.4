@@ -1,18 +1,45 @@
 import React from 'react'
 import { Switch, Input, Slider, InputNumber, Radio } from 'antd/es'
 
+function parse(activeValue, defaultValue, originalType) {
+  function parseOriginalType(originalType) {
+    if (/^boolean$|^string$|^number$/.test(originalType)) {
+      return originalType
+    } else {
+      if (/^\[.*\|.*\]$/.test(originalType)) return 'enum'
+      if (/^\(.*?\) => .*$/.test(originalType)) return 'function'
+      if (/^{.*}$/.test(originalType)) return 'object'
+      if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
+      if (/.*/.test(originalType)) return 'string'
+    }
+    console.warn(`can't get widgetType by typeString, set: ${originalType}`)
+    return 'unknown'
+  }
+  function getWidgetTypeByValue(value) {
+    // 不可能有 RadioGroup
+    if (typeof value === 'string' && originalType.match(value)) return 'enum' // 自定义的模式
+    return typeof value
+  }
+  function getWidgeValue(widgetType) {
+    return (
+      (getWidgetTypeByValue(activeValue) === widgetType && activeValue) ||
+      (getWidgetTypeByValue(defaultValue) === widgetType && defaultValue)
+    )
+  }
+  return {}
+}
 /**
  * @param {object} props
  * @param {any} props.activeValue
  * @param {any} props.defaultValue
- * @param {string} props.availableType
+ * @param {string} props.originalType
  * @param {Function} [props.onChange]
  * @returns
  */
 export function StateWidgetSeletor({
   activeValue,
   defaultValue,
-  originalType, // TODO:应该使用widgetType代替，不然组件的耦合性太强。判断逻辑应该单独提取到为一个判断逻辑。StateWidget组件作为一个终端，递归的逻辑单独提取出来
+  originalType, 
 
   onChange = () => {}
 }) {
@@ -139,7 +166,7 @@ export function StateWidgetSeletor({
                   >{`${key} :   `}</span>
                   <StateWidgetSeletor
                     activeValue={(getWidgeValue('object') || {})[key]}
-                    availableType={valueType}
+                    originalType={valueType}
                     // defaultValue={getSettedWidgeValue('object').defaultValue[key]}
                     isObjectChild
                     onChange={value => {
@@ -186,7 +213,7 @@ export function StateWidgetSeletor({
                 <StateWidgetSeletor
                   activeValue={radioGroupValues[widgetType]}
                   defaultValue={getWidgetDefaultValue(widgetType)}
-                  availableType={originalType}
+                  originalType={originalType}
                   onChange={radioValue => {
                     changeSelectedRadioType(widgetType)
                     setValue({ key: widgetType, value: radioValue })
