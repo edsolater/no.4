@@ -26,7 +26,7 @@ export default {
       {
         name: 'disabled',
         description: '按钮失效状态',
-        type: 'boolean',
+        type: 'boolean'
       },
       {
         name: 'ghost',
@@ -52,7 +52,7 @@ export default {
       {
         name: 'loading',
         description: '设置按钮载入状态',
-        type: 'boolean | { delay: number }',
+        type: 'boolean | { delay: { delay: {delay:number}}}'
       },
       {
         name: 'shape',
@@ -62,7 +62,7 @@ export default {
       {
         name: 'size',
         description: '设置按钮大小',
-        type: "'small' | 'large'",
+        type: "'small' | 'large'"
       },
       {
         name: 'target',
@@ -91,8 +91,8 @@ export default {
     {
       children: 'BUTTON',
       type: 'primary',
-      size:'small',
-      loading:true
+      size: 'small',
+      loading: true
     },
     {
       children: '2222222',

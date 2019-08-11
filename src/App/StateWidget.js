@@ -5,12 +5,6 @@ import { Switch, Input, Slider, InputNumber, Radio } from 'antd/es'
  * 逻辑组件
  * 只是分析数据，不做UI显示
  * 选择应该使用的value与其widget
- * @param {object} props
- * @param {any} props.activeValue
- * @param {any} props.defaultValue
- * @param {string} props.originalType
- * @param {Function} [props.onChange]
- * @returns
  */
 export function StateWidgetSeletor({
   activeValue,
@@ -37,7 +31,6 @@ export function StateWidgetSeletor({
     // 不可能有 RadioGroup
     if (typeof value === 'string') {
       if (originalType.match(value)) {
-        console.log('hello')
         return 'enum'
       }
     } // 自定义的模式
@@ -54,7 +47,7 @@ export function StateWidgetSeletor({
     boolean() {
       return (
         <StateWidget_boolean
-          value={getWidgeValue('boolean') || false}
+          activeValue={getWidgeValue('boolean') || false}
           onChange={onChange}
         />
       )
@@ -62,7 +55,7 @@ export function StateWidgetSeletor({
     number() {
       return (
         <StateWidget_number
-          value={getWidgeValue('number') || 0}
+          activeValue={getWidgeValue('number') || 0}
           onChange={onChange}
         />
       )
@@ -70,7 +63,7 @@ export function StateWidgetSeletor({
     string() {
       return (
         <StateWidget_string
-          value={getWidgeValue('string') || ''}
+          activeValue={getWidgeValue('string') || ''}
           onChange={onChange}
         />
       )
@@ -78,51 +71,22 @@ export function StateWidgetSeletor({
     enum() {
       return (
         <StateWidget_enum
-          value={getWidgeValue('enum')}
+          activeValue={getWidgeValue('enum')}
           onChange={onChange}
           originalType={originalType}
         />
       )
     },
     function() {
-      return <StateWidget_function value={originalType} />
+      return <StateWidget_function activeValue={originalType} />
     },
     object() {
-      const [, matched] = originalType.trim().match(/^{(.*)}$/)
-      const entries = matched
-        .trim()
-        .split(', ')
-        .map(entry => entry.split(': '))
       return (
-        <div>
-          {'{'}
-          <div style={{ marginLeft: 32 }}>
-            {entries.map(([key, valueType]) => {
-              return (
-                <div style={{ display: 'flex' }} key={`${key}`}>
-                  <span
-                    style={{
-                      marginRight: 20,
-                      opacity: 0.6,
-                      flex: 0,
-                      whiteSpace: 'nowrap'
-                    }}
-                  >{`${key} :   `}</span>
-                  <StateWidgetSeletor
-                    activeValue={(getWidgeValue('object') || {})[key]}
-                    originalType={valueType}
-                    // defaultValue={getSettedWidgeValue('object').defaultValue[key]}
-                    isObjectChild
-                    onChange={value => {
-                      onChange({ ...activeValue, [key]: value })
-                    }}
-                  />
-                </div>
-              )
-            })}
-          </div>
-          {'}'}
-        </div>
+        <StateWidget_object
+          activeValue={getWidgeValue('object') || {}}
+          onChange={onChange}
+          originalType={originalType}
+        />
       )
     },
 
@@ -150,10 +114,10 @@ export function StateWidgetSeletor({
 /**
  * 以下均为UI控件（StateWidget的）
  */
-function StateWidget_string({ value, onChange = () => {} }) {
+function StateWidget_string({ value: activeValue, onChange = () => {} }) {
   return (
     <Input
-      value={value}
+      value={activeValue}
       onChange={e => {
         onChange(e.target.value)
       }}
@@ -161,25 +125,25 @@ function StateWidget_string({ value, onChange = () => {} }) {
   )
 }
 
-function StateWidget_boolean({ value, onChange = () => {} }) {
+function StateWidget_boolean({ activeValue, onChange = () => {} }) {
   return (
     <Switch
-      checked={value}
+      checked={activeValue}
       onChange={checked => {
         onChange(checked)
       }}
     />
   )
 }
-function StateWidget_number({ value, onChange = () => {} }) {
+function StateWidget_number({ activeValue, onChange = () => {} }) {
   return (
     <div>
-      <InputNumber value={value} onChange={num => onChange(num)} />
-      <Slider defaultValue={value} onAfterChange={num => onChange(num)} />
+      <InputNumber value={activeValue} onChange={num => onChange(num)} />
+      <Slider defaultValue={activeValue} onAfterChange={num => onChange(num)} />
     </div>
   )
 }
-function StateWidget_enum({ value, onChange = () => {}, originalType }) {
+function StateWidget_enum({ activeValue, onChange = () => {}, originalType }) {
   const enumStrings = originalType
     .trim()
     .split('|')
@@ -187,7 +151,7 @@ function StateWidget_enum({ value, onChange = () => {}, originalType }) {
   return (
     <Radio.Group
       buttonStyle='solid'
-      value={value}
+      value={activeValue}
       onChange={e => onChange(e.target.value)}
     >
       {enumStrings.map(str => (
@@ -198,8 +162,8 @@ function StateWidget_enum({ value, onChange = () => {}, originalType }) {
     </Radio.Group>
   )
 }
-function StateWidget_function({ value }) {
-  return <span>{value}</span>
+function StateWidget_function({ activeValue }) {
+  return <span>{activeValue}</span>
 }
 function StateWidget_radioGroup({
   activeValue,
@@ -225,7 +189,6 @@ function StateWidget_radioGroup({
     // 不可能有 RadioGroup
     if (typeof value === 'string') {
       if (originalType.match(value)) {
-        console.log('hello')
         return 'enum'
       }
     } // 自定义的模式
@@ -264,7 +227,6 @@ function StateWidget_radioGroup({
     >
       {originalTypes.map((originalType, index) => {
         const widgetType = getWidgetTypeByTypeString(originalType.trim())
-        console.log('widgetType: ', widgetType)
         return (
           <Radio
             key={index}
@@ -281,5 +243,41 @@ function StateWidget_radioGroup({
         )
       })}
     </Radio.Group>
+  )
+}
+function StateWidget_object({
+  activeValue,
+  originalType,
+  onChange = () => {}
+}) {
+  const entries = Object.entries(
+    JSON.parse(originalType.replace(/\w+/g, word => `"${word}"`))
+  )
+  return (
+    <div>
+      {'{'}
+      <div style={{ marginLeft: 32 }}>
+        {entries.map(([key, valueType]) => (
+          <div style={{ display: 'flex' }} key={`${key}`}>
+            <span
+              style={{
+                marginRight: 20,
+                opacity: 0.6,
+                flex: 0,
+                whiteSpace: 'nowrap'
+              }}
+            >{`${key} :   `}</span>
+            <StateWidgetSeletor
+              activeValue={activeValue[key] || {}}
+              originalType={JSON.stringify(valueType).replace(/"/g, '')}
+              onChange={value => {
+                onChange({ ...activeValue, [key]: value })
+              }}
+            />
+          </div>
+        ))}
+      </div>
+      {'}'}
+    </div>
   )
 }
