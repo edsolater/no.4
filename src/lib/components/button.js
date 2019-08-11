@@ -16,6 +16,7 @@ export default {
   reactProps: {
     // name、 type 为必须提供，不然UI会出现怪异的空白、报错
     // description、default 是可选的
+    // enum类型必须写在trpe的开头，不然无法准确断句，程序会死循环
     main: [
       {
         name: 'children',
@@ -56,12 +57,12 @@ export default {
       {
         name: 'shape',
         description: '设置按钮形状，可选值为 circle、 round 或者不设',
-        type: "['circle' | 'round']"
+        type: "'circle' | 'round'"
       },
       {
         name: 'size',
         description: '设置按钮大小',
-        type: "['small' | 'large']"
+        type: "'small' | 'large'",
       },
       {
         name: 'target',
@@ -72,7 +73,7 @@ export default {
         name: 'type',
         description:
           '设置按钮类型，可选值为 primary dashed danger link(3.17 中增加) 或者不设',
-        type: "['primary' | 'dashed' | 'danger' | 'link']"
+        type: "'primary' | 'dashed' | 'danger' | 'link'|number"
       },
       {
         name: 'onClick',
@@ -90,7 +91,9 @@ export default {
     {
       children: 'BUTTON',
       type: 'primary',
-      disabled:true
+      disabled:true,
+      size:'small',
+      loading:true
     },
     {
       children: '2222222',

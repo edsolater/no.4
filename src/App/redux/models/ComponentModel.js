@@ -43,4 +43,7 @@ export default class ComponentModel {
 
     this.settedProps = undefined // 初始化挂载的设定参数
   }
+  static say(){
+    console.log('hello')
+  }
 }

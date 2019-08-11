@@ -15,12 +15,12 @@ function Preview({
       <List>
         {selectedComponent.presets.map(setting => (
           <List.Item
-            key={setting.toSource()}
+            key={JSON.stringify(setting)}
             onClick={() => {
               componentCollection_settedProps_cover(setting)
             }}
           >
-            {setting.toSource()}
+            {JSON.stringify(setting)}
           </List.Item>
         ))}
       </List>

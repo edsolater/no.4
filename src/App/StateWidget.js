@@ -2,7 +2,9 @@ import React from 'react'
 import { Switch, Input, Slider, InputNumber, Radio } from 'antd/es'
 
 /**
- * 设计太过复杂以至于无法重构
+ * 逻辑组件
+ * 只是分析数据，不做UI显示
+ * 选择应该使用的value与其widget
  * @param {object} props
  * @param {any} props.activeValue
  * @param {any} props.defaultValue
@@ -24,7 +26,8 @@ export function StateWidgetSeletor({
     } else {
       if (/^\(.*?\) => .*$/.test(originalType)) return 'function'
       if (/^{.*}$/.test(originalType)) return 'object'
-      if (/^\[.*\|.*\]$/.test(originalType)) return 'enum'
+      if (/^ ?['"]\w+['"] ?(?:\| ?['"]\w+['"] ?)*$/.test(originalType))
+        return 'enum'
       if (/^.*\|.*$/.test(originalType)) return 'radioGroup'
       if (/.*/.test(originalType)) return 'string'
     }
@@ -32,7 +35,12 @@ export function StateWidgetSeletor({
   }
   function getWidgetTypeByValue(value) {
     // 不可能有 RadioGroup
-    if (typeof value === 'string' && originalType.match(value)) return 'enum' // 自定义的模式
+    if (typeof value === 'string') {
+      if (originalType.match(value)) {
+        console.log('hello')
+        return 'enum'
+      }
+    } // 自定义的模式
     return typeof value
   }
   function getWidgeValue(widgetType) {
@@ -43,7 +51,7 @@ export function StateWidgetSeletor({
   }
   // const [is]
 
-  // ------------RadioGroup控件们的状态------------
+  //#region ------------RadioGroup控件们的状态------------
   // 自己配置babel、webpack后把这些特化的逻辑放到对应的组件配置中，
   // 或者单独把各个控件提取为单独的组件。现在为了开发速度还不需要
   const [activeRadioType, changeSelectedRadioType] = React.useState(
@@ -56,12 +64,20 @@ export function StateWidgetSeletor({
   }
 
   React.useEffect(() => {
-    if (activeValue === null) {
-      onChange(undefined)
+    if (!activeValue) {
+      // 如果点了重置，则activeValue===null,则启用以下逻辑
       setRadioGroupValues({})
       changeSelectedRadioType(getWidgetTypeByValue(defaultValue))
-    } //重置 RadioGroup 保留的状态
+    } else {
+      // 因preset而传入了新的设定值时
+      changeSelectedRadioType(getWidgetTypeByValue(activeValue))
+      setRadioGroupValues({
+        ...radioGroupValues,
+        [getWidgetTypeByValue(activeValue)]: activeValue
+      })
+    }
   }, [activeValue, defaultValue])
+  //#endregion
 
   // ------------所有的可用控件------------
   const widgets = {
@@ -92,8 +108,7 @@ export function StateWidgetSeletor({
       )
     },
     enum() {
-      const [, matched] = originalType.match(/^\[(.*)\]$/)
-      const enumStrings = matched
+      const enumStrings = originalType
         .trim()
         .split('|')
         .map(str => str.trim().replace(/'|"/g, ''))
@@ -148,7 +163,7 @@ export function StateWidgetSeletor({
     },
 
     radioGroup() {
-      const originalTypes = originalType.split(/ \| (?!'|")/) //如果有前置判断就报错，是babel的关系？
+      const originalTypes = originalType.split(/ ?\|(?! ?'| ?")/) //如果有前置判断就报错，是babel的关系？
       function getWidgetDefaultValue(widgetType) {
         return widgetType === getWidgetTypeByValue(defaultValue)
           ? defaultValue
@@ -162,11 +177,11 @@ export function StateWidgetSeletor({
               key: widgetType,
               value: radioGroupValues[widgetType] // may be undefined
             })
-            changeSelectedRadioType(widgetType)
           }}
         >
           {originalTypes.map((originalType, index) => {
-            const widgetType = getWidgetTypeByTypeString(originalType)
+            const widgetType = getWidgetTypeByTypeString(originalType.trim())
+            console.log('widgetType: ', widgetType)
             return (
               <Radio
                 key={index}
@@ -178,7 +193,6 @@ export function StateWidgetSeletor({
                   defaultValue={getWidgetDefaultValue(widgetType)}
                   originalType={originalType}
                   onChange={radioValue => {
-                    changeSelectedRadioType(widgetType)
                     setValue({ key: widgetType, value: radioValue })
                   }}
                 />
@@ -193,7 +207,7 @@ export function StateWidgetSeletor({
   // 第一次渲染的何种控件，中途不可能变成另一种控件，故这样优化。
   // 可以使 RadioGroup 变换操作控件(o゜▽゜)o☆
   const widgetType = React.useMemo(
-    () => getWidgetTypeByTypeString(originalType),
+    () => getWidgetTypeByTypeString(originalType.trim()),
     [originalType]
   )
   return widgets[widgetType] ? widgets[widgetType]() : null
