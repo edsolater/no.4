@@ -13,7 +13,6 @@ export function StateWidgetSeletor({
 
   onChange = () => {}
 }) {
-  // TODO: 可以提取这三个算法的共性，以优化
   function getWidgetTypeByTypeString(originalType) {
     if (/^boolean$|^string$|^number$/.test(originalType)) {
       return originalType
@@ -43,56 +42,59 @@ export function StateWidgetSeletor({
     )
   }
 
-  const widgets = {
-    boolean() {
+  const widgetType = React.useMemo(
+    () => getWidgetTypeByTypeString(originalType.trim()),
+    [originalType]
+  )
+  switch (widgetType) {
+    case 'boolean': {
       return (
-        <StateWidget_boolean
+        <StateWidget_Boolean
           activeValue={getWidgeValue('boolean') || false}
           onChange={onChange}
         />
       )
-    },
-    number() {
+    }
+    case 'number': {
       return (
-        <StateWidget_number
+        <StateWidget_Number
           activeValue={getWidgeValue('number') || 0}
           onChange={onChange}
         />
       )
-    },
-    string() {
+    }
+    case 'string': {
       return (
-        <StateWidget_string
+        <StateWidget_String
           activeValue={getWidgeValue('string') || ''}
           onChange={onChange}
         />
       )
-    },
-    enum() {
+    }
+    case 'enum': {
       return (
-        <StateWidget_enum
+        <StateWidget_Enum
           activeValue={getWidgeValue('enum')}
           onChange={onChange}
           originalType={originalType}
         />
       )
-    },
-    function() {
-      return <StateWidget_function activeValue={originalType} />
-    },
-    object() {
+    }
+    case 'function': {
+      return <StateWidget_Function activeValue={originalType} />
+    }
+    case 'object': {
       return (
-        <StateWidget_object
+        <StateWidget_Object
           activeValue={getWidgeValue('object') || {}}
           onChange={onChange}
           originalType={originalType}
         />
       )
-    },
-
-    radioGroup() {
+    }
+    case 'radioGroup': {
       return (
-        <StateWidget_radioGroup
+        <StateWidget_RadioGroup
           activeValue={activeValue}
           defaultValue={defaultValue}
           onChange={onChange}
@@ -100,21 +102,16 @@ export function StateWidgetSeletor({
         />
       )
     }
+    default: {
+      return null
+    }
   }
-
-  // 第一次渲染的何种控件，中途不可能变成另一种控件，故这样优化。
-  // 可以使 RadioGroup 变换操作控件(o゜▽゜)o☆
-  const widgetType = React.useMemo(
-    () => getWidgetTypeByTypeString(originalType.trim()),
-    [originalType]
-  )
-  return widgets[widgetType] ? widgets[widgetType]() : null
 }
 
 /**
  * 以下均为UI控件（StateWidget的）
  */
-function StateWidget_string({ value: activeValue, onChange = () => {} }) {
+function StateWidget_String({ activeValue, onChange = () => {} }) {
   return (
     <Input
       value={activeValue}
@@ -125,7 +122,7 @@ function StateWidget_string({ value: activeValue, onChange = () => {} }) {
   )
 }
 
-function StateWidget_boolean({ activeValue, onChange = () => {} }) {
+function StateWidget_Boolean({ activeValue, onChange = () => {} }) {
   return (
     <Switch
       checked={activeValue}
@@ -135,7 +132,8 @@ function StateWidget_boolean({ activeValue, onChange = () => {} }) {
     />
   )
 }
-function StateWidget_number({ activeValue, onChange = () => {} }) {
+
+function StateWidget_Number({ activeValue, onChange = () => {} }) {
   return (
     <div>
       <InputNumber value={activeValue} onChange={num => onChange(num)} />
@@ -143,7 +141,8 @@ function StateWidget_number({ activeValue, onChange = () => {} }) {
     </div>
   )
 }
-function StateWidget_enum({ activeValue, onChange = () => {}, originalType }) {
+
+function StateWidget_Enum({ activeValue, onChange = () => {}, originalType }) {
   const enumStrings = originalType
     .trim()
     .split('|')
@@ -162,10 +161,12 @@ function StateWidget_enum({ activeValue, onChange = () => {}, originalType }) {
     </Radio.Group>
   )
 }
-function StateWidget_function({ activeValue }) {
+
+function StateWidget_Function({ activeValue }) {
   return <span>{activeValue}</span>
 }
-function StateWidget_radioGroup({
+
+function StateWidget_RadioGroup({
   activeValue,
   defaultValue,
   originalType,
@@ -245,7 +246,8 @@ function StateWidget_radioGroup({
     </Radio.Group>
   )
 }
-function StateWidget_object({
+
+function StateWidget_Object({
   activeValue,
   originalType,
   onChange = () => {}
