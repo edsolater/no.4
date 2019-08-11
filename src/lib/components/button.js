@@ -91,7 +91,6 @@ export default {
     {
       children: 'BUTTON',
       type: 'primary',
-      disabled:true,
       size:'small',
       loading:true
     },
