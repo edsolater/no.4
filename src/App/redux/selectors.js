@@ -26,10 +26,10 @@ export const getCurrentSelection = (store = {}) => {
 
 /** @returns {Array} */
 export const getRelatedComponents = (store = {}) => {
-  const currentCategory = getCurrentSelection(store).category
+  const currentCategory = getCurrentSelection(store).class
   return (
     getAllComponents(store).filter(
-      ({ category }) => category === currentCategory
+      ({ class: className }) => className === currentCategory
     ) || []
   )
 }

@@ -3,7 +3,7 @@ export default class ComponentModel {
    *
    * @param {object} [data]
    * @param {string} [data.class] 规定了组件的所属类别
-   * @param {string} [data.category] 规定了组件的所属类别, class 的别称
+   * @param {string} [data.class] 规定了组件的所属类别, class 的别称
    * @param {string} [data.name] 组件的名称
    * @param {string} [data.name_en] 组件的英文名
    * @param {string} [data.name_cn] 组件的中文名
@@ -15,7 +15,6 @@ export default class ComponentModel {
    */
   constructor({
     class: className = '其他',
-    category = className || '其他',
     name = '',
     name_en = name,
     name_cn = '未设定',
@@ -26,11 +25,7 @@ export default class ComponentModel {
     reactProps = { main: [] },
     presets = [{}]
   } = {}) {
-    /**
-     * @deprecated
-     */
-    this.class = category
-    this.category = category
+    this.class = className
     this.name = name_en.toLowerCase()
     this.name_en = name_en.toLowerCase()
     this.name_cn = name_cn
@@ -43,7 +38,7 @@ export default class ComponentModel {
 
     this.settedProps = undefined // 初始化挂载的设定参数
   }
-  static say(){
+  static say() {
     console.log('hello')
   }
 }

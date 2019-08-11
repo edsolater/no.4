@@ -5,7 +5,7 @@ import { ReactComponent as Component } from './icons/folder-react-components.svg
 import { color } from './settings/style'
 import { getAllComponents } from './redux/selectors'
 import { componentCollection_currentName_set } from './redux/actionCreators'
-const categoryIcons = { Component }
+const classIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
 //转换一切字符串分割形式为 PascalCase
@@ -89,13 +89,13 @@ function SideMenu({
       )
     }
     return [
-      Object.entries(subMenuData).map(([category, groups]) => (
+      Object.entries(subMenuData).map(([className, groups]) => (
         <SubMenu
-          key={category}
+          key={className}
           title={
             <>
-              <Icon component={categoryIcons[category]} />
-              <span>{category}</span>
+              <Icon component={classIcons[className]} />
+              <span>{className}</span>
             </>
           }
         >
