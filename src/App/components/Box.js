@@ -28,6 +28,7 @@ export default function Box({
   const featureProps = merge(
     restProps,
     { style: style },
+    { style: style2 },
     grid && feature_grid(grid),
     flex && feature_flex(flex)
   )
