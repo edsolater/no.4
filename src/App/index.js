@@ -1,7 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
-import { Layout } from 'antd/es'
 import * as myLibrary from '../lib'
 import { Grid } from './components'
 // import store from './redux/store'
@@ -25,19 +23,23 @@ function App({
     componentCollection_currentName_set('button')
   })
   return (
-    <Layout style={{ width: '100vw', height: '100vh' }}>
-      <TopIndicator />
-      <Layout>
-        <SideMenu />
-        <Layout.Content style={{ position: 'relative' }}>
-          <Grid grid={{ layoutType: 'land_4' }}>
-            <Dashboard />
-            <Preview />
-            <RelatedItem />
-          </Grid>
-        </Layout.Content>
-      </Layout>
-    </Layout>
+    <Grid
+      style={{
+        width: '100vw',
+        height: '100vh',
+        display:'grid',
+        gridTemplateColumns:'1fr 2fr 1fr',
+        gridTemplateRows:'32px 1fr'
+      }}
+    >
+      <TopIndicator style={{ gridColumn: '1/-1' }} />
+      <SideMenu />
+      <Grid grid={{ layoutType: 'land_4' }}>
+        <Dashboard />
+        <Preview />
+      </Grid>
+      <RelatedItem />
+    </Grid>
   )
 }
 

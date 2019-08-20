@@ -1,46 +1,35 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Layout, Icon } from 'antd/es'
+import { Box } from './components'
+import { Icon } from 'antd/es'
 import { color } from './settings/style'
 import { getCurrentSelection } from './redux/selectors'
 
 function TopIndicator({
-  selectedComponent // redux
+  selectedComponent, // redux
+  dispatch, // redux
+  ...restProps
 }) {
   return (
-    <Layout.Header
-      style={{
-        height: 24,
+    <Box
+      _className='TopIndicator'
+      _style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         background:
           color.componentColorInGroup[selectedComponent.class] || 'lightgray'
       }}
+      {...restProps}
     >
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center'
-          }}
-        >
-          <Icon component={selectedComponent.icon} />
-          <span style={{ marginLeft: 16, color: 'white' }}>
-            {selectedComponent.name}
-          </span>
-        </div>
-      </div>
-    </Layout.Header>
+      <Icon component={selectedComponent.icon} />
+      <span style={{ marginLeft: 16, color: 'white' }}>
+        {selectedComponent.name}
+      </span>
+    </Box>
   )
 }
 
 export default connect(
-  store => ({ selectedComponent: getCurrentSelection(store) }),
-  null
+  store => ({ selectedComponent: getCurrentSelection(store) })
 )(TopIndicator)
