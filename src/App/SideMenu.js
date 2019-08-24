@@ -9,17 +9,14 @@ const classIcons = { Component }
 const { SubMenu, ItemGroup } = Menu
 
 //转换一切字符串分割形式为 PascalCase
-const toPascalCase = str => {
-  return (
-    str &&
-    str
-      .replace(
-        /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
-        word => word.toUpperCase() // 转换成大写形式
-      )
-      .replace(/\s+/g, '')
-  ) // 去除分割符中可能有的所有空格
-}
+const toPascalCase = (str = '') =>
+  str
+    .replace(
+      /^\w|[A-Z]|\b\w/g, // 挑选出以各种方式标记出的首字母
+      word => word.toUpperCase() // 转换成大写形式
+    )
+    .replace(/\s+/g, '') // 去除分割符中可能有的所有空格
+
 function SideMenu({
   componentCollection_currentName_set, // redux
   componentCollection // redux
