@@ -13,7 +13,7 @@ import { getSettedProps, getCurrentSelection } from './redux/selectors'
 
 function Dashboard({
   selectedComponent, //redux
-  settedProps, // redux
+  settedProps, // redux try
   componentCollection_settedProps_set, //redux
   componentCollection_settedProps_cover, //redux
   ...restProps
